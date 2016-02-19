@@ -1,0 +1,33 @@
+package org.sms.component.idfactory;
+
+import org.sms.component.idfactory.KeyFactory.PrimaryKeyType;
+
+/**
+ * 
+ * @author zhenxing.liu
+ */
+public enum IDFactory {
+
+  INSTANCE;
+  
+  public Long getId(PrimaryKeyType typeName, String tableName) {
+    
+    KeyFactory factory = null;
+    switch (typeName) {
+    case CLUSTERDB:
+      factory = ClusterDbFactory.INSTANCE;
+      break;
+    case AUTO:
+      break;
+    case CACHEDB:
+      factory = CacheDbFactory.INSTANCE;
+      break;
+    case DEFAULT:
+      factory = UUIDFactory.INSTANCE;
+      break;
+    default:
+      throw new RuntimeException("不能解析的主键获取类型");
+    }
+    return factory.getPrimaryKey(tableName);
+  }
+}
