@@ -82,7 +82,6 @@ public class SamlService {
 
   public String generateSAMLRequest(String assertionConsumerServiceURL, String nameIdFormat) {
     String samlRequest = "";
-
     try {
       String randId = "A71AB3E13";
       IssuerBuilder issuerBuilder = new IssuerBuilder();
@@ -97,8 +96,7 @@ public class SamlService {
       nameIdPolicy.setSPNameQualifier(issuerString);
       nameIdPolicy.setAllowCreate(true);
       AuthnContextClassRefBuilder authnContextClassRefBuilder = new AuthnContextClassRefBuilder();
-      AuthnContextClassRef authnContextClassRef = authnContextClassRefBuilder.buildObject("urn:oasis:names:tc:SAML:2.0:assertion", "AuthnContextClassRef",
-          "saml");
+      AuthnContextClassRef authnContextClassRef = authnContextClassRefBuilder.buildObject("urn:oasis:names:tc:SAML:2.0:assertion", "AuthnContextClassRef", "saml");
       authnContextClassRef.setAuthnContextClassRef("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport");
       RequestedAuthnContextBuilder requestedAuthnContextBuilder = new RequestedAuthnContextBuilder();
       RequestedAuthnContext requestedAuthnContext = requestedAuthnContextBuilder.buildObject();
@@ -117,7 +115,7 @@ public class SamlService {
       authRequest.setID(randId);
       authRequest.setVersion(SAMLVersion.VERSION_20);
       Marshaller marshaller = org.opensaml.Configuration.getMarshallerFactory().getMarshaller(authRequest);
-      org.w3c.dom.Element authDOM = marshaller.marshall(authRequest);
+      Element authDOM = marshaller.marshall(authRequest);
       StringWriter rspWrt = new StringWriter();
       XMLHelper.writeNode(authDOM, rspWrt);
       String messageXML = rspWrt.toString();
@@ -150,7 +148,6 @@ public class SamlService {
       Unmarshaller unmarshaller = Configuration.getUnmarshallerFactory().getUnmarshaller(qName);
       Response response = (Response) unmarshaller.unmarshall(metadataRoot);
       // Issuer issuer = response.getIssuer();
-
       java.security.cert.X509Certificate jX509Cert = SamlUtils.parsePemCertificate(samlCert);
       if (null == jX509Cert) {
         return "";
