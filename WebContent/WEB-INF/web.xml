@@ -77,8 +77,9 @@
 		<session-timeout>60</session-timeout>
 	</session-config>
 	<welcome-file-list>
-     	<welcome-file>index.html</welcome-file>
+     	<!--<welcome-file>index.html</welcome-file>
 		<welcome-file>index.htm</welcome-file>
-		<!-- <welcome-file>index.jsp</welcome-file> -->
+		<welcome-file>index.jsp</welcome-file> -->
+		<welcome-file>login.jsp</welcome-file>
 	</welcome-file-list>
 </web-app>

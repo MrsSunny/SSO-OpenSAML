@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
 
+import org.sms.project.SysConstants;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -374,6 +375,6 @@ public class User implements Serializable, UserDetails {
 
   @Override
   public boolean isEnabled() {
-    return "1".equals(this.usable_status);
+    return SysConstants.ENABLE.equals(this.usable_status);
   }
 }
