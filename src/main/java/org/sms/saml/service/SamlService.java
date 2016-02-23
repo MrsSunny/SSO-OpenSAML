@@ -159,7 +159,7 @@ public class SamlService {
       KeyFactory keyFactory = KeyFactory.getInstance("RSA");
       PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
 
-      // Setup validation
+      //Setup validation
       BasicX509Credential publicCredential = new BasicX509Credential();
       publicCredential.setPublicKey(publicKey);
       SignatureValidator signatureValidator = new SignatureValidator(publicCredential);

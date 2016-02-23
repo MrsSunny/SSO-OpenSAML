@@ -32,7 +32,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
      * 获取当前登录人信息
      */
     User user = (User) session.getAttribute(SysConstants.LOGIN_USER);
-    
+    System.out.println(user);
     response.sendRedirect("/index.jsp");
   }
 }
