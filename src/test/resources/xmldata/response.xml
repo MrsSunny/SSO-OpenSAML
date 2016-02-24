@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<saml2p:Response ID="_c7055387-af61-4fce-8b98-e2927324b306"
+	InResponseTo="_abcdef123456" IssueInstant="2006-01-26T13:35:05.000Z"
+	Version="2.0" xmlns:saml2p="urn:oasis:names:tc:SAML:2.0:protocol">
+	<saml2:Issuer Format="urn:oasis:names:tc:SAML:2.0:nameid-format:entity"
+		xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">https://idp.example.org</saml2:Issuer>
+	<saml2p:Status>
+		<saml2p:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success" />
+	</saml2p:Status>
+	<saml2:Assertion ID="_a75adf55-01d7-40cc-929f-dbd8372ebdfc"
+		IssueInstant="2006-01-26T13:35:05.000Z" Version="2.0"
+		xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">
+		<saml2:Issuer Format="urn:oasis:names:tc:SAML:2.0:nameid-format:entity">https://idp.example.org
+		</saml2:Issuer>
+		<saml2:Subject>
+			<saml2:NameID Format="urn:oasis:names:tc:SAML:2.0:nameid-format:transient">_820d2843-2342-8236-ad28-8ac94fb3e6a1
+			</saml2:NameID>
+			<saml2:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer" />
+		</saml2:Subject>
+		<saml2:Conditions NotBefore="2006-01-26T13:35:05.000Z"
+			NotOnOrAfter="2006-01-26T13:45:05.000Z">
+			<saml2:AudienceRestriction>
+				<saml2:Audience>https://sp.example.org</saml2:Audience>
+			</saml2:AudienceRestriction>
+		</saml2:Conditions>
+		<saml2:AuthnStatement AuthnInstant="2006-01-26T13:35:05.000Z">
+			<saml2:AuthnContext>
+				<saml2:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport
+				</saml2:AuthnContextClassRef>
+			</saml2:AuthnContext>
+		</saml2:AuthnStatement>
+		<saml2:AttributeStatement>
+			<saml2:Attribute FriendlyName="fooAttrib" Name="urn:foo:attrib"
+				NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+				<saml2:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema"
+					xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">SomeValue
+				</saml2:AttributeValue>
+				<saml2:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema"
+					xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">SomeOtherValue
+				</saml2:AttributeValue>
+			</saml2:Attribute>
+			<saml2:Attribute FriendlyName="eduPersonPrincipalName"
+				Name="urn:oid:1.3.6.1.4.1.5923.1.1.1.6" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
+				<saml2:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema"
+					xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">j.doe@idp.example.org
+				</saml2:AttributeValue>
+			</saml2:Attribute>
+		</saml2:AttributeStatement>
+	</saml2:Assertion>
+</saml2p:Response>

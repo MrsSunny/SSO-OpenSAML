@@ -13,13 +13,13 @@ import java.util.UUID;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
 import org.opensaml.DefaultBootstrap;
 import org.opensaml.common.SAMLVersion;
 import org.opensaml.common.xml.SAMLConstants;
+import org.opensaml.saml2.core.Artifact;
 import org.opensaml.saml2.core.Assertion;
 import org.opensaml.saml2.core.Attribute;
 import org.opensaml.saml2.core.AttributeStatement;
@@ -28,24 +28,17 @@ import org.opensaml.saml2.core.Audience;
 import org.opensaml.saml2.core.AudienceRestriction;
 import org.opensaml.saml2.core.AuthnContext;
 import org.opensaml.saml2.core.AuthnContextClassRef;
-import org.opensaml.saml2.core.AuthnContextComparisonTypeEnumeration;
 import org.opensaml.saml2.core.AuthnRequest;
 import org.opensaml.saml2.core.AuthnStatement;
 import org.opensaml.saml2.core.Conditions;
 import org.opensaml.saml2.core.Issuer;
 import org.opensaml.saml2.core.NameID;
-import org.opensaml.saml2.core.NameIDPolicy;
 import org.opensaml.saml2.core.RequestedAuthnContext;
 import org.opensaml.saml2.core.Response;
 import org.opensaml.saml2.core.Status;
 import org.opensaml.saml2.core.StatusCode;
 import org.opensaml.saml2.core.Subject;
 import org.opensaml.saml2.core.SubjectConfirmation;
-import org.opensaml.saml2.core.impl.AuthnContextClassRefBuilder;
-import org.opensaml.saml2.core.impl.AuthnRequestBuilder;
-import org.opensaml.saml2.core.impl.IssuerBuilder;
-import org.opensaml.saml2.core.impl.NameIDPolicyBuilder;
-import org.opensaml.saml2.core.impl.RequestedAuthnContextBuilder;
 import org.opensaml.saml2.encryption.Decrypter;
 import org.opensaml.saml2.metadata.EntityDescriptor;
 import org.opensaml.saml2.metadata.KeyDescriptor;
@@ -64,6 +57,7 @@ import org.opensaml.xml.io.Unmarshaller;
 import org.opensaml.xml.io.UnmarshallingException;
 import org.opensaml.xml.parse.BasicParserPool;
 import org.opensaml.xml.parse.XMLParserException;
+import org.opensaml.xml.schema.XSBooleanValue;
 import org.opensaml.xml.schema.XSString;
 import org.opensaml.xml.security.keyinfo.StaticKeyInfoCredentialResolver;
 import org.opensaml.xml.security.x509.BasicX509Credential;
@@ -76,18 +70,18 @@ import org.opensaml.xml.validation.ValidationException;
 import org.sms.saml.core.SamlUtils;
 import org.sms.saml.dao.SamlDao;
 import org.sms.util.GZipUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-@Service
+@Service("samlService")
 public class SamlService {
 
+  @Autowired
   private SamlDao samlDao;
 
   protected static XMLObjectBuilderFactory builderFactory = Configuration.getBuilderFactory();;
-
-  private String issuerString = "http://localhost:9080/ServiceProvider/";
 
   static {
     try {
@@ -98,46 +92,53 @@ public class SamlService {
     Security.addProvider(new BouncyCastleProvider());
   }
 
-  public String getSAMLRequest(String assertionConsumerServiceURL, String nameIdFormat) {
-    String samlRequest = "";
-    try {
-      String randId = "A71AB3E13";
-      IssuerBuilder issuerBuilder = new IssuerBuilder();
-      Issuer issuer = issuerBuilder.buildObject("urn:oasis:names:tc:SAML:2.0:assertion", "Issuer", "samlp");
-      issuer.setValue(issuerString);
+  public String buildRequest() {
+    NameID nameid = (NameID) buildXMLObject(NameID.DEFAULT_ELEMENT_NAME);
+    nameid.setFormat("urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress");
+    nameid.setValue("j.doe@company.com");
 
-      NameIDPolicyBuilder nameIdPolicyBuilder = new NameIDPolicyBuilder();
-      NameIDPolicy nameIdPolicy = nameIdPolicyBuilder.buildObject();
-      if (StringUtils.isNotEmpty(nameIdFormat)) {
-        nameIdPolicy.setFormat(nameIdFormat);
-      }
-      nameIdPolicy.setSPNameQualifier(issuerString);
-      nameIdPolicy.setAllowCreate(true);
-      AuthnContextClassRefBuilder authnContextClassRefBuilder = new AuthnContextClassRefBuilder();
-      AuthnContextClassRef authnContextClassRef = authnContextClassRefBuilder.buildObject("urn:oasis:names:tc:SAML:2.0:assertion", "AuthnContextClassRef", "saml");
-      authnContextClassRef.setAuthnContextClassRef("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport");
-      RequestedAuthnContextBuilder requestedAuthnContextBuilder = new RequestedAuthnContextBuilder();
-      RequestedAuthnContext requestedAuthnContext = requestedAuthnContextBuilder.buildObject();
-      requestedAuthnContext.setComparison(AuthnContextComparisonTypeEnumeration.EXACT);
-      requestedAuthnContext.getAuthnContextClassRefs().add(authnContextClassRef);
-      AuthnRequestBuilder authRequestBuilder = new AuthnRequestBuilder();
-      AuthnRequest authRequest = authRequestBuilder.buildObject("urn:oasis:names:tc:SAML:2.0:protocol", "AuthnRequest", "samlp");
-      authRequest.setForceAuthn(false);
-      authRequest.setIsPassive(false);
-      authRequest.setIssueInstant(new DateTime());
-      authRequest.setProtocolBinding("urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST");
-      authRequest.setAssertionConsumerServiceURL(assertionConsumerServiceURL);
-      authRequest.setIssuer(issuer);
-      authRequest.setNameIDPolicy(nameIdPolicy);
-      authRequest.setRequestedAuthnContext(requestedAuthnContext);
-      authRequest.setID(randId);
-      authRequest.setVersion(SAMLVersion.VERSION_20);
-      Marshaller marshaller = org.opensaml.Configuration.getMarshallerFactory().getMarshaller(authRequest);
-      Element authDOM = marshaller.marshall(authRequest);
+    Subject subject = (Subject) buildXMLObject(Subject.DEFAULT_ELEMENT_NAME);
+    subject.setNameID(nameid);
+
+    Audience audience = (Audience) buildXMLObject(Audience.DEFAULT_ELEMENT_NAME);
+    audience.setAudienceURI("urn:foo:sp.example.org");
+
+    AudienceRestriction ar = (AudienceRestriction) buildXMLObject(AudienceRestriction.DEFAULT_ELEMENT_NAME);
+    ar.getAudiences().add(audience);
+
+    Conditions conditions = (Conditions) buildXMLObject(Conditions.DEFAULT_ELEMENT_NAME);
+    conditions.getAudienceRestrictions().add(ar);
+
+    AuthnContextClassRef classRef = (AuthnContextClassRef) buildXMLObject(AuthnContextClassRef.DEFAULT_ELEMENT_NAME);
+    classRef.setAuthnContextClassRef("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport");
+
+    RequestedAuthnContext rac = (RequestedAuthnContext) buildXMLObject(RequestedAuthnContext.DEFAULT_ELEMENT_NAME);
+    rac.getAuthnContextClassRefs().add(classRef);
+
+    AuthnRequest request = (AuthnRequest) buildXMLObject(AuthnRequest.DEFAULT_ELEMENT_NAME);
+    request.setSubject(subject);
+    request.setConditions(conditions);
+    request.setRequestedAuthnContext(rac);
+
+    request.setForceAuthn(XSBooleanValue.valueOf("true"));
+    request.setAssertionConsumerServiceURL("http://www.example.com/");
+    request.setAttributeConsumingServiceIndex(0);
+    request.setProviderName("SomeProvider");
+    request.setID("abe567de6");
+    request.setVersion(SAMLVersion.VERSION_20);
+    request.setIssueInstant(new DateTime(2005, 1, 31, 12, 0, 0, 0, ISOChronology.getInstanceUTC()));
+    request.setDestination("http://www.example.com/");
+    request.setConsent("urn:oasis:names:tc:SAML:2.0:consent:obtained");
+
+    Marshaller marshaller = org.opensaml.Configuration.getMarshallerFactory().getMarshaller(request);
+    Element authDOM;
+    try {
+      authDOM = marshaller.marshall(request);
       StringWriter rspWrt = new StringWriter();
       XMLHelper.writeNode(authDOM, rspWrt);
       String messageXML = rspWrt.toString();
-      samlRequest = GZipUtil.gzip(messageXML);
+      System.out.println(messageXML);
+      String samlRequest = GZipUtil.gzip(messageXML);
       return Base64.encodeBytes(samlRequest.getBytes(), Base64.DONT_BREAK_LINES);
     } catch (MarshallingException e) {
       e.printStackTrace();
@@ -150,7 +151,7 @@ public class SamlService {
    * 
    * @return
    */
-  public String getResponse() {
+  public String buildResponse() {
     Response response = (Response) buildXMLObject(Response.DEFAULT_ELEMENT_NAME);
     String responseID = UUID.randomUUID().toString().replace("-", "");
     response.setID(responseID);
@@ -243,8 +244,29 @@ public class SamlService {
       StringWriter rspWrt = new StringWriter();
       XMLHelper.writeNode(authDOM, rspWrt);
       String messageXML = rspWrt.toString();
+      System.out.println(messageXML);
       String samlResponse = GZipUtil.gzip(messageXML);
       return Base64.encodeBytes(samlResponse.getBytes(), Base64.DONT_BREAK_LINES);
+    } catch (MarshallingException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+  
+  public String buildArtifact() {
+    Artifact artifact = (Artifact) buildXMLObject(Artifact.DEFAULT_ELEMENT_NAME);
+    artifact.setArtifact("new String Name");
+    
+    Marshaller marshaller = org.opensaml.Configuration.getMarshallerFactory().getMarshaller(artifact);
+    Element authDOM;
+    try {
+      authDOM = marshaller.marshall(artifact);
+      StringWriter rspWrt = new StringWriter();
+      XMLHelper.writeNode(authDOM, rspWrt);
+      String messageXML = rspWrt.toString();
+      System.out.println(messageXML);
+      String samlArtifact = GZipUtil.gzip(messageXML);
+      return Base64.encodeBytes(samlArtifact.getBytes(), Base64.DONT_BREAK_LINES);
     } catch (MarshallingException e) {
       e.printStackTrace();
     }

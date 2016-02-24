@@ -20,7 +20,7 @@
 	<!-- Spring MVC配置 -->
 	<context:annotation-config />
 	<!--扫描注解 -->
-	<context:component-scan base-package="org.sms.project,org.sms.organization" />
+	<context:component-scan base-package="org.sms" />
 	<!--默认的mvc注解映射的支持 -->
 	<mvc:annotation-driven />
 	<!-- 加载配置文件 -->
