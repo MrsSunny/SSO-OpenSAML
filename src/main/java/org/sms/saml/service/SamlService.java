@@ -9,23 +9,38 @@ import java.security.Security;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.List;
+import java.util.UUID;
+
 import javax.xml.namespace.QName;
+
 import org.apache.commons.lang.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.joda.time.DateTime;
+import org.joda.time.chrono.ISOChronology;
 import org.opensaml.DefaultBootstrap;
 import org.opensaml.common.SAMLVersion;
 import org.opensaml.common.xml.SAMLConstants;
 import org.opensaml.saml2.core.Assertion;
 import org.opensaml.saml2.core.Attribute;
 import org.opensaml.saml2.core.AttributeStatement;
+import org.opensaml.saml2.core.AttributeValue;
+import org.opensaml.saml2.core.Audience;
+import org.opensaml.saml2.core.AudienceRestriction;
+import org.opensaml.saml2.core.AuthnContext;
 import org.opensaml.saml2.core.AuthnContextClassRef;
 import org.opensaml.saml2.core.AuthnContextComparisonTypeEnumeration;
 import org.opensaml.saml2.core.AuthnRequest;
+import org.opensaml.saml2.core.AuthnStatement;
+import org.opensaml.saml2.core.Conditions;
 import org.opensaml.saml2.core.Issuer;
+import org.opensaml.saml2.core.NameID;
 import org.opensaml.saml2.core.NameIDPolicy;
 import org.opensaml.saml2.core.RequestedAuthnContext;
 import org.opensaml.saml2.core.Response;
+import org.opensaml.saml2.core.Status;
+import org.opensaml.saml2.core.StatusCode;
+import org.opensaml.saml2.core.Subject;
+import org.opensaml.saml2.core.SubjectConfirmation;
 import org.opensaml.saml2.core.impl.AuthnContextClassRefBuilder;
 import org.opensaml.saml2.core.impl.AuthnRequestBuilder;
 import org.opensaml.saml2.core.impl.IssuerBuilder;
@@ -39,6 +54,8 @@ import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.opensaml.xml.Configuration;
 import org.opensaml.xml.ConfigurationException;
 import org.opensaml.xml.XMLObject;
+import org.opensaml.xml.XMLObjectBuilder;
+import org.opensaml.xml.XMLObjectBuilderFactory;
 import org.opensaml.xml.encryption.DecryptionException;
 import org.opensaml.xml.encryption.InlineEncryptedKeyResolver;
 import org.opensaml.xml.io.Marshaller;
@@ -47,6 +64,7 @@ import org.opensaml.xml.io.Unmarshaller;
 import org.opensaml.xml.io.UnmarshallingException;
 import org.opensaml.xml.parse.BasicParserPool;
 import org.opensaml.xml.parse.XMLParserException;
+import org.opensaml.xml.schema.XSString;
 import org.opensaml.xml.security.keyinfo.StaticKeyInfoCredentialResolver;
 import org.opensaml.xml.security.x509.BasicX509Credential;
 import org.opensaml.xml.signature.Signature;
@@ -55,10 +73,8 @@ import org.opensaml.xml.signature.X509Data;
 import org.opensaml.xml.util.Base64;
 import org.opensaml.xml.util.XMLHelper;
 import org.opensaml.xml.validation.ValidationException;
-import org.sms.saml.core.SamlException;
 import org.sms.saml.core.SamlUtils;
 import org.sms.saml.dao.SamlDao;
-import org.sms.saml.entity.IdentityProvider;
 import org.sms.util.GZipUtil;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -68,6 +84,8 @@ import org.w3c.dom.Element;
 public class SamlService {
 
   private SamlDao samlDao;
+
+  protected static XMLObjectBuilderFactory builderFactory = Configuration.getBuilderFactory();;
 
   private String issuerString = "http://localhost:9080/ServiceProvider/";
 
@@ -80,7 +98,7 @@ public class SamlService {
     Security.addProvider(new BouncyCastleProvider());
   }
 
-  public String generateSAMLRequest(String assertionConsumerServiceURL, String nameIdFormat) {
+  public String getSAMLRequest(String assertionConsumerServiceURL, String nameIdFormat) {
     String samlRequest = "";
     try {
       String randId = "A71AB3E13";
@@ -120,16 +138,127 @@ public class SamlService {
       XMLHelper.writeNode(authDOM, rspWrt);
       String messageXML = rspWrt.toString();
       samlRequest = GZipUtil.gzip(messageXML);
-      samlRequest = Base64.encodeBytes(samlRequest.getBytes(), Base64.DONT_BREAK_LINES);
+      return Base64.encodeBytes(samlRequest.getBytes(), Base64.DONT_BREAK_LINES);
     } catch (MarshallingException e) {
       e.printStackTrace();
     }
-    return samlRequest;
+    return null;
+  }
+
+  /**
+   * 根据登录情况返回AuthSamlResponse
+   * 
+   * @return
+   */
+  public String getResponse() {
+    Response response = (Response) buildXMLObject(Response.DEFAULT_ELEMENT_NAME);
+    String responseID = UUID.randomUUID().toString().replace("-", "");
+    response.setID(responseID);
+    response.setInResponseTo("_abcdef123456");
+    response.setIssueInstant(new DateTime(2006, 1, 26, 13, 35, 5, 0, ISOChronology.getInstanceUTC()));
+
+    Issuer rIssuer = (Issuer) buildXMLObject(Issuer.DEFAULT_ELEMENT_NAME);
+    rIssuer.setFormat("urn:oasis:names:tc:SAML:2.0:nameid-format:entity");
+    rIssuer.setValue("https://idp.example.org");
+
+    Status status = (Status) buildXMLObject(Status.DEFAULT_ELEMENT_NAME);
+    StatusCode statusCode = (StatusCode) buildXMLObject(StatusCode.DEFAULT_ELEMENT_NAME);
+    statusCode.setValue("urn:oasis:names:tc:SAML:2.0:status:Success");
+
+    Assertion assertion = (Assertion) buildXMLObject(Assertion.DEFAULT_ELEMENT_NAME);
+    assertion.setID("_a75adf55-01d7-40cc-929f-dbd8372ebdfc");
+    assertion.setIssueInstant(new DateTime(2006, 1, 26, 13, 35, 5, 0, ISOChronology.getInstanceUTC()));
+
+    Issuer aIssuer = (Issuer) buildXMLObject(Issuer.DEFAULT_ELEMENT_NAME);
+    aIssuer.setFormat("urn:oasis:names:tc:SAML:2.0:nameid-format:entity");
+    aIssuer.setValue("https://idp.example.org");
+
+    Subject subject = (Subject) buildXMLObject(Subject.DEFAULT_ELEMENT_NAME);
+    NameID nameID = (NameID) buildXMLObject(NameID.DEFAULT_ELEMENT_NAME);
+    nameID.setFormat("urn:oasis:names:tc:SAML:2.0:nameid-format:transient");
+    nameID.setValue("_820d2843-2342-8236-ad28-8ac94fb3e6a1");
+
+    SubjectConfirmation subjectConfirmation = (SubjectConfirmation) buildXMLObject(SubjectConfirmation.DEFAULT_ELEMENT_NAME);
+    subjectConfirmation.setMethod("urn:oasis:names:tc:SAML:2.0:cm:bearer");
+
+    Conditions conditions = (Conditions) buildXMLObject(Conditions.DEFAULT_ELEMENT_NAME);
+    conditions.setNotBefore(new DateTime(2006, 1, 26, 13, 35, 5, 0, ISOChronology.getInstanceUTC()));
+    conditions.setNotOnOrAfter(new DateTime(2006, 1, 26, 13, 45, 5, 0, ISOChronology.getInstanceUTC()));
+
+    AudienceRestriction audienceRestriction = (AudienceRestriction) buildXMLObject(AudienceRestriction.DEFAULT_ELEMENT_NAME);
+    Audience audience = (Audience) buildXMLObject(Audience.DEFAULT_ELEMENT_NAME);
+    audience.setAudienceURI("https://sp.example.org");
+
+    AuthnStatement authnStatement = (AuthnStatement) buildXMLObject(AuthnStatement.DEFAULT_ELEMENT_NAME);
+    authnStatement.setAuthnInstant(new DateTime(2006, 1, 26, 13, 35, 5, 0, ISOChronology.getInstanceUTC()));
+
+    AuthnContext authnContext = (AuthnContext) buildXMLObject(AuthnContext.DEFAULT_ELEMENT_NAME);
+    AuthnContextClassRef classRef = (AuthnContextClassRef) buildXMLObject(AuthnContextClassRef.DEFAULT_ELEMENT_NAME);
+    classRef.setAuthnContextClassRef("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport");
+
+    AttributeStatement attribStatement = (AttributeStatement) buildXMLObject(AttributeStatement.DEFAULT_ELEMENT_NAME);
+    XMLObjectBuilder<?> stringBuilder = builderFactory.getBuilder(XSString.TYPE_NAME);
+    Attribute fooAttrib = (Attribute) buildXMLObject(Attribute.DEFAULT_ELEMENT_NAME);
+    fooAttrib.setFriendlyName("fooAttrib");
+    fooAttrib.setName("urn:foo:attrib");
+    fooAttrib.setNameFormat("urn:oasis:names:tc:SAML:2.0:attrname-format:uri");
+    XSString fooAttribValue = null;
+    fooAttribValue = (XSString) stringBuilder.buildObject(AttributeValue.DEFAULT_ELEMENT_NAME, XSString.TYPE_NAME);
+    fooAttribValue.setValue("SomeValue");
+    fooAttrib.getAttributeValues().add(fooAttribValue);
+    fooAttribValue = (XSString) stringBuilder.buildObject(AttributeValue.DEFAULT_ELEMENT_NAME, XSString.TYPE_NAME);
+    fooAttribValue.setValue("SomeOtherValue");
+    fooAttrib.getAttributeValues().add(fooAttribValue);
+
+    Attribute ldapAttrib = (Attribute) buildXMLObject(Attribute.DEFAULT_ELEMENT_NAME);
+    ldapAttrib.setFriendlyName("eduPersonPrincipalName");
+    ldapAttrib.setName("urn:oid:1.3.6.1.4.1.5923.1.1.1.6");
+    ldapAttrib.setNameFormat("urn:oasis:names:tc:SAML:2.0:attrname-format:uri");
+    XSString ldapAttribValue = (XSString) stringBuilder.buildObject(AttributeValue.DEFAULT_ELEMENT_NAME, XSString.TYPE_NAME);
+    ldapAttribValue.setValue("j.doe@idp.example.org");
+    ldapAttrib.getAttributeValues().add(ldapAttribValue);
+    response.setIssuer(rIssuer);
+    status.setStatusCode(statusCode);
+    response.setStatus(status);
+    response.getAssertions().add(assertion);
+    assertion.setIssuer(aIssuer);
+    subject.setNameID(nameID);
+    subject.getSubjectConfirmations().add(subjectConfirmation);
+    assertion.setSubject(subject);
+
+    audienceRestriction.getAudiences().add(audience);
+    conditions.getAudienceRestrictions().add(audienceRestriction);
+    assertion.setConditions(conditions);
+    authnContext.setAuthnContextClassRef(classRef);
+    authnStatement.setAuthnContext(authnContext);
+    assertion.getAuthnStatements().add(authnStatement);
+    attribStatement.getAttributes().add(fooAttrib);
+    attribStatement.getAttributes().add(ldapAttrib);
+    assertion.getAttributeStatements().add(attribStatement);
+
+    Marshaller marshaller = org.opensaml.Configuration.getMarshallerFactory().getMarshaller(response);
+    Element authDOM;
+    try {
+      authDOM = marshaller.marshall(response);
+      StringWriter rspWrt = new StringWriter();
+      XMLHelper.writeNode(authDOM, rspWrt);
+      String messageXML = rspWrt.toString();
+      String samlResponse = GZipUtil.gzip(messageXML);
+      return Base64.encodeBytes(samlResponse.getBytes(), Base64.DONT_BREAK_LINES);
+    } catch (MarshallingException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 
   public String decodeSAMLResponse(String samlResponse) {
     byte[] decodedBytes = Base64.decode(samlResponse);
     return new String(decodedBytes);
+  }
+
+  public XMLObject buildXMLObject(QName objectQName) {
+    XMLObjectBuilder<?> builder = Configuration.getBuilderFactory().getBuilder(objectQName);
+    return builder.buildObject(objectQName.getNamespaceURI(), objectQName.getLocalPart(), objectQName.getPrefix());
   }
 
   public String validateSAMLResponse(String samlResponse, String samlCert) throws Exception {
@@ -159,7 +288,7 @@ public class SamlService {
       KeyFactory keyFactory = KeyFactory.getInstance("RSA");
       PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
 
-      //Setup validation
+      // Setup validation
       BasicX509Credential publicCredential = new BasicX509Credential();
       publicCredential.setPublicKey(publicKey);
       SignatureValidator signatureValidator = new SignatureValidator(publicCredential);
@@ -227,29 +356,6 @@ public class SamlService {
     return null;
   }
 
-  public String validateSAMLResponse(String sAMLResponse, List<IdentityProvider> identityProviders) throws SamlException {
-    String samlResponse = "";
-    StringBuilder samlErrors = new StringBuilder();
-    for (IdentityProvider identityProvider : identityProviders) {
-      try {
-        samlResponse = validateSAMLResponse(sAMLResponse, SamlUtils.extractCert(identityProvider.getMetaData()));
-        if (samlResponse.length() > 0) {
-          return samlResponse;
-        }
-      } catch (Exception e) {
-        samlErrors.append(identityProvider.getHorizonUrl());
-        samlErrors.append(":");
-        samlErrors.append(e.getLocalizedMessage());
-        samlErrors.append("\n");
-      }
-    }
-    throw new SamlException("Cannot validate against any IDP \n(" + samlErrors.toString() + ")");
-  }
-  
-  public String buildResponseAuthn() {
-    return null;
-  }
-
   protected static XMLObject unmarshallElement(String authReauest) {
     try {
       BasicParserPool parser;
@@ -282,13 +388,13 @@ public class SamlService {
     }
     return request;
   }
-  
+
   public String consumerServiceURL(AuthnRequest request) {
     if (null == request)
       return null;
     return request.getAssertionConsumerServiceURL();
   }
-  
+
   public boolean checkUrl(String url) {
     return samlDao.checkUrl(url);
   }

@@ -1,20 +1,16 @@
 package org.sms.component.idfactory;
 
+import java.util.UUID;
+
 
 /**
  * @author zhenxing.Liu
  */
-public enum UUIDFactory implements KeyFactory {
+public enum UUIDFactory {
   
   INSTANCE;
   
-  @Override
-  public long getPrimaryKey(String tableName) {
-    return 0;
-  }
-
-  @Override
-  public long getPrimaryKey(String groupName, String tableName) {
-    return 0;
+  public String getUUID(String tableName) {
+    return UUID.randomUUID().toString().replace("-", "");
   }
 }

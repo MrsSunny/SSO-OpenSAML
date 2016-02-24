@@ -22,9 +22,6 @@ public enum IDFactory {
     case CACHEDB:
       factory = CacheDbFactory.INSTANCE;
       break;
-    case DEFAULT:
-      factory = UUIDFactory.INSTANCE;
-      break;
     default:
       throw new RuntimeException("不能解析的主键获取类型");
     }
