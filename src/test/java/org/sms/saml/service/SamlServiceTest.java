@@ -1,5 +1,7 @@
 package org.sms.saml.service;
 
+import java.util.UUID;
+
 import org.junit.Test;
 import base.BaseTest;
 import static org.junit.Assert.*;
@@ -34,7 +36,8 @@ public class SamlServiceTest extends BaseTest {
   
   @Test
   public void testBuildArtifact() {
-    String samlResponse = samlService.buildArtifact();
-    assertNotNull("response is null", samlResponse);
+    String artifactId = UUID.randomUUID().toString().replace("-", "");
+    String samlArtifact = samlService.buildArtifact(artifactId);
+    assertNotNull("response is null", samlArtifact);
   }
 }

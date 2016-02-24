@@ -130,7 +130,7 @@ public class SamlService {
     request.setDestination("http://www.example.com/");
     request.setConsent("urn:oasis:names:tc:SAML:2.0:consent:obtained");
 
-    Marshaller marshaller = org.opensaml.Configuration.getMarshallerFactory().getMarshaller(request);
+    Marshaller marshaller = Configuration.getMarshallerFactory().getMarshaller(request);
     Element authDOM;
     try {
       authDOM = marshaller.marshall(request);
@@ -237,7 +237,7 @@ public class SamlService {
     attribStatement.getAttributes().add(ldapAttrib);
     assertion.getAttributeStatements().add(attribStatement);
 
-    Marshaller marshaller = org.opensaml.Configuration.getMarshallerFactory().getMarshaller(response);
+    Marshaller marshaller = Configuration.getMarshallerFactory().getMarshaller(response);
     Element authDOM;
     try {
       authDOM = marshaller.marshall(response);
@@ -253,10 +253,9 @@ public class SamlService {
     return null;
   }
   
-  public String buildArtifact() {
+  public String buildArtifact(String artifactId) {
     Artifact artifact = (Artifact) buildXMLObject(Artifact.DEFAULT_ELEMENT_NAME);
-    artifact.setArtifact("new String Name");
-    
+    artifact.setArtifact(artifactId);
     Marshaller marshaller = org.opensaml.Configuration.getMarshallerFactory().getMarshaller(artifact);
     Element authDOM;
     try {
