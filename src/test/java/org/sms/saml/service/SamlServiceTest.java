@@ -1,10 +1,9 @@
 package org.sms.saml.service;
 
+import static org.junit.Assert.assertNotNull;
 import java.util.UUID;
-
 import org.junit.Test;
 import base.BaseTest;
-import static org.junit.Assert.*;
 
 /**
  * @author Sunny
@@ -39,5 +38,17 @@ public class SamlServiceTest extends BaseTest {
     String artifactId = UUID.randomUUID().toString().replace("-", "");
     String samlArtifact = samlService.buildArtifact(artifactId);
     assertNotNull("response is null", samlArtifact);
+  }
+  
+  @Test
+  public void testGetRSAPublicKey() {
+    String idpXmlFile = "/opensaml/IDPSSODescriptor.xml";
+    samlService.getRSAPublicKey(idpXmlFile);
+  }
+  
+  @Test
+  public void testGetRSAPrivateKey() {
+    String spXmlFile = "/opensaml/SPSSODescriptor.xml";
+    samlService.getRSAPrivateKey(spXmlFile);
   }
 }

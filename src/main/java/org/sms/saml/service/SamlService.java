@@ -3,9 +3,11 @@ package org.sms.saml.service;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.security.KeyException;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.Security;
+import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.List;
@@ -44,6 +46,7 @@ import org.opensaml.saml2.metadata.EntityDescriptor;
 import org.opensaml.saml2.metadata.IDPSSODescriptor;
 import org.opensaml.saml2.metadata.KeyDescriptor;
 import org.opensaml.saml2.metadata.SPSSODescriptor;
+import org.opensaml.saml2.metadata.SSODescriptor;
 import org.opensaml.saml2.metadata.provider.HTTPMetadataProvider;
 import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.opensaml.xml.Configuration;
@@ -61,10 +64,13 @@ import org.opensaml.xml.parse.BasicParserPool;
 import org.opensaml.xml.parse.XMLParserException;
 import org.opensaml.xml.schema.XSBooleanValue;
 import org.opensaml.xml.schema.XSString;
+import org.opensaml.xml.security.SecurityHelper;
 import org.opensaml.xml.security.keyinfo.StaticKeyInfoCredentialResolver;
 import org.opensaml.xml.security.x509.BasicX509Credential;
+import org.opensaml.xml.signature.KeyInfo;
 import org.opensaml.xml.signature.Signature;
 import org.opensaml.xml.signature.SignatureValidator;
+import org.opensaml.xml.signature.X509Certificate;
 import org.opensaml.xml.signature.X509Data;
 import org.opensaml.xml.util.Base64;
 import org.opensaml.xml.util.XMLHelper;
@@ -272,16 +278,47 @@ public class SamlService {
     return null;
   }
 
-  public void buildIDPSSODescriptor() {
-    String singleElementFile = "";
-    IDPSSODescriptor descriptor = (IDPSSODescriptor) unmarshallElement(singleElementFile);
-    System.out.println(descriptor);
+  public SSODescriptor buildSSODescriptor(String xmlFilePath, Class<?> descriptorType) {
+    EntityDescriptor entityDescriptor = (EntityDescriptor) unmarshallElementWithXMLFile(xmlFilePath);
+    if (descriptorType.getClass().getName().equals(IDPSSODescriptor.class.getName())) {
+      return entityDescriptor.getIDPSSODescriptor("urn:oasis:names:tc:SAML:2.0:protocol");
+    }
+    return entityDescriptor.getSPSSODescriptor("urn:oasis:names:tc:SAML:2.0:protocol");
   }
-
-  public void buildSPSSODescriptor() {
-    String singleElementFile = "";
-    SPSSODescriptor descriptor = (SPSSODescriptor) unmarshallElement(singleElementFile);
-    System.out.println(descriptor);
+  
+  public PublicKey getRSAPublicKey(String xmlFilePath) {
+    SSODescriptor _SPSSODescriptor = buildSSODescriptor(xmlFilePath, SPSSODescriptor.class);
+    List<KeyDescriptor> keyDescriptors = _SPSSODescriptor.getKeyDescriptors();
+    KeyDescriptor keyDescriptor = keyDescriptors.get(0);
+    KeyInfo keyInfo = keyDescriptor.getKeyInfo();
+    List<X509Data> x509Datas = keyInfo.getX509Datas();
+    List<X509Certificate> x509Certificates = x509Datas.get(0).getX509Certificates();
+    X509Certificate x509Certificate = x509Certificates.get(0);
+    String _x509Value = x509Certificate.getValue();
+    try {
+      java.security.cert.X509Certificate cert = SecurityHelper.buildJavaX509Cert(_x509Value);
+      return cert.getPublicKey();
+    } catch (CertificateException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+  
+  public RSAPrivateKey getRSAPrivateKey(String xmlFilePath) {
+    SSODescriptor _IDPSSODescriptor = buildSSODescriptor(xmlFilePath, IDPSSODescriptor.class);
+    List<KeyDescriptor> keyDescriptors = _IDPSSODescriptor.getKeyDescriptors();
+    KeyDescriptor keyDescriptor = keyDescriptors.get(0);
+    KeyInfo keyInfo = keyDescriptor.getKeyInfo();
+    List<X509Data> x509Datas = keyInfo.getX509Datas();
+    List<X509Certificate> x509Certificates = x509Datas.get(0).getX509Certificates();
+    X509Certificate x509Certificate = x509Certificates.get(0);
+    String _x509Value = x509Certificate.getValue();
+    try {
+      return SecurityHelper.buildJavaRSAPrivateKey(_x509Value);
+    } catch (KeyException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 
   public String decodeSAMLResponse(String samlResponse) {
@@ -401,6 +438,23 @@ public class SamlService {
     return null;
   }
 
+  protected XMLObject unmarshallElementWithXMLFile(String elementFile) {
+    try {
+      BasicParserPool parser;
+      parser = new BasicParserPool();
+      parser.setNamespaceAware(true);
+      Document doc = parser.parse(SamlService.class.getResourceAsStream(elementFile));
+      Element samlElement = doc.getDocumentElement();
+      Unmarshaller unmarshaller = Configuration.getUnmarshallerFactory().getUnmarshaller(samlElement);
+      return unmarshaller.unmarshall(samlElement);
+    } catch (XMLParserException e) {
+      e.printStackTrace();
+    } catch (UnmarshallingException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
   public AuthnRequest getAuthRequest(String authRequest) {
     AuthnRequest request = null;
     try {
@@ -414,7 +468,8 @@ public class SamlService {
   }
 
   public String consumerServiceURL(AuthnRequest request) {
-    if (null == request) return null;
+    if (null == request)
+      return null;
     return request.getAssertionConsumerServiceURL();
   }
 
