@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+	entityID="www.soaer.com">
+	<md:SPSSODescriptor AuthnRequestsSigned="true"
+		WantAssertionsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+		<md:KeyDescriptor use="signing">
+			<ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+				<ds:X509Data>
+					<ds:X509Certificate>
+					    MIIDqDCCApCgAwIBAgIBATANBgkqhkiG9w0BAQsFADBZMQswCQYDVQQGEwJBVTET
+						MBEGA1UECAwKU29tZS1TdGF0ZTEhMB8GA1UECgwYSW50ZXJuZXQgV2lkZ2l0cyBQ
+						dHkgTHRkMRIwEAYDVQQDDAlzb2Flci5jb20wHhcNMTYwMjIzMDg0MTE4WhcNMjEw
+						MjIyMDg0MTE4WjBZMQswCQYDVQQGEwJBVTETMBEGA1UECAwKU29tZS1TdGF0ZTEh
+						MB8GA1UECgwYSW50ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMRIwEAYDVQQDDAlzb2Fl
+						ci5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC+RvyHfUBABcjt
+						VVcrxHHK4tTRB5B92zjyVlUN8rTzzSxFOc3CtgL5DI8Yk3iUYjBpRN3QHhwNnBrX
+						bSN3SUAOVHgrbnhMNlU73I868k9+sEyMeFtngtCwO/AFsC1qF1SPc6m6zSn5BCiq
+						d415FcHrC+3dJO25DdZyOCOOOxrC4bURSXNKngKavsCrbJVoUphy1UiQ+AyRhhH/
+						Ui3Dz+HzVx97/gvHtNEOMtB8ZQ8dm7+vGqfigTy3EfYR3cbR/CbWzg+kF4cMy/IX
+						DP7qtP7Ph8r6ATjS8JQ/QbXVNQVYOxUj79U/XlyrExAk9c9YYGdjQlUHHNBdhdlC
+						4Q8N4RzBAgMBAAGjezB5MAkGA1UdEwQCMAAwLAYJYIZIAYb4QgENBB8WHU9wZW5T
+						U0wgR2VuZXJhdGVkIENlcnRpZmljYXRlMB0GA1UdDgQWBBRM7iMCWHPYFOnxvq8Z
+						4LVTOo8rMzAfBgNVHSMEGDAWgBQ8g5hCWNU413KFNueYN52EvSOkYjANBgkqhkiG
+						9w0BAQsFAAOCAQEAr0Zi9ThkdFDuxDzlLOluee4Q9VyN8C60MfPAKcvazmOs1dvn
+						QnWNc0k7h3q6AQHyyZ788dJMjYZiZkyoI9yngfeh4IhIUhrmrTWXrdLOkuIKHX+u
+						asjYKpG8Hbq9QbTWw/SIkJUPDcqO1xJj15CGcmlE4NahmglC+4Ks2sgG+Isc6JhO
+						ceHzDEFnSR0HwS+NOZ7uqtIO8LyeEtSrFtyh8uMRfZj4MPBYqILH3Y0VqKkgoAFY
+						0HvusopOCzQ19eBNnE3ra0PrulrSGYC3FpUOTd/Sk1dpCXdP04rDhUAWoy5CzDCn
+						YMHpcb766ZSzcIGeUArI7/koJhACgcMXbc+RhQ==
+					</ds:X509Certificate>
+				</ds:X509Data>
+			</ds:KeyInfo>
+		</md:KeyDescriptor>
+		<NameIDFormat xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata">urn:name:format</NameIDFormat>
+		<md:AttributeConsumingService isDefault="true" index="1">
+			<md:ServiceName xml:lang="en">Service Provider</md:ServiceName>
+			<md:RequestedAttribute
+				NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic" Name="firstName"
+				FriendlyName="firstName">
+			</md:RequestedAttribute>
+			<md:RequestedAttribute
+				NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic" Name="lastName"
+				FriendlyName="lastName">
+			</md:RequestedAttribute>
+		</md:AttributeConsumingService>
+		<md:AssertionConsumerService
+			Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="login.soaer.com"
+			index="0" isDefault="true" />
+	</md:SPSSODescriptor>
+</md:EntityDescriptor>

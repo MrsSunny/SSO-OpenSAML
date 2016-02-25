@@ -41,7 +41,9 @@ import org.opensaml.saml2.core.Subject;
 import org.opensaml.saml2.core.SubjectConfirmation;
 import org.opensaml.saml2.encryption.Decrypter;
 import org.opensaml.saml2.metadata.EntityDescriptor;
+import org.opensaml.saml2.metadata.IDPSSODescriptor;
 import org.opensaml.saml2.metadata.KeyDescriptor;
+import org.opensaml.saml2.metadata.SPSSODescriptor;
 import org.opensaml.saml2.metadata.provider.HTTPMetadataProvider;
 import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.opensaml.xml.Configuration;
@@ -75,7 +77,7 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-@Service("samlService")
+@Service
 public class SamlService {
 
   @Autowired
@@ -244,7 +246,6 @@ public class SamlService {
       StringWriter rspWrt = new StringWriter();
       XMLHelper.writeNode(authDOM, rspWrt);
       String messageXML = rspWrt.toString();
-      System.out.println(messageXML);
       String samlResponse = GZipUtil.gzip(messageXML);
       return Base64.encodeBytes(samlResponse.getBytes(), Base64.DONT_BREAK_LINES);
     } catch (MarshallingException e) {
@@ -252,7 +253,7 @@ public class SamlService {
     }
     return null;
   }
-  
+
   public String buildArtifact(String artifactId) {
     Artifact artifact = (Artifact) buildXMLObject(Artifact.DEFAULT_ELEMENT_NAME);
     artifact.setArtifact(artifactId);
@@ -263,13 +264,24 @@ public class SamlService {
       StringWriter rspWrt = new StringWriter();
       XMLHelper.writeNode(authDOM, rspWrt);
       String messageXML = rspWrt.toString();
-      System.out.println(messageXML);
       String samlArtifact = GZipUtil.gzip(messageXML);
       return Base64.encodeBytes(samlArtifact.getBytes(), Base64.DONT_BREAK_LINES);
     } catch (MarshallingException e) {
       e.printStackTrace();
     }
     return null;
+  }
+
+  public void buildIDPSSODescriptor() {
+    String singleElementFile = "";
+    IDPSSODescriptor descriptor = (IDPSSODescriptor) unmarshallElement(singleElementFile);
+    System.out.println(descriptor);
+  }
+
+  public void buildSPSSODescriptor() {
+    String singleElementFile = "";
+    SPSSODescriptor descriptor = (SPSSODescriptor) unmarshallElement(singleElementFile);
+    System.out.println(descriptor);
   }
 
   public String decodeSAMLResponse(String samlResponse) {
@@ -337,17 +349,12 @@ public class SamlService {
         } catch (DecryptionException e) {
           throw e;
         }
-        // Extract attributes, log in output
         List<AttributeStatement> attributeStatements = decryptedAssertion.getAttributeStatements();
         for (int i = 0; i < attributeStatements.size(); i++) {
           List<Attribute> attributes = attributeStatements.get(i).getAttributes();
           for (int x = 0; x < attributes.size(); x++) {
-            // String strAttributeName =
-            // attributes.get(x).getDOM().getAttribute("Name");
             List<XMLObject> attributeValues = attributes.get(x).getAttributeValues();
             for (int y = 0; y < attributeValues.size(); y++) {
-              // String strAttributeValue =
-              // attributeValues.get(y).getDOM().getTextContent();
             }
           }
         }
@@ -385,8 +392,6 @@ public class SamlService {
       Document doc = (Document) parser.parse(new ByteArrayInputStream(authReauest.getBytes()));
       Element samlElement = (Element) doc.getDocumentElement();
       Unmarshaller unmarshaller = Configuration.getUnmarshallerFactory().getUnmarshaller(samlElement);
-      if (null == unmarshaller)
-        throw new RuntimeException("unmarshaller的值为空");
       return unmarshaller.unmarshall(samlElement);
     } catch (XMLParserException e) {
       e.printStackTrace();
@@ -397,22 +402,19 @@ public class SamlService {
   }
 
   public AuthnRequest getAuthRequest(String authRequest) {
-
-    AuthnRequest request;
+    AuthnRequest request = null;
     try {
       byte[] check = Base64.decode(authRequest);
       String gunZip = GZipUtil.gunzip(new String(check));
       request = (AuthnRequest) unmarshallElement(gunZip);
     } catch (Exception e) {
       e.printStackTrace();
-      return null;
     }
     return request;
   }
 
   public String consumerServiceURL(AuthnRequest request) {
-    if (null == request)
-      return null;
+    if (null == request) return null;
     return request.getAssertionConsumerServiceURL();
   }
 
