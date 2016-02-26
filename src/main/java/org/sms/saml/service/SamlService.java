@@ -1,26 +1,26 @@
 package org.sms.saml.service;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.security.KeyException;
-import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPrivateKey;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.List;
 import java.util.UUID;
 
+import javax.crypto.SecretKey;
 import javax.xml.namespace.QName;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
 import org.opensaml.DefaultBootstrap;
 import org.opensaml.common.SAMLVersion;
-import org.opensaml.common.xml.SAMLConstants;
 import org.opensaml.saml2.core.Artifact;
 import org.opensaml.saml2.core.Assertion;
 import org.opensaml.saml2.core.Attribute;
@@ -33,6 +33,7 @@ import org.opensaml.saml2.core.AuthnContextClassRef;
 import org.opensaml.saml2.core.AuthnRequest;
 import org.opensaml.saml2.core.AuthnStatement;
 import org.opensaml.saml2.core.Conditions;
+import org.opensaml.saml2.core.EncryptedAssertion;
 import org.opensaml.saml2.core.Issuer;
 import org.opensaml.saml2.core.NameID;
 import org.opensaml.saml2.core.RequestedAuthnContext;
@@ -42,12 +43,13 @@ import org.opensaml.saml2.core.StatusCode;
 import org.opensaml.saml2.core.Subject;
 import org.opensaml.saml2.core.SubjectConfirmation;
 import org.opensaml.saml2.encryption.Decrypter;
+import org.opensaml.saml2.encryption.Encrypter;
+import org.opensaml.saml2.encryption.Encrypter.KeyPlacement;
 import org.opensaml.saml2.metadata.EntityDescriptor;
 import org.opensaml.saml2.metadata.IDPSSODescriptor;
 import org.opensaml.saml2.metadata.KeyDescriptor;
 import org.opensaml.saml2.metadata.SPSSODescriptor;
 import org.opensaml.saml2.metadata.SSODescriptor;
-import org.opensaml.saml2.metadata.provider.HTTPMetadataProvider;
 import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.opensaml.xml.Configuration;
 import org.opensaml.xml.ConfigurationException;
@@ -55,8 +57,14 @@ import org.opensaml.xml.XMLObject;
 import org.opensaml.xml.XMLObjectBuilder;
 import org.opensaml.xml.XMLObjectBuilderFactory;
 import org.opensaml.xml.encryption.DecryptionException;
+import org.opensaml.xml.encryption.EncryptedKey;
+import org.opensaml.xml.encryption.EncryptionConstants;
+import org.opensaml.xml.encryption.EncryptionException;
+import org.opensaml.xml.encryption.EncryptionParameters;
 import org.opensaml.xml.encryption.InlineEncryptedKeyResolver;
+import org.opensaml.xml.encryption.KeyEncryptionParameters;
 import org.opensaml.xml.io.Marshaller;
+import org.opensaml.xml.io.MarshallerFactory;
 import org.opensaml.xml.io.MarshallingException;
 import org.opensaml.xml.io.Unmarshaller;
 import org.opensaml.xml.io.UnmarshallingException;
@@ -64,24 +72,30 @@ import org.opensaml.xml.parse.BasicParserPool;
 import org.opensaml.xml.parse.XMLParserException;
 import org.opensaml.xml.schema.XSBooleanValue;
 import org.opensaml.xml.schema.XSString;
+import org.opensaml.xml.security.SecurityException;
 import org.opensaml.xml.security.SecurityHelper;
+import org.opensaml.xml.security.credential.BasicCredential;
+import org.opensaml.xml.security.credential.Credential;
+import org.opensaml.xml.security.keyinfo.KeyInfoCredentialResolver;
 import org.opensaml.xml.security.keyinfo.StaticKeyInfoCredentialResolver;
-import org.opensaml.xml.security.x509.BasicX509Credential;
+import org.opensaml.xml.security.x509.X509Credential;
 import org.opensaml.xml.signature.KeyInfo;
 import org.opensaml.xml.signature.Signature;
-import org.opensaml.xml.signature.SignatureValidator;
+import org.opensaml.xml.signature.SignatureException;
+import org.opensaml.xml.signature.Signer;
 import org.opensaml.xml.signature.X509Certificate;
 import org.opensaml.xml.signature.X509Data;
+import org.opensaml.xml.signature.impl.SignatureBuilder;
 import org.opensaml.xml.util.Base64;
 import org.opensaml.xml.util.XMLHelper;
 import org.opensaml.xml.validation.ValidationException;
-import org.sms.saml.core.SamlUtils;
 import org.sms.saml.dao.SamlDao;
 import org.sms.util.GZipUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 @Service
 public class SamlService {
@@ -89,7 +103,9 @@ public class SamlService {
   @Autowired
   private SamlDao samlDao;
 
-  protected static XMLObjectBuilderFactory builderFactory = Configuration.getBuilderFactory();;
+  protected static XMLObjectBuilderFactory builderFactory = Configuration.getBuilderFactory();
+  private static String SIGNATURE_METHOD = "http://www.w3.org/2000/09/xmldsig#rsa-sha1";
+  private static String CANON_ALGORITHM = "http://www.w3.org/2001/10/xml-exc-c14n#";
 
   static {
     try {
@@ -104,30 +120,22 @@ public class SamlService {
     NameID nameid = (NameID) buildXMLObject(NameID.DEFAULT_ELEMENT_NAME);
     nameid.setFormat("urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress");
     nameid.setValue("j.doe@company.com");
-
     Subject subject = (Subject) buildXMLObject(Subject.DEFAULT_ELEMENT_NAME);
     subject.setNameID(nameid);
-
     Audience audience = (Audience) buildXMLObject(Audience.DEFAULT_ELEMENT_NAME);
     audience.setAudienceURI("urn:foo:sp.example.org");
-
     AudienceRestriction ar = (AudienceRestriction) buildXMLObject(AudienceRestriction.DEFAULT_ELEMENT_NAME);
     ar.getAudiences().add(audience);
-
     Conditions conditions = (Conditions) buildXMLObject(Conditions.DEFAULT_ELEMENT_NAME);
     conditions.getAudienceRestrictions().add(ar);
-
     AuthnContextClassRef classRef = (AuthnContextClassRef) buildXMLObject(AuthnContextClassRef.DEFAULT_ELEMENT_NAME);
     classRef.setAuthnContextClassRef("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport");
-
     RequestedAuthnContext rac = (RequestedAuthnContext) buildXMLObject(RequestedAuthnContext.DEFAULT_ELEMENT_NAME);
     rac.getAuthnContextClassRefs().add(classRef);
-
     AuthnRequest request = (AuthnRequest) buildXMLObject(AuthnRequest.DEFAULT_ELEMENT_NAME);
     request.setSubject(subject);
     request.setConditions(conditions);
     request.setRequestedAuthnContext(rac);
-
     request.setForceAuthn(XSBooleanValue.valueOf("true"));
     request.setAssertionConsumerServiceURL("http://www.example.com/");
     request.setAttributeConsumingServiceIndex(0);
@@ -145,13 +153,11 @@ public class SamlService {
       StringWriter rspWrt = new StringWriter();
       XMLHelper.writeNode(authDOM, rspWrt);
       String messageXML = rspWrt.toString();
-      System.out.println(messageXML);
       String samlRequest = GZipUtil.gzip(messageXML);
       return Base64.encodeBytes(samlRequest.getBytes(), Base64.DONT_BREAK_LINES);
     } catch (MarshallingException e) {
-      e.printStackTrace();
+      throw new RuntimeException(e);
     }
-    return null;
   }
 
   /**
@@ -160,16 +166,30 @@ public class SamlService {
    * @return
    */
   public String buildResponse() {
+    Response response = getResponse();
+    Marshaller marshaller = Configuration.getMarshallerFactory().getMarshaller(response);
+    try {
+      Element authDOM = marshaller.marshall(response);
+      StringWriter rspWrt = new StringWriter();
+      XMLHelper.writeNode(authDOM, rspWrt);
+      String messageXML = rspWrt.toString();
+      System.out.println(messageXML);
+      String samlResponse = GZipUtil.gzip(messageXML);
+      return Base64.encodeBytes(samlResponse.getBytes(), Base64.DONT_BREAK_LINES);
+    } catch (MarshallingException e) {
+      throw new RuntimeException("创建Response错误:" + e.getMessage());
+    }
+  }
+
+  public Response getResponse() {
     Response response = (Response) buildXMLObject(Response.DEFAULT_ELEMENT_NAME);
     String responseID = UUID.randomUUID().toString().replace("-", "");
     response.setID(responseID);
     response.setInResponseTo("_abcdef123456");
     response.setIssueInstant(new DateTime(2006, 1, 26, 13, 35, 5, 0, ISOChronology.getInstanceUTC()));
-
     Issuer rIssuer = (Issuer) buildXMLObject(Issuer.DEFAULT_ELEMENT_NAME);
     rIssuer.setFormat("urn:oasis:names:tc:SAML:2.0:nameid-format:entity");
     rIssuer.setValue("https://idp.example.org");
-
     Status status = (Status) buildXMLObject(Status.DEFAULT_ELEMENT_NAME);
     StatusCode statusCode = (StatusCode) buildXMLObject(StatusCode.DEFAULT_ELEMENT_NAME);
     statusCode.setValue("urn:oasis:names:tc:SAML:2.0:status:Success");
@@ -181,30 +201,23 @@ public class SamlService {
     Issuer aIssuer = (Issuer) buildXMLObject(Issuer.DEFAULT_ELEMENT_NAME);
     aIssuer.setFormat("urn:oasis:names:tc:SAML:2.0:nameid-format:entity");
     aIssuer.setValue("https://idp.example.org");
-
     Subject subject = (Subject) buildXMLObject(Subject.DEFAULT_ELEMENT_NAME);
     NameID nameID = (NameID) buildXMLObject(NameID.DEFAULT_ELEMENT_NAME);
     nameID.setFormat("urn:oasis:names:tc:SAML:2.0:nameid-format:transient");
     nameID.setValue("_820d2843-2342-8236-ad28-8ac94fb3e6a1");
-
     SubjectConfirmation subjectConfirmation = (SubjectConfirmation) buildXMLObject(SubjectConfirmation.DEFAULT_ELEMENT_NAME);
     subjectConfirmation.setMethod("urn:oasis:names:tc:SAML:2.0:cm:bearer");
-
     Conditions conditions = (Conditions) buildXMLObject(Conditions.DEFAULT_ELEMENT_NAME);
     conditions.setNotBefore(new DateTime(2006, 1, 26, 13, 35, 5, 0, ISOChronology.getInstanceUTC()));
     conditions.setNotOnOrAfter(new DateTime(2006, 1, 26, 13, 45, 5, 0, ISOChronology.getInstanceUTC()));
-
     AudienceRestriction audienceRestriction = (AudienceRestriction) buildXMLObject(AudienceRestriction.DEFAULT_ELEMENT_NAME);
     Audience audience = (Audience) buildXMLObject(Audience.DEFAULT_ELEMENT_NAME);
     audience.setAudienceURI("https://sp.example.org");
-
     AuthnStatement authnStatement = (AuthnStatement) buildXMLObject(AuthnStatement.DEFAULT_ELEMENT_NAME);
     authnStatement.setAuthnInstant(new DateTime(2006, 1, 26, 13, 35, 5, 0, ISOChronology.getInstanceUTC()));
-
     AuthnContext authnContext = (AuthnContext) buildXMLObject(AuthnContext.DEFAULT_ELEMENT_NAME);
     AuthnContextClassRef classRef = (AuthnContextClassRef) buildXMLObject(AuthnContextClassRef.DEFAULT_ELEMENT_NAME);
     classRef.setAuthnContextClassRef("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport");
-
     AttributeStatement attribStatement = (AttributeStatement) buildXMLObject(AttributeStatement.DEFAULT_ELEMENT_NAME);
     XMLObjectBuilder<?> stringBuilder = builderFactory.getBuilder(XSString.TYPE_NAME);
     Attribute fooAttrib = (Attribute) buildXMLObject(Attribute.DEFAULT_ELEMENT_NAME);
@@ -218,7 +231,6 @@ public class SamlService {
     fooAttribValue = (XSString) stringBuilder.buildObject(AttributeValue.DEFAULT_ELEMENT_NAME, XSString.TYPE_NAME);
     fooAttribValue.setValue("SomeOtherValue");
     fooAttrib.getAttributeValues().add(fooAttribValue);
-
     Attribute ldapAttrib = (Attribute) buildXMLObject(Attribute.DEFAULT_ELEMENT_NAME);
     ldapAttrib.setFriendlyName("eduPersonPrincipalName");
     ldapAttrib.setName("urn:oid:1.3.6.1.4.1.5923.1.1.1.6");
@@ -229,12 +241,14 @@ public class SamlService {
     response.setIssuer(rIssuer);
     status.setStatusCode(statusCode);
     response.setStatus(status);
-    response.getAssertions().add(assertion);
+    
+    /**
+     * 添加断言
+     */
     assertion.setIssuer(aIssuer);
     subject.setNameID(nameID);
     subject.getSubjectConfirmations().add(subjectConfirmation);
-    assertion.setSubject(subject);
-
+//    assertion.setSubject(subject);
     audienceRestriction.getAudiences().add(audience);
     conditions.getAudienceRestrictions().add(audienceRestriction);
     assertion.setConditions(conditions);
@@ -244,20 +258,28 @@ public class SamlService {
     attribStatement.getAttributes().add(fooAttrib);
     attribStatement.getAttributes().add(ldapAttrib);
     assertion.getAttributeStatements().add(attribStatement);
-
-    Marshaller marshaller = Configuration.getMarshallerFactory().getMarshaller(response);
-    Element authDOM;
+    
+    SignatureBuilder signatureBuilder = (SignatureBuilder) builderFactory.getBuilder(Signature.DEFAULT_ELEMENT_NAME);
+    BasicCredential basicCredential = new BasicCredential();
+    Signature signature = signatureBuilder.buildObject();
+    basicCredential.setPrivateKey(getRSAPrivateKey("/opensaml/IDPSSODescriptor.xml"));
+    signature.setCanonicalizationAlgorithm(CANON_ALGORITHM);
+    signature.setSignatureAlgorithm(SIGNATURE_METHOD);
+    signature.setSigningCredential(basicCredential);
+    assertion.setSignature(signature);
+    Marshaller marshaller = null;
+    MarshallerFactory marshallerFactory = Configuration.getMarshallerFactory();
+    marshaller = marshallerFactory.getMarshaller(assertion);
     try {
-      authDOM = marshaller.marshall(response);
-      StringWriter rspWrt = new StringWriter();
-      XMLHelper.writeNode(authDOM, rspWrt);
-      String messageXML = rspWrt.toString();
-      String samlResponse = GZipUtil.gzip(messageXML);
-      return Base64.encodeBytes(samlResponse.getBytes(), Base64.DONT_BREAK_LINES);
+      marshaller.marshall(assertion);
     } catch (MarshallingException e) {
-      e.printStackTrace();
     }
-    return null;
+    try {
+      Signer.signObject(signature);
+    } catch (SignatureException e) {
+    }
+    response.getAssertions().add(assertion);
+    return response;
   }
 
   public String buildArtifact(String artifactId) {
@@ -273,9 +295,8 @@ public class SamlService {
       String samlArtifact = GZipUtil.gzip(messageXML);
       return Base64.encodeBytes(samlArtifact.getBytes(), Base64.DONT_BREAK_LINES);
     } catch (MarshallingException e) {
-      e.printStackTrace();
+      throw new RuntimeException("创建Artifact错误:" + e.getMessage());
     }
-    return null;
   }
 
   public SSODescriptor buildSSODescriptor(String xmlFilePath, Class<?> descriptorType) {
@@ -285,7 +306,7 @@ public class SamlService {
     }
     return entityDescriptor.getSPSSODescriptor("urn:oasis:names:tc:SAML:2.0:protocol");
   }
-  
+
   public PublicKey getRSAPublicKey(String xmlFilePath) {
     SSODescriptor _SPSSODescriptor = buildSSODescriptor(xmlFilePath, SPSSODescriptor.class);
     List<KeyDescriptor> keyDescriptors = _SPSSODescriptor.getKeyDescriptors();
@@ -299,11 +320,10 @@ public class SamlService {
       java.security.cert.X509Certificate cert = SecurityHelper.buildJavaX509Cert(_x509Value);
       return cert.getPublicKey();
     } catch (CertificateException e) {
-      e.printStackTrace();
+      throw new RuntimeException("获取公钥错误 :" + e.getMessage());
     }
-    return null;
   }
-  
+
   public RSAPrivateKey getRSAPrivateKey(String xmlFilePath) {
     SSODescriptor _IDPSSODescriptor = buildSSODescriptor(xmlFilePath, IDPSSODescriptor.class);
     List<KeyDescriptor> keyDescriptors = _IDPSSODescriptor.getKeyDescriptors();
@@ -312,13 +332,22 @@ public class SamlService {
     List<X509Data> x509Datas = keyInfo.getX509Datas();
     List<X509Certificate> x509Certificates = x509Datas.get(0).getX509Certificates();
     X509Certificate x509Certificate = x509Certificates.get(0);
-    String _x509Value = x509Certificate.getValue();
     try {
-      return SecurityHelper.buildJavaRSAPrivateKey(_x509Value);
+      return SecurityHelper.buildJavaRSAPrivateKey(x509Certificate.getValue());
     } catch (KeyException e) {
-      e.printStackTrace();
+      throw new RuntimeException("获取私钥错误:" + e.getMessage());
     }
-    return null;
+  }
+
+  public X509Certificate getX509Certificate(String xmlFilePath) {
+    SSODescriptor _SPSSODescriptor = buildSSODescriptor(xmlFilePath, SPSSODescriptor.class);
+    List<KeyDescriptor> keyDescriptors = _SPSSODescriptor.getKeyDescriptors();
+    KeyDescriptor keyDescriptor = keyDescriptors.get(0);
+    KeyInfo keyInfo = keyDescriptor.getKeyInfo();
+    List<X509Data> x509Datas = keyInfo.getX509Datas();
+    List<X509Certificate> x509Certificates = x509Datas.get(0).getX509Certificates();
+    X509Certificate x509Certificate = x509Certificates.get(0);
+    return x509Certificate;
   }
 
   public String decodeSAMLResponse(String samlResponse) {
@@ -331,97 +360,7 @@ public class SamlService {
     return builder.buildObject(objectQName.getNamespaceURI(), objectQName.getLocalPart(), objectQName.getPrefix());
   }
 
-  public String validateSAMLResponse(String samlResponse, String samlCert) throws Exception {
-    String decodedString = "";
-    try {
-      decodedString = decodeSAMLResponse(samlResponse);
-      InputStream inputStream = new ByteArrayInputStream(decodedString.getBytes("UTF-8"));
-      // Parse XML
-      BasicParserPool parserPoolManager = new BasicParserPool();
-      parserPoolManager.setNamespaceAware(true);
-      parserPoolManager.setIgnoreElementContentWhitespace(true);
-      Document document = parserPoolManager.parse(inputStream);
-      Element metadataRoot = document.getDocumentElement();
-      QName qName = new QName(metadataRoot.getNamespaceURI(), metadataRoot.getLocalName(), metadataRoot.getPrefix());
-      // Unmarshall document
-      Unmarshaller unmarshaller = Configuration.getUnmarshallerFactory().getUnmarshaller(qName);
-      Response response = (Response) unmarshaller.unmarshall(metadataRoot);
-      // Issuer issuer = response.getIssuer();
-      java.security.cert.X509Certificate jX509Cert = SamlUtils.parsePemCertificate(samlCert);
-      if (null == jX509Cert) {
-        return "";
-      }
-
-      PublicKey publicCert = jX509Cert.getPublicKey();
-      X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicCert.getEncoded());
-
-      KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-      PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
-
-      // Setup validation
-      BasicX509Credential publicCredential = new BasicX509Credential();
-      publicCredential.setPublicKey(publicKey);
-      SignatureValidator signatureValidator = new SignatureValidator(publicCredential);
-      Signature signature = response.getSignature();
-      // Validate
-      try {
-        signatureValidator.validate(signature);
-      } catch (ValidationException e) {
-        throw e;
-      }
-
-      // Get decryption key
-      RSAPrivateKey privateKey = null;
-      BasicX509Credential decryptionCredential = new BasicX509Credential();
-      decryptionCredential.setPrivateKey(privateKey);
-      StaticKeyInfoCredentialResolver skicr = new StaticKeyInfoCredentialResolver(decryptionCredential);
-
-      // Decrypt assertion
-      Decrypter decrypter = new Decrypter(null, skicr, new InlineEncryptedKeyResolver());
-      if (response.getEncryptedAssertions().isEmpty()) {
-      } else {
-        Assertion decryptedAssertion;
-        try {
-          decryptedAssertion = decrypter.decrypt(response.getEncryptedAssertions().get(0));
-        } catch (DecryptionException e) {
-          throw e;
-        }
-        List<AttributeStatement> attributeStatements = decryptedAssertion.getAttributeStatements();
-        for (int i = 0; i < attributeStatements.size(); i++) {
-          List<Attribute> attributes = attributeStatements.get(i).getAttributes();
-          for (int x = 0; x < attributes.size(); x++) {
-            List<XMLObject> attributeValues = attributes.get(x).getAttributeValues();
-            for (int y = 0; y < attributeValues.size(); y++) {
-            }
-          }
-        }
-      }
-    } catch (Exception ex) {
-      throw ex;
-    }
-    return decodedString;
-  }
-
-  public String loadSigningKeyFromMetaData(String metadataUri, String a) {
-    try {
-      @SuppressWarnings("deprecation")
-      HTTPMetadataProvider mdp = new HTTPMetadataProvider(metadataUri, 5000);
-      mdp.setRequireValidMetadata(true);
-      mdp.setParserPool(new BasicParserPool());
-      mdp.initialize();
-      EntityDescriptor idpEntityDescriptor = mdp.getEntityDescriptor(metadataUri);
-
-      for (KeyDescriptor key : idpEntityDescriptor.getIDPSSODescriptor(SAMLConstants.SAML20P_NS).getKeyDescriptors()) {
-        X509Data x509 = key.getKeyInfo().getX509Datas().get(0);
-        org.opensaml.xml.signature.X509Certificate x509Cert = x509.getX509Certificates().get(0);
-        return SamlUtils.convertCertToPemFormat(x509Cert.getValue());
-      }
-    } catch (MetadataProviderException e) {
-    }
-    return null;
-  }
-
-  protected static XMLObject unmarshallElement(String authReauest) {
+  protected XMLObject unmarshallElement(String authReauest) {
     try {
       BasicParserPool parser;
       parser = new BasicParserPool();
@@ -431,49 +370,131 @@ public class SamlService {
       Unmarshaller unmarshaller = Configuration.getUnmarshallerFactory().getUnmarshaller(samlElement);
       return unmarshaller.unmarshall(samlElement);
     } catch (XMLParserException e) {
-      e.printStackTrace();
+      throw new RuntimeException(e);
     } catch (UnmarshallingException e) {
-      e.printStackTrace();
+      throw new RuntimeException(e);
     }
-    return null;
   }
 
   protected XMLObject unmarshallElementWithXMLFile(String elementFile) {
     try {
-      BasicParserPool parser;
-      parser = new BasicParserPool();
+      BasicParserPool parser = new BasicParserPool();
       parser.setNamespaceAware(true);
       Document doc = parser.parse(SamlService.class.getResourceAsStream(elementFile));
       Element samlElement = doc.getDocumentElement();
       Unmarshaller unmarshaller = Configuration.getUnmarshallerFactory().getUnmarshaller(samlElement);
       return unmarshaller.unmarshall(samlElement);
     } catch (XMLParserException e) {
-      e.printStackTrace();
+      throw new RuntimeException(e);
     } catch (UnmarshallingException e) {
-      e.printStackTrace();
+      throw new RuntimeException(e);
     }
-    return null;
   }
 
-  public AuthnRequest getAuthRequest(String authRequest) {
-    AuthnRequest request = null;
-    try {
-      byte[] check = Base64.decode(authRequest);
-      String gunZip = GZipUtil.gunzip(new String(check));
-      request = (AuthnRequest) unmarshallElement(gunZip);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return request;
+  /**
+   * 加密断言 encrypt_descriptions:
+   * 
+   * @param assertion
+   * @param receiverCredential
+   * @return
+   * @throws EncryptionException
+   * @throws NoSuchAlgorithmException
+   * @throws KeyException
+   */
+  public EncryptedAssertion encrypt(Assertion assertion, X509Credential receiverCredential) throws EncryptionException, NoSuchAlgorithmException, KeyException {
+    Credential symmetricCredential = SecurityHelper.getSimpleCredential(SecurityHelper.generateSymmetricKey(EncryptionConstants.ALGO_ID_BLOCKCIPHER_AES128));
+    EncryptionParameters encParams = new EncryptionParameters();
+    encParams.setAlgorithm(EncryptionConstants.ALGO_ID_BLOCKCIPHER_AES128);
+    encParams.setEncryptionCredential(symmetricCredential);
+    KeyEncryptionParameters kek = new KeyEncryptionParameters();
+    kek.setAlgorithm(EncryptionConstants.ALGO_ID_KEYTRANSPORT_RSA15);
+    kek.setEncryptionCredential(receiverCredential);
+    Encrypter encrypter = new Encrypter(encParams, kek);
+    encrypter.setKeyPlacement(KeyPlacement.INLINE);
+    EncryptedAssertion encrypted = encrypter.encrypt(assertion);
+    return encrypted;
   }
 
-  public String consumerServiceURL(AuthnRequest request) {
-    if (null == request)
-      return null;
-    return request.getAssertionConsumerServiceURL();
+  /**
+   * 解密断言 decrypt_descriptions:
+   * 
+   * @param enc
+   * @param credential
+   * @param federationMetadata
+   * @return
+   * @throws DecryptionException
+   * @throws ValidationException
+   * @throws ParserConfigurationException
+   * @throws SAXException
+   * @throws IOException
+   * @throws MetadataProviderException
+   * @throws SecurityException
+   */
+  public Assertion decrypt(EncryptedAssertion enc, Credential credential, String federationMetadata) throws DecryptionException, ValidationException,
+      ParserConfigurationException, SAXException, IOException, MetadataProviderException, SecurityException {
+    KeyInfoCredentialResolver keyResolver = new StaticKeyInfoCredentialResolver(credential);
+    EncryptedKey key = enc.getEncryptedData().getKeyInfo().getEncryptedKeys().get(0);
+    Decrypter decrypter = new Decrypter(null, keyResolver, new InlineEncryptedKeyResolver());
+    decrypter.setRootInNewDocument(true);
+    SecretKey dkey = (SecretKey) decrypter.decryptKey(key, enc.getEncryptedData().getEncryptionMethod().getAlgorithm());
+    Credential shared = SecurityHelper.getSimpleCredential(dkey);
+    decrypter = new Decrypter(new StaticKeyInfoCredentialResolver(shared), null, null);
+    decrypter.setRootInNewDocument(true);
+    Assertion assertion = decrypter.decrypt(enc);
+    return assertion;
   }
 
-  public boolean checkUrl(String url) {
-    return samlDao.checkUrl(url);
+  /**
+   * 签名断言 signature_descriptions:
+   * 
+   * @param enc
+   * @param credential
+   * @param federationMetadata
+   * @return
+   * @throws DecryptionException
+   * @throws ValidationException
+   * @throws ParserConfigurationException
+   * @throws SAXException
+   * @throws IOException
+   * @throws MetadataProviderException
+   * @throws SecurityException
+   */
+  public Signature signature() {
+    SignatureBuilder signatureBuilder = (SignatureBuilder) builderFactory.getBuilder(Signature.DEFAULT_ELEMENT_NAME);
+    BasicCredential basicCredential = new BasicCredential();
+    Signature signature = signatureBuilder.buildObject();
+    basicCredential.setPrivateKey(getRSAPrivateKey("/opensaml/IDPSSODescriptor.xml"));
+    signature.setCanonicalizationAlgorithm(CANON_ALGORITHM);
+    signature.setSignatureAlgorithm(SIGNATURE_METHOD);
+    return signature;
+  }
+
+  /**
+   * 验签断言 attestation_descriptions:
+   * 
+   * @param enc
+   * @param credential
+   * @param federationMetadata
+   * @return
+   * @throws DecryptionException
+   * @throws ValidationException
+   * @throws ParserConfigurationException
+   * @throws SAXException
+   * @throws IOException
+   * @throws MetadataProviderException
+   * @throws SecurityException
+   */
+  public Assertion attestation(EncryptedAssertion enc, Credential credential, String federationMetadata) throws DecryptionException, ValidationException,
+      ParserConfigurationException, SAXException, IOException, MetadataProviderException, SecurityException {
+    KeyInfoCredentialResolver keyResolver = new StaticKeyInfoCredentialResolver(credential);
+    EncryptedKey key = enc.getEncryptedData().getKeyInfo().getEncryptedKeys().get(0);
+    Decrypter decrypter = new Decrypter(null, keyResolver, new InlineEncryptedKeyResolver());
+    decrypter.setRootInNewDocument(true);
+    SecretKey dkey = (SecretKey) decrypter.decryptKey(key, enc.getEncryptedData().getEncryptionMethod().getAlgorithm());
+    Credential shared = SecurityHelper.getSimpleCredential(dkey);
+    decrypter = new Decrypter(new StaticKeyInfoCredentialResolver(shared), null, null);
+    decrypter.setRootInNewDocument(true);
+    Assertion assertion = decrypter.decrypt(enc);
+    return assertion;
   }
 }
