@@ -10,7 +10,7 @@ public enum UUIDFactory {
   
   INSTANCE;
   
-  public String getUUID(String tableName) {
+  public String getUUID() {
     return UUID.randomUUID().toString().replace("-", "");
   }
 }

@@ -80,23 +80,9 @@ public class AuthResponse {
 
   public void verifyIDP(Signature idpSignature, String federationMetadata) throws ValidationException, MetadataProviderException, ParserConfigurationException,
       SAXException, IOException, SecurityException {
-
-    /*
-     * FilesystemMetadataProvider idpMetaDataProvider = new
-     * FilesystemMetadataProvider(new File(federationMetadata));
-     * idpMetaDataProvider.setRequireValidMetadata(true);
-     * idpMetaDataProvider.setParserPool(new BasicParserPool());
-     * idpMetaDataProvider.initialize();
-     * 
-     * EntityDescriptor idpEntityDescriptor =
-     * idpMetaDataProvider.getEntityDescriptor
-     * ("http://colo-pm2.adx.isi.edu/adfs/services/trust");
-     */
     SAMLSignatureProfileValidator profileValidator = new SAMLSignatureProfileValidator();
     profileValidator.validate(idpSignature);
-
     SignatureValidator sigValidator = new SignatureValidator(AuthRequest.getCredential(federationMetadata));
-
     sigValidator.validate(idpSignature);
   }
 
@@ -185,9 +171,7 @@ public class AuthResponse {
         continue;
       // System.out.println(nodeList.item(i).getTextContent());
     }
-
     return claimsContainer;
-
   }
 
   public Assertion decrypt(EncryptedAssertion enc, Credential credential, String federationMetadata) throws DecryptionException, ValidationException,

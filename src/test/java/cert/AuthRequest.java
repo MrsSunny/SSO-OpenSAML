@@ -77,7 +77,6 @@ public class AuthRequest {
     try {
       DefaultBootstrap.bootstrap();
       System.out.println("Initialized the libraries");
-
     } catch (Exception ce) {
       ce.printStackTrace();
     }
@@ -222,11 +221,15 @@ public class AuthRequest {
    */
   public static Attribute buildStringAttribute(String name, String value, XMLObjectBuilderFactory builderFactory) throws ConfigurationException {
     SAMLObjectBuilder attrBuilder = (SAMLObjectBuilder) getSAMLBuilder().getBuilder(Attribute.DEFAULT_ELEMENT_NAME);
+    
+    
     Attribute attrFirstName = (Attribute) attrBuilder.buildObject();
     attrFirstName.setName(name);
-
     // Set custom Attributes
     XMLObjectBuilder stringBuilder = getSAMLBuilder().getBuilder(XSString.TYPE_NAME);
+    
+    
+    
     XSString attrValueFirstName = (XSString) stringBuilder.buildObject(AttributeValue.DEFAULT_ELEMENT_NAME, XSString.TYPE_NAME);
     attrValueFirstName.setValue(value);
 
@@ -285,11 +288,6 @@ public class AuthRequest {
       SAMLObjectBuilder authContextClassRefBuilder = (SAMLObjectBuilder) AuthRequest.getSAMLBuilder().getBuilder(AuthnContextClassRef.DEFAULT_ELEMENT_NAME);
       AuthnContextClassRef authnContextClassRef = (AuthnContextClassRef) authContextClassRefBuilder.buildObject();
       authnContextClassRef.setAuthnContextClassRef("urn:oasis:names:tc:SAML:2.0:ac:classes:Password"); // TODO
-                                                                                                       // not
-                                                                                                       // sure
-                                                                                                       // exactly
-                                                                                                       // about
-                                                                                                       // this
 
       authnContext.setAuthnContextClassRef(authnContextClassRef);
       authnStatement.setAuthnContext(authnContext);
@@ -368,7 +366,6 @@ public class AuthRequest {
     criteriaSet.add(new MetadataCriteria(IDPSSODescriptor.DEFAULT_ELEMENT_NAME, SAMLConstants.SAML20P_NS));
     criteriaSet.add(new EntityIDCriteria("http://colo-pm2.adx.isi.edu/adfs/services/trust"));
     criteriaSet.add(new UsageCriteria(UsageType.SIGNING));
-
     X509Credential credential = (X509Credential) credentialResolver.resolveSingle(criteriaSet);
     return credential;
   }
@@ -511,7 +508,5 @@ public class AuthRequest {
     public int getMaxSessionTimeoutInMinutes() {
       return maxSessionTimeoutInMinutes;
     }
-
   }
-
 }

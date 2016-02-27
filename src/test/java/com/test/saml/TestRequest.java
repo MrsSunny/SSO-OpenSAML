@@ -4,19 +4,23 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.security.Security;
+
 import javax.xml.namespace.QName;
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.joda.time.DateTime;
 import org.opensaml.Configuration;
 import org.opensaml.DefaultBootstrap;
 import org.opensaml.common.SAMLVersion;
-import org.opensaml.common.impl.SecureRandomIdentifierGenerator;
 import org.opensaml.saml2.core.Assertion;
+import org.opensaml.saml2.core.Audience;
+import org.opensaml.saml2.core.AudienceRestriction;
+import org.opensaml.saml2.core.AuthnRequest;
 import org.opensaml.saml2.core.AuthnStatement;
+import org.opensaml.saml2.core.Conditions;
 import org.opensaml.saml2.core.Issuer;
-import org.opensaml.saml2.core.Response;
 import org.opensaml.saml2.core.impl.AssertionBuilder;
 import org.opensaml.saml2.core.impl.AuthnStatementBuilder;
 import org.opensaml.saml2.core.impl.IssuerBuilder;
@@ -35,11 +39,9 @@ import org.opensaml.xml.security.credential.BasicCredential;
 import org.opensaml.xml.signature.Signature;
 import org.opensaml.xml.signature.SignatureConstants;
 import org.opensaml.xml.signature.SignatureException;
-import org.opensaml.xml.signature.SignatureValidator;
 import org.opensaml.xml.signature.Signer;
 import org.opensaml.xml.signature.impl.SignatureBuilder;
 import org.opensaml.xml.util.XMLHelper;
-import org.opensaml.xml.validation.ValidationException;
 import org.sms.saml.service.SamlService;
 import org.sms.util.GZipUtil;
 import org.w3c.dom.Document;
@@ -65,7 +67,6 @@ public class TestRequest {
   private AuthnStatementBuilder authnStatementBuilder;
 
   /** Builder of AuthnStatements. */
-  private SignatureBuilder signatureBuilder;
 
   /** Generator of element IDs. */
 
@@ -80,31 +81,48 @@ public class TestRequest {
     Security.addProvider(new BouncyCastleProvider());
   }
 
-  public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, MarshallingException, SignatureException {
+  public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, MarshallingException, SignatureException, ConfigurationException {
     SamlService saml = new SamlService();
-    String xmlResponseBase64 = saml.buildResponse();
-    Response response = null;
+    String xmlRequestBase64 = saml.buildRequest();
+    AuthnRequest request = null;
     try {
-      byte[] check = Base64.decodeBase64(xmlResponseBase64);
+      byte[] check = Base64.decodeBase64(xmlRequestBase64);
       String gunZip = GZipUtil.gunzip(new String(check));
-      response = (Response) unmarshallElement(gunZip);
+      request = (AuthnRequest) unmarshallElement(gunZip);
     } catch (Exception e) {
       e.printStackTrace();
     }
-    BasicCredential basicCredential = new BasicCredential();
-    basicCredential.setPublicKey(saml.getRSAPublicKey("/opensaml/SPSSODescriptor.xml"));
-    SignatureValidator signatureValidator = new SignatureValidator(basicCredential);
-    Assertion fristAssertion = response.getAssertions().get(0);
-    fristAssertion.setID("ddddddddddddddeeeeeeeeee");
-    Signature signature = fristAssertion.getSignature();
-    try {
-      signatureValidator.validate(signature);
-      System.out.println("验证痛过");
-    } catch (ValidationException e) {
-      throw new RuntimeException("验证签名错误");
-    }
-    Element eee = signature.getDOM();
-    System.out.println(eee.toString());
+    String requestID = request.getID();
+    String serviceUrl = request.getAssertionConsumerServiceURL();
+    Conditions conditions = request.getConditions();
+    AudienceRestriction audienceRestriction = conditions.getAudienceRestrictions().get(0);
+    Audience audience = audienceRestriction.getAudiences().get(0);
+    String audienceURI = audience.getAudienceURI();
+    System.out.println("Request ID为：" + requestID);
+    System.out.println("serviceUrl 为：" + serviceUrl);
+    System.out.println("audienceURI 为：" + audienceURI);
+    String xmlResponseBase64 = saml.buildResponse(requestID, audienceURI);
+    boolean isCheck = saml.validate(xmlResponseBase64);
+    System.out.println(isCheck);
+//    Response response = null;
+//    try {
+//      byte[] check = Base64.decodeBase64(xmlResponseBase64);
+//      String gunZip = GZipUtil.gunzip(new String(check));
+//      response = (Response) unmarshallElement(gunZip);
+//    } catch (Exception e) {
+//      e.printStackTrace();
+//    }
+//    BasicCredential basicCredential = new BasicCredential();
+//    basicCredential.setPublicKey(saml.getRSAPublicKey());
+//    SignatureValidator signatureValidator = new SignatureValidator(basicCredential);
+//    Assertion fristAssertion = response.getAssertions().get(0);
+//    Signature signature = fristAssertion.getSignature();
+//    try {
+//      signatureValidator.validate(signature);
+//      System.out.println("验证痛过");
+//    } catch (ValidationException e) {
+//      throw new RuntimeException("验证签名错误");
+//    }
   }
 
   public static XMLObject buildXMLObject(QName objectQName) {
@@ -122,7 +140,6 @@ public class TestRequest {
       parser = new BasicParserPool();
       parser.setNamespaceAware(true);
       Document doc = (Document) parser.parse(new ByteArrayInputStream(elementFile.getBytes()));
-      System.out.println(doc.toString());
       Element samlElement = (Element) doc.getDocumentElement();
       Unmarshaller unmarshaller = Configuration.getUnmarshallerFactory().getUnmarshaller(samlElement);
       if (null == unmarshaller)
@@ -157,7 +174,7 @@ public class TestRequest {
     assertion.getAuthnStatements().add(authnStmt);
     Signature signature = signatureBuilder.buildObject();
     BasicCredential basicCredential = new BasicCredential();
-    basicCredential.setPrivateKey(saml.getRSAPrivateKey("/opensaml/IDPSSODescriptor.xml"));
+    basicCredential.setPrivateKey(saml.getRSAPrivateKey());
     signature.setCanonicalizationAlgorithm(SignatureConstants.ALGO_ID_C14N_EXCL_OMIT_COMMENTS);
     signature.setSignatureAlgorithm(SignatureConstants.ALGO_ID_SIGNATURE_RSA);
     signature.setSigningCredential(basicCredential);

@@ -4,9 +4,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.sms.SysConstants;
 import org.sms.organization.user.entity.User;
 import org.sms.organization.user.service.UserService;
-import org.sms.project.SysConstants;
 import org.sms.project.encrypt.md5.MD5;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationServiceException;

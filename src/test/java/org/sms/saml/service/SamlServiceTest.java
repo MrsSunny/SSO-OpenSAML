@@ -1,34 +1,29 @@
 package org.sms.saml.service;
 
+import java.util.UUID;
+import javax.xml.namespace.QName;
+import org.junit.Test;
+import base.BaseTest;
 import static org.junit.Assert.assertNotNull;
-
 import java.security.KeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
-import java.util.UUID;
-
-import javax.xml.namespace.QName;
-
-import org.junit.Test;
-import org.opensaml.saml2.core.Response;
+import org.opensaml.saml2.core.Audience;
+import org.opensaml.saml2.core.AudienceRestriction;
+import org.opensaml.saml2.core.AuthnRequest;
+import org.opensaml.saml2.core.Conditions;
 import org.opensaml.xml.Configuration;
+import org.opensaml.xml.ConfigurationException;
 import org.opensaml.xml.XMLObject;
 import org.opensaml.xml.XMLObjectBuilder;
 import org.opensaml.xml.encryption.EncryptionException;
-import org.opensaml.xml.security.x509.BasicX509Credential;
-import org.opensaml.xml.signature.Signature;
-import org.opensaml.xml.signature.SignatureValidator;
 import org.opensaml.xml.signature.X509Certificate;
-import org.opensaml.xml.validation.ValidationException;
-
-import base.BaseTest;
 
 /**
  * @author Sunny
  * @since 1.8.0
  */
 public class SamlServiceTest extends BaseTest {
-
+  
   private SamlService samlService = (SamlService) aCtx.getBean("samlService");
   
   /**
@@ -44,10 +39,17 @@ public class SamlServiceTest extends BaseTest {
 
   /**
    * Test method for {@link org.sms.saml.service.SamlService#getResponse()}.
+   * @throws ConfigurationException 
    */
   @Test
-  public void testBuildResponse() {
-    String samlResponse = samlService.buildResponse();
+  public void testBuildResponse() throws ConfigurationException {
+    AuthnRequest request = samlService.getRequest();
+    String requestID = request.getID();
+    Conditions conditions = request.getConditions();
+    AudienceRestriction audienceRestriction = conditions.getAudienceRestrictions().get(0);
+    Audience audience = audienceRestriction.getAudiences().get(0);
+    String audienceURI = audience.getAudienceURI();
+    String samlResponse = samlService.buildResponse(requestID, audienceURI);
     assertNotNull("response is null", samlResponse);
   }
   
@@ -60,30 +62,28 @@ public class SamlServiceTest extends BaseTest {
   
 //  @Test
   public void testGetRSAPublicKey() {
-    String idpXmlFile = "/opensaml/SPSSODescriptor.xml";
-    samlService.getRSAPublicKey(idpXmlFile);
+    samlService.getRSAPublicKey();
   }
   
 //  @Test
   public void testGetRSAPrivateKey() {
-    String spXmlFile = "/opensaml/IDPSSODescriptor.xml";
-    samlService.getRSAPrivateKey(spXmlFile);
+    samlService.getRSAPrivateKey();
   }
   
 //  @Test
   public void testSignature() {
-    String spXmlFile = "/opensaml/IDPSSODescriptor.xml";
-    Response response = samlService.getResponse();
-    PublicKey publicKey = samlService.getRSAPublicKey(spXmlFile);
-    BasicX509Credential publicCredential = new BasicX509Credential();
-    publicCredential.setPublicKey(publicKey);
-    SignatureValidator signatureValidator = new SignatureValidator(publicCredential);
-    Signature signature = response.getSignature();
-    try {
-      signatureValidator.validate(signature);
-    } catch (ValidationException e) {
-      e.printStackTrace();
-    }
+//    String spXmlFile = "/opensaml/IDPSSODescriptor.xml";
+//    Response response = samlService.getResponse();
+//    PublicKey publicKey = samlService.getRSAPublicKey(spXmlFile);
+//    BasicX509Credential publicCredential = new BasicX509Credential();
+//    publicCredential.setPublicKey(publicKey);
+//    SignatureValidator signatureValidator = new SignatureValidator(publicCredential);
+//    Signature signature = response.getSignature();
+//    try {
+//      signatureValidator.validate(signature);
+//    } catch (ValidationException e) {
+//      e.printStackTrace();
+//    }
   }
   
 //  @Test
