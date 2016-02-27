@@ -1,13 +1,15 @@
 package org.sms.project.filter;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import javax.servlet.Filter;
+import org.sms.SysConstants;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,44 +19,22 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class SamlFilter implements Filter {
   
-  public static final String COOKIE_ANTH = "CTLPS";
-  
-  public static final String TICKETID = "ticket";
-  
-  public static final String AUTHREQUEST = "authRequest";
-
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
-    
   }
 
   @Override
-  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-    
-    HttpServletRequest req = (HttpServletRequest) request;
-    HttpServletResponse res = (HttpServletResponse) response;
-    Cookie[] reqCookies = req.getCookies();
-    String cookieValue = null;
-    
+  public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
+    HttpServletRequest request = (HttpServletRequest) servletRequest;
+    HttpServletResponse response = (HttpServletResponse) servletResponse;
+    HttpSession session = request.getSession(true);
     /**
-     * 从request中发现Cookie
+     * 判断用户是否处于登录状态
      */
-    for (Cookie reqCookie : reqCookies) {
-      if (reqCookie.getName().equals(COOKIE_ANTH)) {
-        cookieValue = reqCookie.getValue();
-        break;
-      }
-    }
-    /**
-     * 从request中发现ticket
-     */
-    String ticket = req.getParameter(TICKETID);
-    if (null == cookieValue) {
-      res.sendRedirect("/login.jsp");
-    }
-    
-    if (null != ticket) {
-      
+    if (session != null && session.getAttribute(SysConstants.LOGIN_USER) != null) {
+      StringBuffer url = request.getRequestURL();
+      String returnUrl = URLEncoder.encode(url.toString(), SysConstants.CHARSET);
+      ((HttpServletResponse) response).sendRedirect("http://login.soaer.com:8083?ReturnUrl=" + returnUrl);
     }
   }
 

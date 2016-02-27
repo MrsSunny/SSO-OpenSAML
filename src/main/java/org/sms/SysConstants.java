@@ -11,6 +11,9 @@ public interface SysConstants {
   
   public static final String LOGIN_USER = "user";
   public static final String ENABLE = "0";
+  public static final String CHARSET = "UTF-8";
+  public static final String TICKETID = "ticket";
+  public static final String AUTHREQUEST = "authRequest";
   public static final String LOCALDOMAIN = "http://soaer.com";
   public static String SIGNATURE_METHOD = "http://www.w3.org/2000/09/xmldsig#rsa-sha1";
   public static String CANON_ALGORITHM = "http://www.w3.org/2001/10/xml-exc-c14n#";

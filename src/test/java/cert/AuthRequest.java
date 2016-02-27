@@ -72,6 +72,8 @@ import org.xml.sax.SAXException;
  * This is a demo class which creates a valid SAML 2.0 Assertion.
  */
 public class AuthRequest {
+  
+  private static XMLObjectBuilderFactory builderFactory;
 
   public AuthRequest() {
     try {
@@ -119,94 +121,12 @@ public class AuthRequest {
     }
   }
 
-  /*
-   * public void doAuthenticationRedirect(final HttpServletResponse response,
-   * final HttpSession currentSession, final String gotoURL, final SAMLMetaData
-   * metaData) throws IllegalArgumentException, SecurityException,
-   * IllegalAccessException { AuthnRequest authnRequest =
-   * generateAuthnRequest(metaData);
-   * 
-   * SAMLUtil.logSAMLObject(authnRequest);
-   * 
-   * // Save the request ID to session for future validation
-   * currentSession.setAttribute("AuthnRequestID", authnRequest.getID());
-   * currentSession.setAttribute("goto", gotoURL);
-   * 
-   * HttpServletResponseAdapter responseAdapter = new
-   * HttpServletResponseAdapter(response, true);
-   * BasicSAMLMessageContext<SAMLObject, AuthnRequest, SAMLObject> context = new
-   * BasicSAMLMessageContext<SAMLObject, AuthnRequest, SAMLObject>();
-   * context.setPeerEntityEndpoint(getEndpointFromMetaData());
-   * context.setOutboundSAMLMessage(authnRequest);
-   * context.setOutboundSAMLMessageSigningCredential(getSigningCredential());
-   * context.setOutboundMessageTransport(responseAdapter);
-   * 
-   * HTTPRedirectDeflateEncoder encoder = new HTTPRedirectDeflateEncoder();
-   * 
-   * try { encoder.encode(context); } catch (MessageEncodingException e) {
-   * 
-   * } }
-   * 
-   * private AuthnRequest generateAuthnRequest(final SAMLMetaData metaData)
-   * throws IllegalArgumentException, SecurityException, IllegalAccessException
-   * {
-   * 
-   * AuthnRequest authnRequest =
-   * SAMLUtil.buildSAMLObjectWithDefaultName(AuthnRequest.class);
-   * 
-   * authnRequest.setForceAuthn(true); authnRequest.setIsPassive(false);
-   * authnRequest.setIssueInstant(new DateTime()); for (SingleSignOnService sss
-   * :
-   * metaData.getIdpEntityDescriptor().getIDPSSODescriptor(SAMLConstants.SAML20P_NS
-   * ).getSingleSignOnServices()) { if
-   * (sss.getBinding().equals(SAMLConstants.SAML2_REDIRECT_BINDING_URI)) {
-   * authnRequest.setDestination(sss.getLocation()); } }
-   * authnRequest.setProtocolBinding(SAMLConstants.SAML2_ARTIFACT_BINDING_URI);
-   * 
-   * String deployURL = getDeployURL(); if (deployURL.charAt(deployURL.length()
-   * - 1) == '/') { deployURL = deployURL.substring(0, deployURL.length() - 1);
-   * } authnRequest.setAssertionConsumerServiceURL(deployURL +
-   * SAMLMetaData.CONSUMER_PATH);
-   * 
-   * authnRequest.setID(SAMLUtil.getSecureRandomIdentifier());
-   * 
-   * Issuer issuer = SAMLUtil.buildSAMLObjectWithDefaultName(Issuer.class);
-   * issuer.setValue(getSPEntityId()); authnRequest.setIssuer(issuer);
-   * 
-   * NameIDPolicy nameIDPolicy =
-   * SAMLUtil.buildSAMLObjectWithDefaultName(NameIDPolicy.class);
-   * nameIDPolicy.setSPNameQualifier(getSPEntityId());
-   * nameIDPolicy.setAllowCreate(true);
-   * nameIDPolicy.setFormat("urn:oasis:names:tc:SAML:2.0:nameid-format:transient"
-   * );
-   * 
-   * authnRequest.setNameIDPolicy(nameIDPolicy);
-   * 
-   * RequestedAuthnContext requestedAuthnContext =
-   * SAMLUtil.buildSAMLObjectWithDefaultName(RequestedAuthnContext.class);
-   * requestedAuthnContext
-   * .setComparison(AuthnContextComparisonTypeEnumeration.MINIMUM);
-   * 
-   * AuthnContextClassRef authnContextClassRef =
-   * SAMLUtil.buildSAMLObjectWithDefaultName(AuthnContextClassRef.class);
-   * authnContextClassRef.setAuthnContextClassRef(
-   * "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport");
-   * 
-   * requestedAuthnContext.getAuthnContextClassRefs().add(authnContextClassRef);
-   * authnRequest.setRequestedAuthnContext(requestedAuthnContext);
-   * 
-   * return authnRequest; }
-   */
-  private static XMLObjectBuilderFactory builderFactory;
-
   public static XMLObjectBuilderFactory getSAMLBuilder() throws ConfigurationException {
-
     if (builderFactory == null) {
       // OpenSAML 2.3
       DefaultBootstrap.bootstrap();
       builderFactory = Configuration.getBuilderFactory();
     }
-
     return builderFactory;
   }
 
@@ -221,18 +141,12 @@ public class AuthRequest {
    */
   public static Attribute buildStringAttribute(String name, String value, XMLObjectBuilderFactory builderFactory) throws ConfigurationException {
     SAMLObjectBuilder attrBuilder = (SAMLObjectBuilder) getSAMLBuilder().getBuilder(Attribute.DEFAULT_ELEMENT_NAME);
-    
-    
     Attribute attrFirstName = (Attribute) attrBuilder.buildObject();
     attrFirstName.setName(name);
     // Set custom Attributes
     XMLObjectBuilder stringBuilder = getSAMLBuilder().getBuilder(XSString.TYPE_NAME);
-    
-    
-    
     XSString attrValueFirstName = (XSString) stringBuilder.buildObject(AttributeValue.DEFAULT_ELEMENT_NAME, XSString.TYPE_NAME);
     attrValueFirstName.setValue(value);
-
     attrFirstName.getAttributeValues().add(attrValueFirstName);
     return attrFirstName;
   }
@@ -252,26 +166,20 @@ public class AuthRequest {
       nameId.setValue(input.getStrNameID());
       nameId.setNameQualifier(input.getStrNameQualifier());
       nameId.setFormat(NameID.UNSPECIFIED);
-
       // Create the SubjectConfirmation
-
       SAMLObjectBuilder confirmationMethodBuilder = (SAMLObjectBuilder) AuthRequest.getSAMLBuilder().getBuilder(SubjectConfirmationData.DEFAULT_ELEMENT_NAME);
       SubjectConfirmationData confirmationMethod = (SubjectConfirmationData) confirmationMethodBuilder.buildObject();
       DateTime now = new DateTime();
       confirmationMethod.setNotBefore(now);
       confirmationMethod.setNotOnOrAfter(now.plusMinutes(2));
-
       SAMLObjectBuilder subjectConfirmationBuilder = (SAMLObjectBuilder) AuthRequest.getSAMLBuilder().getBuilder(SubjectConfirmation.DEFAULT_ELEMENT_NAME);
       SubjectConfirmation subjectConfirmation = (SubjectConfirmation) subjectConfirmationBuilder.buildObject();
       subjectConfirmation.setSubjectConfirmationData(confirmationMethod);
-
       // Create the Subject
       SAMLObjectBuilder subjectBuilder = (SAMLObjectBuilder) AuthRequest.getSAMLBuilder().getBuilder(Subject.DEFAULT_ELEMENT_NAME);
       Subject subject = (Subject) subjectBuilder.buildObject();
-
       subject.setNameID(nameId);
       subject.getSubjectConfirmations().add(subjectConfirmation);
-
       // Create Authentication Statement
       SAMLObjectBuilder authStatementBuilder = (SAMLObjectBuilder) AuthRequest.getSAMLBuilder().getBuilder(AuthnStatement.DEFAULT_ELEMENT_NAME);
       AuthnStatement authnStatement = (AuthnStatement) authStatementBuilder.buildObject();
@@ -281,21 +189,16 @@ public class AuthRequest {
       authnStatement.setAuthnInstant(now2);
       authnStatement.setSessionIndex(input.getSessionId());
       authnStatement.setSessionNotOnOrAfter(now2.plus(input.getMaxSessionTimeoutInMinutes()));
-
       SAMLObjectBuilder authContextBuilder = (SAMLObjectBuilder) AuthRequest.getSAMLBuilder().getBuilder(AuthnContext.DEFAULT_ELEMENT_NAME);
       AuthnContext authnContext = (AuthnContext) authContextBuilder.buildObject();
-
       SAMLObjectBuilder authContextClassRefBuilder = (SAMLObjectBuilder) AuthRequest.getSAMLBuilder().getBuilder(AuthnContextClassRef.DEFAULT_ELEMENT_NAME);
       AuthnContextClassRef authnContextClassRef = (AuthnContextClassRef) authContextClassRefBuilder.buildObject();
       authnContextClassRef.setAuthnContextClassRef("urn:oasis:names:tc:SAML:2.0:ac:classes:Password"); // TODO
-
       authnContext.setAuthnContextClassRef(authnContextClassRef);
       authnStatement.setAuthnContext(authnContext);
-
       // Builder Attributes
       SAMLObjectBuilder attrStatementBuilder = (SAMLObjectBuilder) AuthRequest.getSAMLBuilder().getBuilder(AttributeStatement.DEFAULT_ELEMENT_NAME);
       AttributeStatement attrStatement = (AttributeStatement) attrStatementBuilder.buildObject();
-
       // Create the attribute statement
       Map attributes = input.getAttributes();
       if (attributes != null) {
@@ -305,31 +208,25 @@ public class AuthRequest {
           attrStatement.getAttributes().add(attrFirstName);
         }
       }
-
       // Create the do-not-cache condition
       SAMLObjectBuilder doNotCacheConditionBuilder = (SAMLObjectBuilder) AuthRequest.getSAMLBuilder().getBuilder(OneTimeUse.DEFAULT_ELEMENT_NAME);
       Condition condition = (Condition) doNotCacheConditionBuilder.buildObject();
-
       SAMLObjectBuilder conditionsBuilder = (SAMLObjectBuilder) AuthRequest.getSAMLBuilder().getBuilder(Conditions.DEFAULT_ELEMENT_NAME);
       Conditions conditions = (Conditions) conditionsBuilder.buildObject();
       conditions.getConditions().add(condition);
-
       // Create Issuer
       SAMLObjectBuilder issuerBuilder = (SAMLObjectBuilder) AuthRequest.getSAMLBuilder().getBuilder(Issuer.DEFAULT_ELEMENT_NAME);
       Issuer issuer = (Issuer) issuerBuilder.buildObject();
       issuer.setValue(input.getStrIssuer());
-
       // Create the assertion
       SAMLObjectBuilder assertionBuilder = (SAMLObjectBuilder) AuthRequest.getSAMLBuilder().getBuilder(Assertion.DEFAULT_ELEMENT_NAME);
       Assertion assertion = (Assertion) assertionBuilder.buildObject();
       assertion.setIssuer(issuer);
       assertion.setIssueInstant(now);
       assertion.setVersion(SAMLVersion.VERSION_20);
-
       assertion.getAuthnStatements().add(authnStatement);
       assertion.getAttributeStatements().add(attrStatement);
       assertion.setConditions(conditions);
-
       return assertion;
     } catch (Exception e) {
       e.printStackTrace();
