@@ -63,7 +63,6 @@ public class AuthResponse {
   public HashMap<String, HashSet<String>> processResponse(String responseMessage) throws ParserConfigurationException, SAXException, IOException,
       UnmarshallingException, DecryptionException, KeyStoreException, NoSuchAlgorithmException, CertificateException, SecurityException, ValidationException,
       MetadataProviderException {
-
     Response fetchedResponse = fetchResponse(responseMessage);
     EncryptedAssertion encryptedAssertion = getEncryptedAssertion(fetchedResponse);
     X509Credential privateCredential = getMyKey();
@@ -108,17 +107,12 @@ public class AuthResponse {
     FileInputStream inputStream = new FileInputStream("C:/Users/anveshas/keystore.jks");
     keystore.load(inputStream, "anvesha".toCharArray());
     inputStream.close();
-
     Map<String, String> passwordMap = new HashMap<String, String>();
     passwordMap.put("openSAMLKey", "anvesha");
-
     KeyStoreCredentialResolver resolver = new KeyStoreCredentialResolver(keystore, passwordMap);
-
     Criteria criteria = new EntityIDCriteria("openSAMLKey");
     CriteriaSet criteriaSet = new CriteriaSet(criteria);
-
     X509Credential credential = (X509Credential) resolver.resolveSingle(criteriaSet);
-
     return credential;
 
   }
@@ -127,33 +121,24 @@ public class AuthResponse {
 
     Base64 base64 = new Base64();
     byte[] decodedB = base64.decode(responseMessage);
-
     ByteArrayInputStream is = new ByteArrayInputStream(decodedB);
-
     DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
     documentBuilderFactory.setNamespaceAware(true);
     DocumentBuilder docBuilder = documentBuilderFactory.newDocumentBuilder();
-
     Document document = docBuilder.parse(is);
     Element element = document.getDocumentElement();
-    System.out.println(element);
-
     Unmarshaller unmarshaller = Configuration.getUnmarshallerFactory().getUnmarshaller(element);
     XMLObject xmlobj = unmarshaller.unmarshall(element);
     Response respObject = (Response) xmlobj;
     System.out.println(respObject);
-
     return respObject;
   }
 
   public EncryptedAssertion getEncryptedAssertion(Response respObject) {
-
     List<EncryptedAssertion> encryptedAssertion = respObject.getEncryptedAssertions();
     EncryptedAssertion firstAssertion = encryptedAssertion.get(0);
     System.out.println(encryptedAssertion.get(0));
-
     EncryptedKey key = firstAssertion.getEncryptedData().getKeyInfo().getEncryptedKeys().get(0);
-
     System.out.println(key.toString());
     return firstAssertion;
   }
@@ -207,19 +192,12 @@ public class AuthResponse {
 
   public Assertion decrypt(EncryptedAssertion enc, Credential credential, String federationMetadata) throws DecryptionException, ValidationException,
       ParserConfigurationException, SAXException, IOException, MetadataProviderException, SecurityException {
-
-    // credential is the receiver's private key
     KeyInfoCredentialResolver keyResolver = new StaticKeyInfoCredentialResolver(credential);
     EncryptedKey key = enc.getEncryptedData().getKeyInfo().getEncryptedKeys().get(0);
-
-    // receiver's private key is used to extract the public key
     Decrypter decrypter = new Decrypter(null, keyResolver, new InlineEncryptedKeyResolver());
     decrypter.setRootInNewDocument(true);
-
     SecretKey dkey = (SecretKey) decrypter.decryptKey(key, enc.getEncryptedData().getEncryptionMethod().getAlgorithm());
     Credential shared = SecurityHelper.getSimpleCredential(dkey);
-
-    // Decrypt the data
     decrypter = new Decrypter(new StaticKeyInfoCredentialResolver(shared), null, null);
     decrypter.setRootInNewDocument(true);
     Assertion assertion = decrypter.decrypt(enc);

@@ -2,20 +2,46 @@ package com.test.saml;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.security.Security;
-
+import javax.xml.namespace.QName;
 import javax.xml.parsers.ParserConfigurationException;
-
+import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.joda.time.DateTime;
 import org.opensaml.Configuration;
 import org.opensaml.DefaultBootstrap;
-import org.opensaml.saml2.core.AuthnRequest;
+import org.opensaml.common.SAMLVersion;
+import org.opensaml.common.impl.SecureRandomIdentifierGenerator;
+import org.opensaml.saml2.core.Assertion;
+import org.opensaml.saml2.core.AuthnStatement;
+import org.opensaml.saml2.core.Issuer;
+import org.opensaml.saml2.core.Response;
+import org.opensaml.saml2.core.impl.AssertionBuilder;
+import org.opensaml.saml2.core.impl.AuthnStatementBuilder;
+import org.opensaml.saml2.core.impl.IssuerBuilder;
 import org.opensaml.xml.ConfigurationException;
 import org.opensaml.xml.XMLObject;
+import org.opensaml.xml.XMLObjectBuilder;
+import org.opensaml.xml.XMLObjectBuilderFactory;
+import org.opensaml.xml.io.Marshaller;
+import org.opensaml.xml.io.MarshallerFactory;
+import org.opensaml.xml.io.MarshallingException;
 import org.opensaml.xml.io.Unmarshaller;
 import org.opensaml.xml.io.UnmarshallingException;
 import org.opensaml.xml.parse.BasicParserPool;
 import org.opensaml.xml.parse.XMLParserException;
+import org.opensaml.xml.security.credential.BasicCredential;
+import org.opensaml.xml.signature.Signature;
+import org.opensaml.xml.signature.SignatureConstants;
+import org.opensaml.xml.signature.SignatureException;
+import org.opensaml.xml.signature.SignatureValidator;
+import org.opensaml.xml.signature.Signer;
+import org.opensaml.xml.signature.impl.SignatureBuilder;
+import org.opensaml.xml.util.XMLHelper;
+import org.opensaml.xml.validation.ValidationException;
+import org.sms.saml.service.SamlService;
+import org.sms.util.GZipUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -26,7 +52,24 @@ import org.xml.sax.SAXException;
  */
 public class TestRequest {
 
-  public static String test = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><samlp:AuthnRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\" AssertionConsumerServiceURL=\"http://soaer.com:8080\" ForceAuthn=\"false\" ID=\"A71AB3E13\" IsPassive=\"false\" IssueInstant=\"2016-01-08T11:14:32.466Z\" ProtocolBinding=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST\" Version=\"2.0\"><samlp:Issuer xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:assertion\">http://localhost:9080/ServiceProvider/</samlp:Issuer><saml2p:NameIDPolicy xmlns:saml2p=\"urn:oasis:names:tc:SAML:2.0:protocol\" AllowCreate=\"true\" SPNameQualifier=\"http://localhost:9080/ServiceProvider/\" /><saml2p:RequestedAuthnContext xmlns:saml2p=\"urn:oasis:names:tc:SAML:2.0:protocol\" Comparison=\"exact\"><saml:AuthnContextClassRef xmlns:saml=\"urn:oasis:names:tc:SAML:2.0:assertion\">urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</saml:AuthnContextClassRef></saml2p:RequestedAuthnContext></samlp:AuthnRequest>";
+  protected static XMLObjectBuilderFactory builderFactory = Configuration.getBuilderFactory();;
+  /** Credential used for signing. */
+
+  /** Builder of Assertions. */
+  private AssertionBuilder assertionBuilder;
+
+  /** Builder of Issuers. */
+  private IssuerBuilder issuerBuilder;
+
+  /** Builder of AuthnStatements. */
+  private AuthnStatementBuilder authnStatementBuilder;
+
+  /** Builder of AuthnStatements. */
+  private SignatureBuilder signatureBuilder;
+
+  /** Generator of element IDs. */
+
+  SamlService saml = new SamlService();
 
   static {
     try {
@@ -37,10 +80,36 @@ public class TestRequest {
     Security.addProvider(new BouncyCastleProvider());
   }
 
-  public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
-    String elementFile = "local.xml";
-    AuthnRequest request = (AuthnRequest) unmarshallElement(elementFile);
-    System.out.println(request);
+  public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, MarshallingException, SignatureException {
+    SamlService saml = new SamlService();
+    String xmlResponseBase64 = saml.buildResponse();
+    Response response = null;
+    try {
+      byte[] check = Base64.decodeBase64(xmlResponseBase64);
+      String gunZip = GZipUtil.gunzip(new String(check));
+      response = (Response) unmarshallElement(gunZip);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    BasicCredential basicCredential = new BasicCredential();
+    basicCredential.setPublicKey(saml.getRSAPublicKey("/opensaml/SPSSODescriptor.xml"));
+    SignatureValidator signatureValidator = new SignatureValidator(basicCredential);
+    Assertion fristAssertion = response.getAssertions().get(0);
+    fristAssertion.setID("ddddddddddddddeeeeeeeeee");
+    Signature signature = fristAssertion.getSignature();
+    try {
+      signatureValidator.validate(signature);
+      System.out.println("验证痛过");
+    } catch (ValidationException e) {
+      throw new RuntimeException("验证签名错误");
+    }
+    Element eee = signature.getDOM();
+    System.out.println(eee.toString());
+  }
+
+  public static XMLObject buildXMLObject(QName objectQName) {
+    XMLObjectBuilder<?> builder = Configuration.getBuilderFactory().getBuilder(objectQName);
+    return builder.buildObject(objectQName.getNamespaceURI(), objectQName.getLocalPart(), objectQName.getPrefix());
   }
 
   /**
@@ -52,7 +121,7 @@ public class TestRequest {
       BasicParserPool parser;
       parser = new BasicParserPool();
       parser.setNamespaceAware(true);
-      Document doc = (Document) parser.parse(new ByteArrayInputStream(test.getBytes()));
+      Document doc = (Document) parser.parse(new ByteArrayInputStream(elementFile.getBytes()));
       System.out.println(doc.toString());
       Element samlElement = (Element) doc.getDocumentElement();
       Unmarshaller unmarshaller = Configuration.getUnmarshallerFactory().getUnmarshaller(samlElement);
@@ -65,5 +134,63 @@ public class TestRequest {
       e.printStackTrace();
     }
     return null;
+  }
+
+  public void testSign() throws MarshallingException, SignatureException {
+
+    assertionBuilder = (AssertionBuilder) builderFactory.getBuilder(Assertion.DEFAULT_ELEMENT_NAME);
+    issuerBuilder = (IssuerBuilder) builderFactory.getBuilder(Issuer.DEFAULT_ELEMENT_NAME);
+    authnStatementBuilder = (AuthnStatementBuilder) builderFactory.getBuilder(AuthnStatement.DEFAULT_ELEMENT_NAME);
+    SignatureBuilder signatureBuilder = (SignatureBuilder) builderFactory.getBuilder(Signature.DEFAULT_ELEMENT_NAME);
+    DateTime now = new DateTime();
+    Assertion assertion = assertionBuilder.buildObject();
+    assertion.setVersion(SAMLVersion.VERSION_20);
+    assertion.setID("fghjkyuiopghjklnm,.");
+    assertion.setIssueInstant(now);
+
+    Issuer issuer = issuerBuilder.buildObject();
+    issuer.setValue("urn:example.org:issuer");
+    assertion.setIssuer(issuer);
+
+    AuthnStatement authnStmt = authnStatementBuilder.buildObject();
+    authnStmt.setAuthnInstant(now);
+    assertion.getAuthnStatements().add(authnStmt);
+    Signature signature = signatureBuilder.buildObject();
+    BasicCredential basicCredential = new BasicCredential();
+    basicCredential.setPrivateKey(saml.getRSAPrivateKey("/opensaml/IDPSSODescriptor.xml"));
+    signature.setCanonicalizationAlgorithm(SignatureConstants.ALGO_ID_C14N_EXCL_OMIT_COMMENTS);
+    signature.setSignatureAlgorithm(SignatureConstants.ALGO_ID_SIGNATURE_RSA);
+    signature.setSigningCredential(basicCredential);
+    assertion.setSignature(signature);
+    MarshallerFactory marshallerFactory = Configuration.getMarshallerFactory();
+    Marshaller marshaller = marshallerFactory.getMarshaller(assertion);
+    marshaller.marshall(assertion);
+    Signer.signObject(signature);
+
+    try {
+      Element authDOM = marshaller.marshall(assertion);
+      StringWriter rspWrt = new StringWriter();
+      XMLHelper.writeNode(authDOM, rspWrt);
+      String messageXML = rspWrt.toString();
+      System.out.println(messageXML);
+    } catch (MarshallingException e) {
+      throw new RuntimeException("创建Response错误:" + e.getMessage());
+    }
+  }
+
+  protected XMLObject unmarshallElementString(String authReauest) {
+    try {
+      BasicParserPool parser;
+      parser = new BasicParserPool();
+      parser.setNamespaceAware(true);
+      Document doc = (Document) parser.parse(new ByteArrayInputStream(authReauest.getBytes()));
+      Element samlElement = (Element) doc.getDocumentElement();
+      Unmarshaller unmarshaller = Configuration.getUnmarshallerFactory().getUnmarshaller(samlElement);
+      return unmarshaller.unmarshall(samlElement);
+    } catch (XMLParserException e) {
+      throw new RuntimeException(e);
+    } catch (UnmarshallingException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

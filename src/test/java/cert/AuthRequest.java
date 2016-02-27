@@ -376,28 +376,16 @@ public class AuthRequest {
   public EncryptedAssertion encrypt(Assertion assertion, X509Credential receiverCredential) throws EncryptionException, NoSuchAlgorithmException, KeyException {
 
     Credential symmetricCredential = SecurityHelper.getSimpleCredential(SecurityHelper.generateSymmetricKey(EncryptionConstants.ALGO_ID_BLOCKCIPHER_AES128));
-
-    // The EncryptionParameters contain a reference to the shared key and the
-    // algorithm to use
     EncryptionParameters encParams = new EncryptionParameters();
     encParams.setAlgorithm(EncryptionConstants.ALGO_ID_BLOCKCIPHER_AES128);
     encParams.setEncryptionCredential(symmetricCredential);
-
-    // The KeyEncryptionParameters contain the receiver's public key
     KeyEncryptionParameters kek = new KeyEncryptionParameters();
     kek.setAlgorithm(EncryptionConstants.ALGO_ID_KEYTRANSPORT_RSA15);
     kek.setEncryptionCredential(receiverCredential);
-
     Encrypter encrypter = new Encrypter(encParams, kek);
     encrypter.setKeyPlacement(KeyPlacement.INLINE);
-
     EncryptedAssertion encrypted = encrypter.encrypt(assertion);
-
     return encrypted;
-    // response.getEncryptedAssertions().add(encrypted);
-    //
-    // response.getAssertions().clear();
-    // System.out.println(response);
   }
 
   public static class SAMLInputContainer {

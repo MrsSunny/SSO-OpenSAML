@@ -180,6 +180,21 @@ public class SamlService {
       throw new RuntimeException("创建Response错误:" + e.getMessage());
     }
   }
+  
+  public String buildResponse(Response response) {
+    Marshaller marshaller = Configuration.getMarshallerFactory().getMarshaller(response);
+    try {
+      Element authDOM = marshaller.marshall(response);
+      StringWriter rspWrt = new StringWriter();
+      XMLHelper.writeNode(authDOM, rspWrt);
+      String messageXML = rspWrt.toString();
+      System.out.println(messageXML);
+      String samlResponse = GZipUtil.gzip(messageXML);
+      return Base64.encodeBytes(samlResponse.getBytes(), Base64.DONT_BREAK_LINES);
+    } catch (MarshallingException e) {
+      throw new RuntimeException("创建Response错误:" + e.getMessage());
+    }
+  }
 
   public Response getResponse() {
     Response response = (Response) buildXMLObject(Response.DEFAULT_ELEMENT_NAME);
@@ -248,7 +263,7 @@ public class SamlService {
     assertion.setIssuer(aIssuer);
     subject.setNameID(nameID);
     subject.getSubjectConfirmations().add(subjectConfirmation);
-//    assertion.setSubject(subject);
+    assertion.setSubject(subject);
     audienceRestriction.getAudiences().add(audience);
     conditions.getAudienceRestrictions().add(audienceRestriction);
     assertion.setConditions(conditions);
@@ -266,6 +281,7 @@ public class SamlService {
     signature.setCanonicalizationAlgorithm(CANON_ALGORITHM);
     signature.setSignatureAlgorithm(SIGNATURE_METHOD);
     signature.setSigningCredential(basicCredential);
+    
     assertion.setSignature(signature);
     Marshaller marshaller = null;
     MarshallerFactory marshallerFactory = Configuration.getMarshallerFactory();
@@ -273,6 +289,7 @@ public class SamlService {
     try {
       marshaller.marshall(assertion);
     } catch (MarshallingException e) {
+      e.printStackTrace();
     }
     try {
       Signer.signObject(signature);
@@ -392,8 +409,7 @@ public class SamlService {
   }
 
   /**
-   * 加密断言 encrypt_descriptions:
-   * 
+   * 加密断言
    * @param assertion
    * @param receiverCredential
    * @return
@@ -416,8 +432,7 @@ public class SamlService {
   }
 
   /**
-   * 解密断言 decrypt_descriptions:
-   * 
+   * 解密断言
    * @param enc
    * @param credential
    * @param federationMetadata
