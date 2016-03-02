@@ -18,7 +18,7 @@ import org.sms.SysConstants;
  * @since 1.8.0
  */
 public class SamlFilter implements Filter {
-  
+
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
   }
@@ -31,10 +31,16 @@ public class SamlFilter implements Filter {
     /**
      * 判断用户是否处于登录状态
      */
-    if (session != null && session.getAttribute(SysConstants.LOGIN_USER) != null) {
+    if (session.getAttribute(SysConstants.LOGIN_USER) == null) {
       StringBuffer url = request.getRequestURL();
-      String returnUrl = URLEncoder.encode(url.toString(), SysConstants.CHARSET);
-      ((HttpServletResponse) response).sendRedirect(SysConstants.IDPSERVERADDRESS + "?ReturnUrl=" + returnUrl);
+      if (url.toString().contains("/SAML2") || url.toString().contains("buildIdpRequest")) {
+        chain.doFilter(request, response);
+      } else {
+        String returnUrl = URLEncoder.encode(url.toString(), SysConstants.CHARSET);
+        response.sendRedirect("/SAML2/buildSPArtifact");
+      }
+    } else {
+      chain.doFilter(request, response);
     }
   }
 
