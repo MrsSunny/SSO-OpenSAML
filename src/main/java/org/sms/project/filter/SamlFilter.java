@@ -3,7 +3,6 @@ package org.sms.project.filter;
 import java.io.IOException;
 import java.net.URLEncoder;
 import javax.servlet.Filter;
-import org.sms.SysConstants;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
@@ -12,6 +11,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.sms.SysConstants;
 
 /**
  * @author Sunny
@@ -34,7 +34,7 @@ public class SamlFilter implements Filter {
     if (session != null && session.getAttribute(SysConstants.LOGIN_USER) != null) {
       StringBuffer url = request.getRequestURL();
       String returnUrl = URLEncoder.encode(url.toString(), SysConstants.CHARSET);
-      ((HttpServletResponse) response).sendRedirect("http://login.soaer.com:8083?ReturnUrl=" + returnUrl);
+      ((HttpServletResponse) response).sendRedirect(SysConstants.IDPSERVERADDRESS + "?ReturnUrl=" + returnUrl);
     }
   }
 

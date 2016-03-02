@@ -55,8 +55,7 @@ public class SamlServiceTest extends BaseTest {
   
 //  @Test
   public void testBuildArtifact() {
-    String artifactId = UUID.randomUUID().toString().replace("-", "");
-    String samlArtifact = samlService.buildArtifact(artifactId);
+    String samlArtifact = samlService.buildArtifact();
     assertNotNull("response is null", samlArtifact);
   }
   

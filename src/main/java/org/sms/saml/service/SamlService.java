@@ -298,7 +298,8 @@ public class SamlService {
     return attribute;
   }
 
-  public String buildArtifact(String artifactId) {
+  public String buildArtifact() {
+    String artifactId = UUIDFactory.INSTANCE.getUUID();
     Artifact artifact = (Artifact) buildXMLObject(Artifact.DEFAULT_ELEMENT_NAME);
     artifact.setArtifact(artifactId);
     Marshaller marshaller = org.opensaml.Configuration.getMarshallerFactory().getMarshaller(artifact);

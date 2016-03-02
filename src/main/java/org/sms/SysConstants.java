@@ -19,6 +19,7 @@ public interface SysConstants {
   public static String CANON_ALGORITHM = "http://www.w3.org/2001/10/xml-exc-c14n#";
   public static String IDPSSPXMLFILE = "/opensaml/IDPSSODescriptor.xml";
   public static final String SPSSPXMLFILE = "/opensaml/SPSSODescriptor.xml";
+  public static final String IDPSERVERADDRESS = "http://login.soaer.com:8888";
   
   public enum LockType {
     
