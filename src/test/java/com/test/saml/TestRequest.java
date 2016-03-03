@@ -43,6 +43,7 @@ import org.opensaml.xml.signature.Signer;
 import org.opensaml.xml.signature.impl.SignatureBuilder;
 import org.opensaml.xml.util.XMLHelper;
 import org.sms.saml.service.SamlService;
+import org.sms.saml.service.impl.SamlServiceImpl;
 import org.sms.util.GZipUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -70,7 +71,7 @@ public class TestRequest {
 
   /** Generator of element IDs. */
 
-  SamlService saml = new SamlService();
+  static SamlService saml = new SamlServiceImpl();
 
   static {
     try {
@@ -82,8 +83,7 @@ public class TestRequest {
   }
 
   public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, MarshallingException, SignatureException, ConfigurationException {
-    SamlService saml = new SamlService();
-    String xmlRequestBase64 = saml.buildRequest();
+    String xmlRequestBase64 = "";
     AuthnRequest request = null;
     try {
       byte[] check = Base64.decodeBase64(xmlRequestBase64);
@@ -101,9 +101,9 @@ public class TestRequest {
     System.out.println("Request ID为：" + requestID);
     System.out.println("serviceUrl 为：" + serviceUrl);
     System.out.println("audienceURI 为：" + audienceURI);
-    String xmlResponseBase64 = saml.buildResponse(requestID, audienceURI);
-    boolean isCheck = saml.validate(xmlResponseBase64);
-    System.out.println(isCheck);
+//    String xmlResponseBase64 = saml.buildResponse(requestID, audienceURI);
+//    boolean isCheck = saml.validate(xmlResponseBase64);
+//    System.out.println(isCheck);
 //    Response response = null;
 //    try {
 //      byte[] check = Base64.decodeBase64(xmlResponseBase64);

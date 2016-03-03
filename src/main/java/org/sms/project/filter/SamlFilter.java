@@ -1,7 +1,6 @@
 package org.sms.project.filter;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -33,11 +32,11 @@ public class SamlFilter implements Filter {
      */
     if (session.getAttribute(SysConstants.LOGIN_USER) == null) {
       StringBuffer url = request.getRequestURL();
-      if (url.toString().contains("/SAML2") || url.toString().contains("buildIdpRequest")) {
+      if (url.toString().contains("/SAML2")) {
         chain.doFilter(request, response);
       } else {
-        String returnUrl = URLEncoder.encode(url.toString(), SysConstants.CHARSET);
-        response.sendRedirect("/SAML2/buildSPArtifact");
+        session.setAttribute(SysConstants.REDIRECT_URL_KEY, url.toString());
+        response.sendRedirect("/SAML2/sendArtifactToIDP");
       }
     } else {
       chain.doFilter(request, response);

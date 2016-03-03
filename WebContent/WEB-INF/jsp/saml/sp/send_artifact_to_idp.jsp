@@ -7,15 +7,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>SPBUILDARTIFACT</title>
 </head>
 <body>
-	Artifact:<%=request.getAttribute(SysConstants.ARTIFACT_KEY)%>
-	Token:<%=request.getAttribute(SysConstants.TOKEN_KEY)%>
-	<form action="<%=SysConstants.IDPRECEIVESPARTIFACT_URL%>" method="post">
+	<form action="<%=SysConstants.IDPRECEIVESPARTIFACT_URL%>" method="post" name = "autoForm">
 		<input type="hidden" name="artifact" value="<%=request.getAttribute(SysConstants.ARTIFACT_KEY)%>" />
 		<input type="hidden" name="token" value="<%=request.getAttribute(SysConstants.TOKEN_KEY)%>" />
-		<input type="submit" value="Submit" />
 	</form>
 </body>
+<script type="text/javascript">
+	document.autoForm.submit();
+</script>
 </html>

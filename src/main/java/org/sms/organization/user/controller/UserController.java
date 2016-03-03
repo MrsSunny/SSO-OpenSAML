@@ -19,7 +19,7 @@ public class UserController {
 
   @RequestMapping(value = "/list")
   public String list(Model model, HttpServletRequest request) {
-    return "login/login_success";
+    return "/login/login_success";
   }
   
   @RequestMapping(value = "/test")
