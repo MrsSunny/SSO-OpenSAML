@@ -10,14 +10,38 @@
 	<http pattern="/logout*" security="none" />
 	<http pattern="/index.html" security="none" />
 	<http pattern="/login.jsp" security="none" />
-	<http use-expressions="true" entry-point-ref="authenticationEntryPoint">
-		<csrf disabled="true"/>
+
+	<!-- Use Form_login_Filter -->
+	<!-- <http use-expressions="true" entry-point-ref="authenticationEntryPoint">
+		<csrf disabled="true" />
 		<custom-filter ref="loginFilter" position="FORM_LOGIN_FILTER" />
 		<custom-filter ref="securityFilter" before="FILTER_SECURITY_INTERCEPTOR" />
 	</http>
 	<beans:bean id="authenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
 		<beans:constructor-arg value="/login/login.jsp" />
 	</beans:bean>
+	<authentication-manager alias="authenticationManager">
+		<authentication-provider user-service-ref="sysUserDetailsService"></authentication-provider>
+	</authentication-manager> -->
+	<!-- Use Form_login_Filter END -->
+	
+	
+	<!-- Use CAS FOR SSO AUTH -->
+	<http auto-config="true" use-expressions="true"
+		entry-point-ref="casProcessingFilterEntryPoint">
+		<csrf disabled="true" />
+		<custom-filter ref="casFilter" position="CAS_FILTER" />
+		<custom-filter ref="securityFilter" before="FILTER_SECURITY_INTERCEPTOR" />
+	</http>
+	<beans:bean id="casProcessingFilterEntryPoint"
+		class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
+		<beans:property name="loginUrl" value="http://soaer.com:8888/login/login.jsp" />
+		<beans:property name="serviceProperties" ref="casService" />
+	</beans:bean>
+	<authentication-manager alias="authenticationManager">
+		<authentication-provider ref="casAuthenticationProvider" />
+	</authentication-manager>
+	<!-- Use CAS FOR SSO AUTH END-->
 
 	<!-- 登录验证器 -->
 	<beans:bean id="loginFilter" class="org.sms.project.login.LoginFilter">
@@ -47,12 +71,38 @@
 
 	<beans:bean id="accessDecisionManager" class="org.sms.project.security.SysDecisionManager">
 	</beans:bean>
-	<authentication-manager alias="authenticationManager">
-		<authentication-provider user-service-ref="sysUserDetailsService"></authentication-provider>
-	</authentication-manager>
 
 	<authentication-manager>
 		<authentication-provider user-service-ref="sysUserDetailsService"></authentication-provider>
 	</authentication-manager>
 	<beans:bean id="sysUserDetailsService" class="org.sms.project.security.SysUserDetailsService"></beans:bean>
+
+	<!-- ADD CAS FOR SSO -->
+	<beans:bean id="casFilter" class="org.sms.project.cas.CasFilter">
+		<beans:property name="filterProcessesUrl" value="/casFilter" />
+		<!-- 验证成功后的处理 -->
+		<beans:property name="authenticationSuccessHandler" ref="loginSuccessHandler"></beans:property>
+		<!-- 验证失败后的处理 -->
+		<beans:property name="authenticationFailureHandler" ref="loginFailureHandler"></beans:property>
+		<beans:property name="authenticationManager" ref="authenticationManager" />
+	</beans:bean>
+	<beans:bean id="casService" class="org.springframework.security.cas.ServiceProperties">
+		<beans:property name="service" value="http://soaer.com:8888/cas/login" />
+		<beans:property name="sendRenew" value="false" />
+	</beans:bean>
+
+	<beans:bean id="casAuthenticationProvider" class="org.springframework.security.cas.authentication.CasAuthenticationProvider">
+		<beans:property name="authenticationUserDetailsService">
+			<beans:bean class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
+				<beans:constructor-arg ref="sysUserDetailsService" />
+			</beans:bean>
+		</beans:property>
+		<beans:property name="serviceProperties" ref="casService" />
+		<beans:property name="ticketValidator">
+			<beans:bean class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
+				<beans:constructor-arg index="0" value="http://soaer.com:8888/cas/artifact" />
+			</beans:bean>
+		</beans:property>
+		<beans:property name="key" value="an_id_for_this_auth_provider_only" />
+	</beans:bean>
 </beans:beans>
