@@ -7,5 +7,5 @@
 	System.out.print("++++++++++++++++++++++++++++++");
 	System.out.print((String)session.getAttribute(SysConstants.REDIRECT_URL_KEY));
 	System.out.print("++++++++++++++++++++++++++++++");
-	response.sendRedirect("http://soaer.com:8888/sysuser/test");
+	response.sendRedirect((String)session.getAttribute(SysConstants.REDIRECT_URL_KEY));
 %>

@@ -22,11 +22,11 @@ public class SysUserDetailsService implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String login_id) throws UsernameNotFoundException {
     User user = sysUserService.findUserByLogin_Id(login_id);
-    this.initAuths(user);
+    this.buildAuths(user);
     return user;
   }
 
-  private void initAuths(User user) {
+  private void buildAuths(User user) {
     Set<GrantedAuthority> auths = new HashSet<GrantedAuthority>();
     auths.add(new SimpleGrantedAuthority("ADMIN"));
     user.setAuthorities(auths);

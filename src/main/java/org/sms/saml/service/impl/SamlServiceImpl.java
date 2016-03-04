@@ -9,10 +9,8 @@ import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.List;
-
 import javax.crypto.SecretKey;
 import javax.xml.namespace.QName;
-
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;

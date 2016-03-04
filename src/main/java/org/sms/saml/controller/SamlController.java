@@ -2,12 +2,10 @@ package org.sms.saml.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.opensaml.saml2.core.Artifact;
 import org.opensaml.saml2.core.ArtifactResolve;
 import org.opensaml.saml2.core.ArtifactResponse;
@@ -16,6 +14,7 @@ import org.opensaml.saml2.core.Response;
 import org.sms.SysConstants;
 import org.sms.component.idfactory.UUIDFactory;
 import org.sms.organization.user.entity.User;
+import org.sms.project.security.SysUserDetailsService;
 import org.sms.saml.service.SamlService;
 import org.sms.util.HttpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +31,9 @@ public class SamlController {
 
   @Autowired
   private SamlService samlService;
+  
+  @Autowired
+  private SysUserDetailsService sysUserDetailsService;
 
   /**
    * IDP
@@ -163,5 +165,4 @@ public class SamlController {
     request.setAttribute(SysConstants.TOKEN_KEY, token);
     return "/saml/sp/send_artifact_to_idp";
   }
-  
 }

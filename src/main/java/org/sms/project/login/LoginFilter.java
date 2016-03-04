@@ -3,7 +3,6 @@ package org.sms.project.login;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.sms.SysConstants;
 import org.sms.organization.user.entity.User;
 import org.sms.organization.user.service.UserService;
@@ -25,7 +24,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     if (!request.getMethod().equals("POST")) {
       throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
     }
-
+    
     String username = obtainUsername(request);
     String password = obtainPassword(request);
     if (null == username || null == password || username.equals(""))
@@ -40,7 +39,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     salt = MD5.encrypt(salt);
     if (!salt.equals(user.getPassword()))
       throw new AuthenticationServiceException("用户名或者密码错误！");
-    HttpSession session = request.getSession(false);
+    HttpSession session = request.getSession(true);
     session.setAttribute(SysConstants.LOGIN_USER, user);
     UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, salt);
     setDetails(request, authRequest);

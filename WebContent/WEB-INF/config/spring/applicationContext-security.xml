@@ -16,7 +16,7 @@
 		<custom-filter ref="securityFilter" before="FILTER_SECURITY_INTERCEPTOR" />
 	</http>
 	<beans:bean id="authenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
-		<beans:constructor-arg value="/login.jsp" />
+		<beans:constructor-arg value="/login/login.jsp" />
 	</beans:bean>
 
 	<!-- 登录验证器 -->
