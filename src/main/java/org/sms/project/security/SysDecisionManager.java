@@ -24,7 +24,7 @@ public class SysDecisionManager implements AccessDecisionManager {
         }
       }
     }
-    throw new AccessDeniedException("访问受限!");
+    throw new RuntimeException("访问受限!");
   }
 
   @Override

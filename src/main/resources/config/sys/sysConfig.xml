@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<ignoreUrls>
+		<url>^.+\.(jpg|html|gif|png|js|htc|jpeg|bmp|ico|swf|css|zip|tgz|gz|rar|bz2|doc|xls|exe|pdf|ppt|txt|tar|mid|midi|wav|rtf)$
+		</url>
+		<url>^/(css|images|js|media)/.*$</url>
+		<url>^/(|(index)\.jsp)$</url>
+		<url>^/(|(index)\.html)$</url>
+		<url>^/(login)/.*$</url>
+		<url>^/(SAML2)/.*$</url>
+		<url>^/casFilter</url>
+	</ignoreUrls>
+</root>

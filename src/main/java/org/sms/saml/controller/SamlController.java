@@ -36,6 +36,7 @@ public class SamlController {
   private SysUserDetailsService sysUserDetailsService;
 
   /**
+   * －－－－－－2-－－－－－
    * IDP
    * 接受SP端的Artifact
    * @param request
@@ -73,7 +74,6 @@ public class SamlController {
       ServletInputStream inputStream = request.getInputStream();
       String result = HttpUtil.readInputStream(inputStream);
       ArtifactResolve artifactResolve = (ArtifactResolve) samlService.buildStringToXMLObject(result.trim());
-      
       ArtifactResponse artifactResponse = samlService.buildArtifactResponse();
       artifactResponse.setInResponseTo(artifactResolve.getID());
       artifactResponse.setMessage(samlService.buildResponse(UUIDFactory.INSTANCE.getUUID(), "http://soaer.com:8888/sysuser/list"));
@@ -91,6 +91,7 @@ public class SamlController {
   }
   
   /**
+   * －－－－－4-－－－－－
    * SP
    * 接受SP端的Artifact
    * @param request
@@ -120,7 +121,8 @@ public class SamlController {
   }
   
   /**
-   * SP
+   * －－－－－3-－－－－－
+   * SP 接受IDP端的Artifact 并返回给IDP ArtifactResponse
    * 接受SP端的Artifact
    * @param request
    * @param response
@@ -150,7 +152,8 @@ public class SamlController {
   }
   
   /**
-   * SP
+   * －－－－－1-－－－－－
+   * SP 发送Artifact到IDP
    * 生成SP端的Artifact
    * @param request
    * @param response

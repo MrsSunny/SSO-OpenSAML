@@ -7,12 +7,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>权限受限</title>
 </head>
 <%
-	session.removeAttribute(SysConstants.LOGIN_USER);
+	Object object = session.getAttribute(SysConstants.LOGIN_USER);
+	if (object == null) {
+	  request.getRequestDispatcher("/SAML2/sendArtifactToIDP").forward(request, response);
+	}
 %>
 <body>
-	权限收到限制，请联系管理员！！！！！！！！！！！！
+	权限受到限制！！！！！！！
 </body>
 </html>
