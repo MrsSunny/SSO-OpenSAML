@@ -16,6 +16,7 @@ import org.opensaml.saml2.core.Attribute;
 import org.opensaml.saml2.core.AuthnRequest;
 import org.opensaml.saml2.core.EncryptedAssertion;
 import org.opensaml.saml2.core.Response;
+import org.opensaml.saml2.core.Status;
 import org.opensaml.saml2.metadata.SSODescriptor;
 import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.opensaml.xml.XMLObject;
@@ -166,4 +167,6 @@ public interface SamlService {
    * @throws SecurityException
    */
   boolean validate(String base64Response);
+  
+  Status getStatusCode(boolean success);
 }

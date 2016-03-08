@@ -450,19 +450,11 @@ public class SamlServiceImpl implements SamlService {
    */
   @Override
   public boolean validate(String base64Response) {
-    Response response = null;
-    try {
-      byte[] check = Base64.decode(base64Response);
-      String gunZip = GZipUtil.gunzip(new String(check));
-      response = (Response) buildStringToXMLObject(gunZip);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    SignableXMLObject signableXMLObject = (SignableXMLObject) buildStringToXMLObject(base64Response);
     BasicCredential basicCredential = new BasicCredential();
     basicCredential.setPublicKey(getRSAPublicKey());
     SignatureValidator signatureValidator = new SignatureValidator(basicCredential);
-    Assertion fristAssertion = response.getAssertions().get(0);
-    Signature signature = fristAssertion.getSignature();
+    Signature signature = signableXMLObject.getSignature();
     try {
       signatureValidator.validate(signature);
       return true;
@@ -502,10 +494,24 @@ public class SamlServiceImpl implements SamlService {
     artifactResponse.setID(artifactResponseId);
     artifactResponse.setVersion(SAMLVersion.VERSION_20);
     artifactResponse.setIssueInstant(new DateTime(2005, 1, 31, 12, 0, 0, 0, ISOChronology.getInstanceUTC()));
+    return artifactResponse;
+  }
+  
+  public Status getStatusCode(boolean success) {
     Status status = (Status) buildXMLObject(Status.DEFAULT_ELEMENT_NAME);
     StatusCode statusCode = (StatusCode) buildXMLObject(StatusCode.DEFAULT_ELEMENT_NAME);
-    statusCode.setValue("urn:oasis:names:tc:SAML:2.0:status:Success");
-    artifactResponse.setStatus(status);
-    return artifactResponse;
+    if (success) {
+      statusCode.setValue(StatusCode.SUCCESS_URI);
+    } else {
+      statusCode.setValue(StatusCode.AUTHN_FAILED_URI);
+    }
+    status.setStatusCode(statusCode);
+    return status;
+  }
+  
+  public static void main(String[] args) {
+     SamlServiceImpl a= new SamlServiceImpl();
+     AuthnRequest request = a.buildAuthnRequest();
+     System.out.println(a.buildXMLObjectToString(request));
   }
 }
