@@ -146,7 +146,7 @@ public class SamlServiceImpl implements SamlService {
     }
   }
   
-  public AuthnRequest buildAuthnRequest(String setAssertionConsumerServiceURL) {
+  public AuthnRequest buildAuthnRequest(String requestId, String setAssertionConsumerServiceURL) {
     NameID nameid = (NameID) buildXMLObject(NameID.DEFAULT_ELEMENT_NAME);
     nameid.setFormat(NameID.UNSPECIFIED);
     nameid.setValue("sunny@soaer.com");
@@ -170,7 +170,11 @@ public class SamlServiceImpl implements SamlService {
     request.setAssertionConsumerServiceURL(setAssertionConsumerServiceURL);
     request.setAttributeConsumingServiceIndex(0);
     request.setProviderName("IDP Provider");
-    request.setID("_" + UUIDFactory.INSTANCE.getUUID());
+    if (null == requestId) {
+      request.setID("_" + UUIDFactory.INSTANCE.getUUID());
+    } else {
+      request.setID(requestId);
+    }
     request.setVersion(SAMLVersion.VERSION_20);
     request.setIssueInstant(new DateTime(2005, 1, 31, 12, 0, 0, 0, ISOChronology.getInstanceUTC()));
     request.setDestination(SysConstants.LOCALDOMAIN);

@@ -5,12 +5,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.opensaml.common.SAMLVersion;
 import org.opensaml.saml2.core.Artifact;
 import org.opensaml.saml2.core.ArtifactResolve;
@@ -20,6 +18,8 @@ import org.opensaml.saml2.core.Issuer;
 import org.opensaml.saml2.core.Response;
 import org.opensaml.saml2.core.Status;
 import org.opensaml.saml2.core.StatusCode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sms.SysConstants;
 import org.sms.component.idfactory.UUIDFactory;
 import org.sms.organization.user.entity.User;
@@ -52,10 +52,11 @@ public class SamlController {
   
   @Autowired
   private AppService appService;
+  
+  private Logger logger = LoggerFactory.getLogger(SamlController.class.getName());
 
   /**
    * IDP 接受SP端的Artifact
-   * 
    * @param request
    * @param response
    * @return
@@ -87,13 +88,13 @@ public class SamlController {
       throw new RuntimeException("认证失败");
     }
     final AuthnRequest authnRequest = (AuthnRequest) artifactResponse.getMessage();
+    
     /**
      * 获取需要跳转的SP的Action
      */
     final String customerServiceUrl = authnRequest.getAssertionConsumerServiceURL();
     request.setAttribute(SysConstants.ACTION_KEY, customerServiceUrl);
-    
-    SAMLVersion samlVersion = authnRequest.getVersion();
+    final SAMLVersion samlVersion = authnRequest.getVersion();
     
     /**
      * 判断版本是否支持
@@ -102,29 +103,31 @@ public class SamlController {
       throw new RuntimeException("SAML版本错误，只支持2.0");
     }
     
-    Issuer issuer = authnRequest.getIssuer();
-    String appName = issuer.getValue();
+    final Issuer issuer = authnRequest.getIssuer();
+    final String appName = issuer.getValue();
     
     /**
      * 判断issure的里面的值是否在SSO系统中注册过
      */
     
-    App app = appService.findAppByAppName(appName.trim());
+    final App app = appService.findAppByAppName(appName.trim());
     if (app == null) {
       throw new RuntimeException("不支持当前系统: " + appName);
     }
     final String requestID = authnRequest.getID();
+    logger.debug("AuthRequest的ID为：" + requestID);
+    
     /**
      * 根据AuthnRequest判断用户是否登录
      */
-    Artifact idpArtifact = samlService.buildArtifact();
+    
+    final Artifact idpArtifact = samlService.buildArtifact();
     request.setAttribute(SysConstants.ARTIFACT_KEY, samlService.buildXMLObjectToString(idpArtifact));
     return "/saml/idp/send_artifact_to_sp";
   }
 
   /**
    * IDP 接受SP端的Artifact
-   * 
    * @param request
    * @param response
    * @return
@@ -182,9 +185,9 @@ public class SamlController {
   }
 
   public void putAuthnToSecuritySession(String name, String password) {
-    AuthenticationManager am = new SampleAuthenticationManager();
+    AuthenticationManager authenticationManager = new SampleAuthenticationManager();
     Authentication request = new UsernamePasswordAuthenticationToken(name, password);
-    Authentication result = am.authenticate(request);
+    Authentication result = authenticationManager.authenticate(request);
     SecurityContextHolder.getContext().setAuthentication(result);
   }
 
@@ -201,6 +204,7 @@ public class SamlController {
       ServletInputStream inputStream = request.getInputStream();
       String result = HttpUtil.readInputStream(inputStream);
       ArtifactResponse artifactResponse = samlService.buildArtifactResponse();
+      
       /**
        * 验证签名
        */
@@ -214,7 +218,11 @@ public class SamlController {
         ArtifactResolve artifactResolve = (ArtifactResolve) samlService.buildStringToXMLObject(result.trim());
         artifactResponse.setInResponseTo(artifactResolve.getID());
         artifactResponse.setStatus(samlService.getStatusCode(true));
-        artifactResponse.setMessage(samlService.buildAuthnRequest(SysConstants.SPRECEIVESPARTIFACT_URL));
+        String sso_token_key = (String) SessionHelper.get(request, SysConstants.SSO_TOKEN_KEY);
+        if (null == sso_token_key) {
+          sso_token_key = SysConstants.SAML_ID_PREFIX_CHAR + UUIDFactory.INSTANCE.getUUID();
+        }
+        artifactResponse.setMessage(samlService.buildAuthnRequest(sso_token_key, SysConstants.SPRECEIVESPARTIFACT_URL));
         artifactResponse.setInResponseTo(artifactResolve.getID());
       }
       write = response.getWriter();
@@ -232,7 +240,6 @@ public class SamlController {
 
   /**
    * SP 发送Artifact到IDP 生成SP端的Artifact
-   * 
    * @param request
    * @param response
    * @return

@@ -28,5 +28,9 @@ public interface SysConstants {
   public static final String LOCALDOMAIN_SAML2_SERVICE = "http://soaer.com:8888/SAML2";
   public static final String SP_ARTIFACT_RESOLUTION_SERVICE = "http://soaer.com:8888/SAML2/SPArtifactResolution";
   public static final String IDP_ARTIFACT_RESOLUTION_SERVICE = "http://soaer.com:8888/SAML2/IDPArtifactResolution";
+  public static final String SSO_TOKEN_KEY = "idp_token";
   public static final String ACTION_KEY = "doAction";
+  public static final String SAML_ID_PREFIX_CHAR = "_";
+  public static final String METHOD_SPILT_CHAR = "?";
+  public static final String IPDLOGIN_PAGE = "http://soaer.com:8888/login.jsp";
 }

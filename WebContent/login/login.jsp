@@ -1,4 +1,3 @@
-<%@page import="org.sms.SysConstants"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
@@ -7,15 +6,27 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>权限受限</title>
+<title>Insert title here</title>
 </head>
-<%
-	Object object = session.getAttribute(SysConstants.LOGIN_USER);
-	if (object == null) {
-	  request.getRequestDispatcher("/SAML2/sendArtifactToIDP").forward(request, response);
-	}
-%>
 <body>
-	权限受到限制！！！！！！！
+	<%-- ${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message} --%> <!-- 输出异常信息 -->
+	<form action="loginFilter" method="POST">
+		<c:if test="${param.error != null}">
+			<p>用户名和密码错误.</p>
+		</c:if>
+		<c:if test="${param.logout != null}">
+			<p>You have been logged out.</p>
+		</c:if>
+		<p>
+			<label for="username">Username</label> <input type="text" id="username" name="username" />
+		</p>
+		<p>
+			<label for="password">Password</label> <input type="password" id="password" name="password" />
+		</p>
+		<p>
+			 <input type="text" id="authRequest" name="authRequest"  value="${param.authRequest}" />
+		</p>
+		<button type="submit" class="btn">Log in</button>
+	</form>
 </body>
 </html>

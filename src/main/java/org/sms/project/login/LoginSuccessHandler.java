@@ -1,12 +1,10 @@
 package org.sms.project.login;
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.sms.SysConstants;
 import org.sms.organization.user.entity.User;
 import org.sms.saml.service.SamlService;
@@ -27,6 +25,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
   public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
     HttpSession session = request.getSession();
     session.setAttribute(SysConstants.LOGIN_USER, new User());
+    
     response.sendRedirect("/index.html");
   }
 }
