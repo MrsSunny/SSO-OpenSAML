@@ -89,10 +89,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sms.SysConstants;
 import org.sms.component.idfactory.UUIDFactory;
-import org.sms.saml.dao.SamlDao;
 import org.sms.saml.service.SamlService;
 import org.sms.util.GZipUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -101,9 +99,6 @@ import org.w3c.dom.Element;
 public class SamlServiceImpl implements SamlService {
   
   private Logger logger = LoggerFactory.getLogger(SamlServiceImpl.class.getName());
-
-  @Autowired
-  private SamlDao samlDao;
 
   protected static XMLObjectBuilderFactory builderFactory = Configuration.getBuilderFactory();
 
