@@ -26,7 +26,7 @@ public interface SysConstants {
   public static final String REDIRECT_URL_KEY = "redirectUrl";
   public static final String IDPRECEIVESPARTIFACT_URL = "http://soaer.com:8888/SAML2/receiveSPArtifact";
   public static final String SPRECEIVESPARTIFACT_URL = "http://soaer.com:8888/SAML2/receiveIDPArtifact";
-  public static final String CAS_FILTER = "http://soaer.com:8888/casFilter";
+//  public static final String CAS_FILTER = "http://soaer.com:8888/casFilter";
   public static final String LOCALDOMAIN_SAML2_SERVICE = "http://soaer.com:8888/SAML2";
   public static final String SP_ARTIFACT_RESOLUTION_SERVICE = "http://soaer.com:8888/SAML2/SPArtifactResolution";
   public static final String IDP_ARTIFACT_RESOLUTION_SERVICE = "http://soaer.com:8888/SAML2/IDPArtifactResolution";

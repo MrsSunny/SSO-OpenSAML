@@ -1,7 +1,6 @@
 package org.sms.project.security;
 
 import java.util.Collection;
-
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
@@ -24,7 +23,7 @@ public class SysDecisionManager implements AccessDecisionManager {
         }
       }
     }
-    throw new RuntimeException("访问受限!");
+    throw new AccessDeniedException("您访问的资源不存在或者没有权限！！");
   }
 
   @Override
