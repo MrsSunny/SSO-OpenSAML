@@ -1,6 +1,7 @@
 package org.sms.project.filter;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,12 +38,17 @@ public class SamlFilter implements Filter {
       chain.doFilter(request, response);
     } else if (session.getAttribute(SysConstants.LOGIN_USER) == null) {
       session.setAttribute(SysConstants.REDIRECT_URL_KEY, uri.toString());
-      response.sendRedirect("/SAML2/sendArtifactToIDP");
+      response.sendRedirect(SysConstants.SEND_ARTIFACT_URI + "?" + URLEncoder.encode(request.getRequestURL().toString(), SysConstants.CHARSET));
     } else {
       chain.doFilter(request, response);
     }
   }
 
+  /**
+   * 判断是否是忽略的URL，如果是直接放行
+   * @param requestUri
+   * @return
+   */
   public boolean isIgnoreUrl(String requestUri) {
     List<String> ignores = SysConfig.INSTANCE.getIgnoreUrls();
     Pattern pattern;

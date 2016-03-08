@@ -9,7 +9,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <body>
-	<form action="<%=SysConstants.IDPRECEIVESPARTIFACT_URL%>" method="post" name = "autoForm">
+	<form action="<%=SysConstants.IDPRECEIVESPARTIFACT_URL%>" method="get" name = "autoForm">
 		<input type="hidden" name="artifact" value="<%=request.getAttribute(SysConstants.ARTIFACT_KEY)%>" />
 		<input type="hidden" name="token" value="<%=request.getAttribute(SysConstants.TOKEN_KEY)%>" />
 	</form>

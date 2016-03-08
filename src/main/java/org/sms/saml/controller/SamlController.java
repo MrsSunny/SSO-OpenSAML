@@ -16,6 +16,7 @@ import org.opensaml.saml2.core.Response;
 import org.sms.SysConstants;
 import org.sms.component.idfactory.UUIDFactory;
 import org.sms.organization.user.entity.User;
+import org.sms.project.helper.SessionHelper;
 import org.sms.project.security.SysUserDetailsService;
 import org.sms.saml.service.SamlService;
 import org.sms.util.HttpUtil;
@@ -53,6 +54,8 @@ public class SamlController {
   @RequestMapping("/receiveSPArtifact")
   public String receiveSPArtifact(HttpServletRequest request, HttpServletResponse response) {
     String _sp_artifact = request.getParameter(SysConstants.ARTIFACT_KEY);
+    if (null == _sp_artifact)
+      throw new RuntimeException("artifact不能为空");
     ArtifactResolve artifactResolve = samlService.buildArtifactResolve();
     Artifact artifact = (Artifact) samlService.buildStringToXMLObject(_sp_artifact);
     artifactResolve.setArtifact(artifact);
@@ -172,6 +175,10 @@ public class SamlController {
     Artifact artifact = samlService.buildArtifact();
     String artifactBase64 = samlService.buildXMLObjectToString(artifact);
     String token = UUIDFactory.INSTANCE.getUUID();
+    /**
+     * 把生成的Artifact放入Session
+     */
+    SessionHelper.put(request, artifact.getArtifact(), artifact);
     request.setAttribute(SysConstants.ARTIFACT_KEY, artifactBase64);
     request.setAttribute(SysConstants.TOKEN_KEY, token);
     return "/saml/sp/send_artifact_to_idp";
@@ -179,6 +186,7 @@ public class SamlController {
 }
 
 class SampleAuthenticationManager implements AuthenticationManager {
+  
   static final List<GrantedAuthority> AUTHORITIES = new ArrayList<GrantedAuthority>();
   static {
     AUTHORITIES.add(new SimpleGrantedAuthority("ADMIN"));
