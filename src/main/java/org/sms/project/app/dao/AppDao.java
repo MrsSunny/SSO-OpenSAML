@@ -3,9 +3,7 @@ package org.sms.project.app.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-
 import org.sms.project.app.entity.App;
-import org.sms.project.resource.entity.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
