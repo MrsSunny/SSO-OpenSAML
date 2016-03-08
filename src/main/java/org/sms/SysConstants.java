@@ -28,4 +28,5 @@ public interface SysConstants {
   public static final String LOCALDOMAIN_SAML2_SERVICE = "http://soaer.com:8888/SAML2";
   public static final String SP_ARTIFACT_RESOLUTION_SERVICE = "http://soaer.com:8888/SAML2/SPArtifactResolution";
   public static final String IDP_ARTIFACT_RESOLUTION_SERVICE = "http://soaer.com:8888/SAML2/IDPArtifactResolution";
+  public static final String ACTION_KEY = "doAction";
 }

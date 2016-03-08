@@ -10,7 +10,7 @@
 <title>SPBUILDARTIFACT</title>
 </head>
 <body>
-	<form action="<%=SysConstants.SPRECEIVESPARTIFACT_URL%>" method="get" name="autoForm">
+	<form action="<%=(String)request.getAttribute(SysConstants.ACTION_KEY)%>" method="get" name="autoForm">
 		<input type="hidden" name="artifact" value="<%=request.getAttribute(SysConstants.ARTIFACT_KEY)%>" />
 		<input type="hidden" name="token" value="<%=request.getAttribute(SysConstants.TOKEN_KEY)%>" />
 	</form>

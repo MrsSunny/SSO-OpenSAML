@@ -51,7 +51,7 @@ public interface SamlService {
    * 获取AuthnRequest对象
    * @return
    */
-  AuthnRequest buildAuthnRequest();
+  AuthnRequest buildAuthnRequest(String setAssertionConsumerServiceURL);
   
   /**
    * 获取Response对象

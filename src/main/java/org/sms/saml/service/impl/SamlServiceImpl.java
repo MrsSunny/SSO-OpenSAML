@@ -151,7 +151,7 @@ public class SamlServiceImpl implements SamlService {
     }
   }
   
-  public AuthnRequest buildAuthnRequest() {
+  public AuthnRequest buildAuthnRequest(String setAssertionConsumerServiceURL) {
     NameID nameid = (NameID) buildXMLObject(NameID.DEFAULT_ELEMENT_NAME);
     nameid.setFormat(NameID.UNSPECIFIED);
     nameid.setValue("sunny@soaer.com");
@@ -172,7 +172,7 @@ public class SamlServiceImpl implements SamlService {
     request.setConditions(conditions);
     request.setRequestedAuthnContext(rac);
     request.setForceAuthn(false);
-    request.setAssertionConsumerServiceURL(SysConstants.LOCALDOMAIN);
+    request.setAssertionConsumerServiceURL(setAssertionConsumerServiceURL);
     request.setAttributeConsumingServiceIndex(0);
     request.setProviderName("IDP Provider");
     request.setID("_" + UUIDFactory.INSTANCE.getUUID());
@@ -180,6 +180,10 @@ public class SamlServiceImpl implements SamlService {
     request.setIssueInstant(new DateTime(2005, 1, 31, 12, 0, 0, 0, ISOChronology.getInstanceUTC()));
     request.setDestination(SysConstants.LOCALDOMAIN);
     request.setConsent("urn:oasis:names:tc:SAML:2.0:consent:obtained");
+    Issuer rIssuer = (Issuer) buildXMLObject(Issuer.DEFAULT_ELEMENT_NAME);
+    rIssuer.setFormat("urn:oasis:names:tc:SAML:2.0:nameid-format:entity");
+    rIssuer.setValue(SysConstants.LOCALDOMAIN);
+    request.setIssuer(rIssuer);
     return request;
   }
 
@@ -507,11 +511,5 @@ public class SamlServiceImpl implements SamlService {
     }
     status.setStatusCode(statusCode);
     return status;
-  }
-  
-  public static void main(String[] args) {
-     SamlServiceImpl a= new SamlServiceImpl();
-     AuthnRequest request = a.buildAuthnRequest();
-     System.out.println(a.buildXMLObjectToString(request));
   }
 }

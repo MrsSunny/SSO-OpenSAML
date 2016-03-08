@@ -5,20 +5,26 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.opensaml.common.SAMLVersion;
 import org.opensaml.saml2.core.Artifact;
 import org.opensaml.saml2.core.ArtifactResolve;
 import org.opensaml.saml2.core.ArtifactResponse;
 import org.opensaml.saml2.core.AuthnRequest;
+import org.opensaml.saml2.core.Issuer;
 import org.opensaml.saml2.core.Response;
 import org.opensaml.saml2.core.Status;
 import org.opensaml.saml2.core.StatusCode;
 import org.sms.SysConstants;
 import org.sms.component.idfactory.UUIDFactory;
 import org.sms.organization.user.entity.User;
+import org.sms.project.app.entity.App;
+import org.sms.project.app.service.AppService;
 import org.sms.project.helper.SessionHelper;
 import org.sms.saml.service.SamlService;
 import org.sms.util.HttpUtil;
@@ -43,6 +49,9 @@ public class SamlController {
 
   @Autowired
   private SamlService samlService;
+  
+  @Autowired
+  private AppService appService;
 
   /**
    * IDP 接受SP端的Artifact
@@ -54,10 +63,11 @@ public class SamlController {
   @RequestMapping("/receiveSPArtifact")
   public String receiveSPArtifact(HttpServletRequest request, HttpServletResponse response) {
     String _sp_artifact = request.getParameter(SysConstants.ARTIFACT_KEY);
-    if (null == _sp_artifact)
+    if (null == _sp_artifact) {
       throw new RuntimeException("artifact不能为空");
-    ArtifactResolve artifactResolve = samlService.buildArtifactResolve();
-    Artifact artifact = (Artifact) samlService.buildStringToXMLObject(_sp_artifact);
+    }
+    final ArtifactResolve artifactResolve = samlService.buildArtifactResolve();
+    final Artifact artifact = (Artifact) samlService.buildStringToXMLObject(_sp_artifact);
     artifactResolve.setArtifact(artifact);
     samlService.signXMLObject(artifactResolve);
     String requestStr = samlService.buildXMLObjectToString(artifactResolve);
@@ -71,17 +81,42 @@ public class SamlController {
     if (codeValue == null || !codeValue.equals(StatusCode.SUCCESS_URI)) {
       throw new RuntimeException("认证失败");
     }
-    String inResponseTo = artifactResponse.getInResponseTo();
-    String artifactResolveID = artifactResolve.getID();
+    final String inResponseTo = artifactResponse.getInResponseTo();
+    final String artifactResolveID = artifactResolve.getID();
     if (null == inResponseTo || !inResponseTo.equals(artifactResolveID)) {
       throw new RuntimeException("认证失败");
     }
+    final AuthnRequest authnRequest = (AuthnRequest) artifactResponse.getMessage();
+    /**
+     * 获取需要跳转的SP的Action
+     */
+    final String customerServiceUrl = authnRequest.getAssertionConsumerServiceURL();
+    request.setAttribute(SysConstants.ACTION_KEY, customerServiceUrl);
+    
+    SAMLVersion samlVersion = authnRequest.getVersion();
+    
+    /**
+     * 判断版本是否支持
+     */
+    if (null == samlVersion || !SAMLVersion.VERSION_20.equals(samlVersion)) {
+      throw new RuntimeException("SAML版本错误，只支持2.0");
+    }
+    
+    Issuer issuer = authnRequest.getIssuer();
+    String appName = issuer.getValue();
+    
+    /**
+     * 判断issure的里面的值是否在SSO系统中注册过
+     */
+    
+    App app = appService.findAppByAppName(appName.trim());
+    if (app == null) {
+      throw new RuntimeException("不支持当前系统: " + appName);
+    }
+    final String requestID = authnRequest.getID();
     /**
      * 根据AuthnRequest判断用户是否登录
      */
-    AuthnRequest authnRequest = (AuthnRequest) artifactResponse.getMessage();
-    String customerServiceUrl = authnRequest.getAssertionConsumerServiceURL();
-    System.out.println(customerServiceUrl);
     Artifact idpArtifact = samlService.buildArtifact();
     request.setAttribute(SysConstants.ARTIFACT_KEY, samlService.buildXMLObjectToString(idpArtifact));
     return "/saml/idp/send_artifact_to_sp";
@@ -155,7 +190,6 @@ public class SamlController {
 
   /**
    * SP 接受IDP端的Artifact 并返回给IDP ArtifactResponse 接受SP端的Artifact
-   * 
    * @param request
    * @param response
    * @return
@@ -180,7 +214,7 @@ public class SamlController {
         ArtifactResolve artifactResolve = (ArtifactResolve) samlService.buildStringToXMLObject(result.trim());
         artifactResponse.setInResponseTo(artifactResolve.getID());
         artifactResponse.setStatus(samlService.getStatusCode(true));
-        artifactResponse.setMessage(samlService.buildAuthnRequest());
+        artifactResponse.setMessage(samlService.buildAuthnRequest(SysConstants.SPRECEIVESPARTIFACT_URL));
         artifactResponse.setInResponseTo(artifactResolve.getID());
       }
       write = response.getWriter();
