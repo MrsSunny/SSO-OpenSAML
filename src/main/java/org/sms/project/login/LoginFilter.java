@@ -2,7 +2,6 @@ package org.sms.project.login;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import org.sms.SysConstants;
 import org.sms.organization.user.entity.User;
 import org.sms.organization.user.service.UserService;
@@ -14,6 +13,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * 用户登录Filter
+ * @author Sunny
+ * @since 1.8.0
+ */
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
   @Autowired
@@ -21,7 +25,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
   @Override
   public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-    if (!request.getMethod().equals("POST")) {
+    
+    /**
+     * 登录方法判断，仅支持POST提交
+     */
+    if (SysConstants.POST_METHOE.equals(request.getMethod())) {
       throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
     }
     
@@ -39,8 +47,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     salt = MD5.encrypt(salt);
     if (!salt.equals(user.getPassword()))
       throw new AuthenticationServiceException("用户名或者密码错误！");
-    HttpSession session = request.getSession(true);
-    session.setAttribute(SysConstants.LOGIN_USER, user);
     UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, salt);
     setDetails(request, authRequest);
     return this.getAuthenticationManager().authenticate(authRequest);
