@@ -9,5 +9,6 @@
 		<url>^/(login)/.*$</url>
 		<url>^/(SAML2)/.*$</url>
 		<url>^/casFilter</url>
+		<url>^/loginPage</url>
 	</ignoreUrls>
 </root>
