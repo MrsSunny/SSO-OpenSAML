@@ -7,7 +7,7 @@ public class RegisterEvent extends ApplicationEvent {
 
   private static final long serialVersionUID = 4670113061631261959L;
 
-    public RegisterEvent(User user) {
-        super(user);
-    }
+  public RegisterEvent(User user) {
+    super(user);
+  }
 }

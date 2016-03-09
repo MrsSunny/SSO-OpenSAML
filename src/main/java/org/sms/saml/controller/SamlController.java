@@ -63,12 +63,12 @@ public class SamlController {
    */
   @RequestMapping("/receiveSPArtifact")
   public String receiveSPArtifact(HttpServletRequest request, HttpServletResponse response) {
-    String _sp_artifact = request.getParameter(SysConstants.ARTIFACT_KEY);
-    if (null == _sp_artifact) {
+    String artifactBaseString = request.getParameter(SysConstants.ARTIFACT_KEY);
+    if (null == artifactBaseString) {
       throw new RuntimeException("artifact不能为空");
     }
     final ArtifactResolve artifactResolve = samlService.buildArtifactResolve();
-    final Artifact artifact = (Artifact) samlService.buildStringToXMLObject(_sp_artifact);
+    final Artifact artifact = (Artifact) samlService.buildStringToXMLObject(artifactBaseString);
     artifactResolve.setArtifact(artifact);
     samlService.signXMLObject(artifactResolve);
     String requestStr = samlService.buildXMLObjectToString(artifactResolve);
