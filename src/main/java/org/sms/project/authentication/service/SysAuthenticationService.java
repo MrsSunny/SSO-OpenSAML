@@ -19,7 +19,7 @@ public class SysAuthenticationService {
     return sysAuthenticationDao.create(sysAuthentication);
   }
   
-  public SysAuthentication queryById(long id) {
-    return sysAuthenticationDao.queryById(id);
+  public SysAuthentication queryBySSOToken(String SSOToken) {
+    return sysAuthenticationDao.queryById(SSOToken);
   }
 }

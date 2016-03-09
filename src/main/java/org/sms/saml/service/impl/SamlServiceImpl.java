@@ -186,7 +186,7 @@ public class SamlServiceImpl implements SamlService {
     return request;
   }
 
-  public Response buildResponse(String requestId, String audienceURI) {
+  public Response buildResponse(String requestId) {
     Response response = (Response) buildXMLObject(Response.DEFAULT_ELEMENT_NAME);
     response.setID(UUIDFactory.INSTANCE.getUUID());
     response.setInResponseTo(requestId);
@@ -212,9 +212,6 @@ public class SamlServiceImpl implements SamlService {
     Conditions conditions = (Conditions) buildXMLObject(Conditions.DEFAULT_ELEMENT_NAME);
     conditions.setNotBefore(new DateTime(2006, 1, 26, 13, 35, 5, 0, ISOChronology.getInstanceUTC()));
     conditions.setNotOnOrAfter(new DateTime(2006, 1, 26, 13, 45, 5, 0, ISOChronology.getInstanceUTC()));
-    AudienceRestriction audienceRestriction = (AudienceRestriction) buildXMLObject(AudienceRestriction.DEFAULT_ELEMENT_NAME);
-    Audience audience = (Audience) buildXMLObject(Audience.DEFAULT_ELEMENT_NAME);
-    audience.setAudienceURI(audienceURI);
     AuthnStatement authnStatement = (AuthnStatement) buildXMLObject(AuthnStatement.DEFAULT_ELEMENT_NAME);
     authnStatement.setAuthnInstant(new DateTime(2006, 1, 26, 13, 35, 5, 0, ISOChronology.getInstanceUTC()));
     AuthnContext authnContext = (AuthnContext) buildXMLObject(AuthnContext.DEFAULT_ELEMENT_NAME);
@@ -234,9 +231,6 @@ public class SamlServiceImpl implements SamlService {
     subject.setNameID(nameID);
     subject.getSubjectConfirmations().add(subjectConfirmation);
     assertion.setSubject(subject);
-    audienceRestriction.getAudiences().add(audience);
-    conditions.getAudienceRestrictions().add(audienceRestriction);
-    assertion.setConditions(conditions);
     authnContext.setAuthnContextClassRef(classRef);
     authnStatement.setAuthnContext(authnContext);
     assertion.getAuthnStatements().add(authnStatement);

@@ -33,4 +33,6 @@ public interface SysConstants {
   public static final String SAML_ID_PREFIX_CHAR = "_";
   public static final String METHOD_SPILT_CHAR = "?";
   public static final String IPDLOGIN_PAGE = "http://soaer.com:8888/login.jsp";
+  public static final String PARAM_VALUE = "=";
+  public static final String DEFAULT_SP_RECEIVESPARTIFACT_URL = "http://soaer.com:8888/SAML2/receiveIDPArtifact";
 }

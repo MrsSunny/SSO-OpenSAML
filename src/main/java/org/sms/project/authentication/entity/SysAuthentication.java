@@ -16,7 +16,7 @@ public class SysAuthentication {
   
   private String subject_id;
   
-  private Timestamp end_time;
+  private Timestamp expire_time;
 
   public final long getId() {
     return id;
@@ -50,11 +50,11 @@ public class SysAuthentication {
     this.subject_id = subject_id;
   }
 
-  public final Timestamp getEnd_time() {
-    return end_time;
+  public final Timestamp getExpire_time() {
+    return expire_time;
   }
 
-  public final void setEnd_time(Timestamp end_time) {
-    this.end_time = end_time;
+  public final void setExpire_time(Timestamp expire_time) {
+    this.expire_time = expire_time;
   }
 }

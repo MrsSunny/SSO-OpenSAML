@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class SysAuthenticationDao {
-  
+
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
@@ -25,7 +25,8 @@ public class SysAuthenticationDao {
    */
   public int create(SysAuthentication sysAuthen) {
     String sql = "INSERT INTO SYS_AUTHENTICATION(ID,SSO_TOKEN,AUTHENTICATION_TIME, SUBJECT_ID ,END_TIME) VALUES(?,?,?,?)";
-    Object[] params = new Object[] { sysAuthen.getId(), sysAuthen.getSso_token(), sysAuthen.getAuthentication_time(), sysAuthen.getSubject_id(), sysAuthen.getEnd_time() };
+    Object[] params = new Object[] { sysAuthen.getId(), sysAuthen.getSso_token(), sysAuthen.getAuthentication_time(), sysAuthen.getSubject_id(),
+        sysAuthen.getExpire_time() };
     int[] types = new int[] { Types.BIGINT, Types.VARCHAR, Types.TIMESTAMP, Types.VARCHAR, Types.TIMESTAMP };
     return jdbcTemplate.update(sql, params, types);
   }
@@ -34,15 +35,15 @@ public class SysAuthenticationDao {
    * @param id
    * @return
    */
-  public SysAuthentication queryById(long id) {
+  public SysAuthentication queryById(String SSOToken) {
     final SysAuthentication sysAuthen = new SysAuthentication();
-    jdbcTemplate.query("SELECT * FROM SYS_AUTHENTICATION WHERE ID = ?", new Object[] { id }, new RowCallbackHandler() {
+    jdbcTemplate.query("SELECT * FROM SYS_AUTHENTICATION WHERE ID = ?", new Object[] { SSOToken }, new RowCallbackHandler() {
       public void processRow(ResultSet rs) throws SQLException {
         sysAuthen.setId(rs.getLong("id"));
         sysAuthen.setSso_token(rs.getString("sso_token"));
         sysAuthen.setAuthentication_time(rs.getTimestamp("authentication_time"));
         sysAuthen.setSubject_id(rs.getString("subject_id"));
-        sysAuthen.setEnd_time(rs.getTimestamp("end_time"));
+        sysAuthen.setExpire_time(rs.getTimestamp("end_time"));
       }
     });
     return sysAuthen;

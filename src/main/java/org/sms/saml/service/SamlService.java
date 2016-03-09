@@ -59,7 +59,7 @@ public interface SamlService {
    * @param audienceURI
    * @return
    */
-  Response buildResponse(String requestId, String audienceURI);
+  Response buildResponse(String requestId);
   
   /**
    * 为断言添加属性

@@ -6,5 +6,6 @@
 		<url>^/(|(index)\.jsp)$</url>
 		<url>^/(login)/.*$</url>
 		<url>^/*.ico</url>
+		<url>/loginPage</url>
 	</ignoreUrls>
 </root>
