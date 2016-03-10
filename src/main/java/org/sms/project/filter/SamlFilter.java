@@ -70,6 +70,8 @@ public class SamlFilter implements Filter {
 
   public String getSSOToken(HttpServletRequest request) {
     final Cookie[] cookies = request.getCookies();
+    if (null == cookies)
+      return null;
     String SSOToken = null;
     for (Cookie cookie : cookies) {
       String name = cookie.getName();

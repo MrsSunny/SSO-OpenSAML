@@ -35,6 +35,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     }
     final Response samlResponse = samlService.buildResponse(UUIDFactory.INSTANCE.getUUID());
     SSOHelper.INSTANCE.put(idpArtifact.getArtifact(), samlResponse);
+    
     response.sendRedirect(url.toString() + SysConstants.METHOD_SPILT_CHAR + SysConstants.ARTIFACT_KEY + SysConstants.PARAM_VALUE + samlService.buildXMLObjectToString(idpArtifact));
   }
 }

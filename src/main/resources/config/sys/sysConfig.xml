@@ -8,7 +8,8 @@
 		<url>^/(|(index)\.html)$</url>
 		<url>^/(login)/.*$</url>
 		<url>^/(SAML2)/.*$</url>
-		<url>^/casFilter</url>
+		<url>^/loginFilter</url>
 		<url>^/loginPage</url>
+		<url>^/favicon.ico</url>
 	</ignoreUrls>
 </root>

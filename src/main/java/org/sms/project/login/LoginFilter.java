@@ -29,7 +29,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     /**
      * 登录方法判断，仅支持POST提交
      */
-    if (SysConstants.POST_METHOE.equals(request.getMethod())) {
+    if (!SysConstants.POST_METHOE.equals(request.getMethod())) {
       throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
     }
     

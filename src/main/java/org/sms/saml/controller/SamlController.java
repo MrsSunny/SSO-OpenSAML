@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletInputStream;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -278,5 +279,10 @@ public class SamlController {
     AuthnRequest authnRequest = samlService.buildAuthnRequest(sso_token_key, SysConstants.SPRECEIVESPARTIFACT_URL);
     AuthenRequestHelper.INSTANCE.put(artifact.getArtifact(), authnRequest);
     return "/saml/sp/send_artifact_to_idp";
+  }
+  
+  public void addCookie() {
+    Cookie cookie = new Cookie(SysConstants.SSO_TOKEN_KEY,"");
+    System.out.println(cookie);
   }
 }
