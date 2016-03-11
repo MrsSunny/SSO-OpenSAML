@@ -10,13 +10,7 @@ import redis.clients.jedis.JedisPoolConfig;
 public class JedisUtil {
   private static JedisPool jedisPool = null;
   static {
-    // String host = redisJsonConfig.getString("host");
-    // int port = redisJsonConfig.getInteger("port");
     JedisPoolConfig config = new JedisPoolConfig();
-    // config.setMaxTotal(redisJsonConfig.getInteger("maxTotal"));
-    // config.setMaxIdle(redisJsonConfig.getInteger("maxIdle"));
-    // config.setMaxWaitMillis(redisJsonConfig.getInteger("maxWaitMillis"));
-    // config.setTestOnBorrow(redisJsonConfig.getBoolean("testOnBorrow"));
     try {
       /**
        * 如果你遇到 java.net.SocketTimeoutException: Read timed out exception的异常信息
