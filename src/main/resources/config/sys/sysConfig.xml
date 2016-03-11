@@ -10,6 +10,7 @@
 		<url>^/(SAML2)/.*$</url>
 		<url>^/loginFilter</url>
 		<url>^/loginPage</url>
+		<url>^/loginPage/error</url>
 		<url>^/favicon.ico</url>
 	</ignoreUrls>
 </root>

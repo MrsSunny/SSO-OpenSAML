@@ -80,7 +80,7 @@
 	<aop:config proxy-target-class="true">
 		<aop:advisor pointcut="execution(* com.sms.*..*ServiceImpl.*(..)) ||execution(* org.sms.*..*ServiceImpl.*(..))" advice-ref="txAdvice" order="0" />
 	</aop:config>
-
+	
 	<!-- <aop:config>
 		<aop:aspect id="DataAspect" ref="sendError">
 			<aop:pointcut id="interfaceDataService" expression="execution(* org.*..*ServiceImpl.*(..)) || execution(* com.*..*ServiceImpl.*(..)) " />

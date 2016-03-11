@@ -18,11 +18,17 @@
     http://www.springframework.org/schema/task/spring-task-4.0.xsd">
 
 	<!-- 对静态资源文件的访问 -->
-	<mvc:resources mapping="/images/**" location="/images/" cache-period="31556926" />
-	<mvc:resources mapping="/js/**" location="/js/" cache-period="31556926" />
-	<mvc:resources mapping="/css/**" location="/css/" cache-period="31556926" />
-	<mvc:resources mapping="/**/*.html" location="/" cache-period="31556926" />
-	<mvc:resources mapping="/*.html" location="/" cache-period="31556926" />
+	<mvc:resources mapping="/images/**" location="/images/"
+		cache-period="31556926" />
+	<mvc:resources mapping="/js/**" location="/js/"
+		cache-period="31556926" />
+	<mvc:resources mapping="/css/**" location="/css/"
+		cache-period="31556926" />
+	<mvc:resources mapping="/**/*.html" location="/"
+		cache-period="31556926" />
+	<mvc:resources mapping="/*.html" location="/"
+		cache-period="31556926" />
+
 	<!-- 视图解析器和json解析器 -->
 	<bean
 		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
@@ -34,7 +40,8 @@
 		</property>
 		<property name="viewResolvers">
 			<list>
-				<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+				<bean
+					class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 					<property name="prefix" value="/WEB-INF/jsp/" /> <!--可为空,方便实现自已的依据扩展名来选择视图解释类的逻辑 -->
 					<property name="suffix" value=".jsp" />
 				</bean>
