@@ -9,10 +9,8 @@ import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.List;
-
 import javax.crypto.SecretKey;
 import javax.xml.namespace.QName;
-
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
@@ -122,9 +120,6 @@ public class SamlServiceImpl implements SamlService {
       StringWriter rspWrt = new StringWriter();
       XMLHelper.writeNode(authDOM, rspWrt);
       String messageXML = rspWrt.toString();
-      System.out.println("==========================================");
-      System.out.println(messageXML);
-      System.out.println("==========================================");
       String samlRequest = GZipUtil.gzip(messageXML);
       return Base64.encodeBytes(samlRequest.getBytes(), Base64.DONT_BREAK_LINES);
     } catch (MarshallingException e) {
