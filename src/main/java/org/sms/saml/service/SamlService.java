@@ -29,6 +29,7 @@ import org.opensaml.xml.signature.SignableXMLObject;
 import org.opensaml.xml.signature.Signature;
 import org.opensaml.xml.signature.X509Certificate;
 import org.opensaml.xml.validation.ValidationException;
+import org.sms.organization.user.entity.User;
 import org.xml.sax.SAXException;
 
 public interface SamlService {
@@ -168,5 +169,9 @@ public interface SamlService {
    */
   boolean validate(String base64Response);
   
+  boolean validate(SignableXMLObject signableXMLObject);
+  
   Status getStatusCode(boolean success);
+  
+  void addAttribute(Response response, User user);
 }

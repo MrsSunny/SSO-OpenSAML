@@ -52,7 +52,7 @@
 		where ID=#{id}
 	</update>
 
-	<select id="get" parameterType="string" resultType="org.sms.organization.user.entity.User">
+	<select id="get" parameterType="long" resultType="org.sms.organization.user.entity.User">
 		select * from user where user.ID=#{id}
 	</select>
 	

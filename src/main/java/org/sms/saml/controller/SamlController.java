@@ -14,16 +14,21 @@ import org.opensaml.common.SAMLVersion;
 import org.opensaml.saml2.core.Artifact;
 import org.opensaml.saml2.core.ArtifactResolve;
 import org.opensaml.saml2.core.ArtifactResponse;
+import org.opensaml.saml2.core.Assertion;
+import org.opensaml.saml2.core.Attribute;
+import org.opensaml.saml2.core.AttributeStatement;
 import org.opensaml.saml2.core.AuthnRequest;
 import org.opensaml.saml2.core.Issuer;
 import org.opensaml.saml2.core.Response;
 import org.opensaml.saml2.core.Status;
 import org.opensaml.saml2.core.StatusCode;
+import org.opensaml.xml.schema.XSString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sms.SysConstants;
 import org.sms.component.idfactory.UUIDFactory;
 import org.sms.organization.user.entity.User;
+import org.sms.organization.user.service.UserService;
 import org.sms.project.app.entity.App;
 import org.sms.project.app.service.AppService;
 import org.sms.project.authentication.entity.SysAuthentication;
@@ -57,6 +62,9 @@ public class SamlController {
   
   @Autowired
   private AppService appService;
+  
+  @Autowired
+  private UserService userService;
   
   @Autowired
   private SysAuthenticationService sysAuthenticationService;
@@ -140,6 +148,10 @@ public class SamlController {
     }
     final Artifact idpArtifact = samlService.buildArtifact();
     final Response samlResponse = samlService.buildResponse(UUIDFactory.INSTANCE.getUUID());
+    String userid = sysAuthen.getSubject_id();
+    long id = Long.parseLong(userid);
+    User user = userService.find(id);
+    samlService.addAttribute(samlResponse, user);
     SSOHelper.INSTANCE.put(idpArtifact.getArtifact(), samlResponse);
     request.setAttribute(SysConstants.ARTIFACT_KEY, samlService.buildXMLObjectToString(idpArtifact));
     return "/saml/idp/send_artifact_to_sp";
@@ -168,6 +180,11 @@ public class SamlController {
       }
       artifactResponse.setMessage(samlResponse);
       SSOHelper.INSTANCE.remove(artifact.getArtifact());
+      SysAuthentication sysAuthen = new SysAuthentication();
+      sysAuthen.setSso_token(samlResponse.getID());
+      sysAuthen.setId(System.currentTimeMillis());
+      sysAuthen.setSubject_id(1 + "");
+      sysAuthenticationService.create(sysAuthen);
       return samlService.buildXMLObjectToString(artifactResponse);
     } catch (Exception e) {
       e.printStackTrace();
@@ -183,24 +200,55 @@ public class SamlController {
    */
   @RequestMapping("/receiveIDPArtifact")
   public String receiveIDPArtifact(HttpServletRequest request, HttpServletResponse response) {
-    String _sp_artifact = request.getParameter(SysConstants.ARTIFACT_KEY);
+    String spArtifact = request.getParameter(SysConstants.ARTIFACT_KEY);
     ArtifactResolve artifactResolve = samlService.buildArtifactResolve();
-    Artifact artifact = (Artifact) samlService.buildStringToXMLObject(_sp_artifact);
+    Artifact artifact = (Artifact) samlService.buildStringToXMLObject(spArtifact);
     artifactResolve.setArtifact(artifact);
     samlService.signXMLObject(artifactResolve);
     String requestStr = samlService.buildXMLObjectToString(artifactResolve);
     String postResult = HttpUtil.doPost(SysConstants.IDP_ARTIFACT_RESOLUTION_SERVICE, requestStr);
     ArtifactResponse artifactResponse = (ArtifactResponse) samlService.buildStringToXMLObject(postResult);
     Response samlResponse = (Response) artifactResponse.getMessage();
-    System.out.println(samlResponse);
-    request.setAttribute(SysConstants.ARTIFACT_KEY, "验证成功");
-    HttpSession session = request.getSession(false);
-    User user = new User();
-    user.setId(1L);
-    user.setName("admin");
-    user.setLogin_id("admin");
-    session.setAttribute(SysConstants.LOGIN_USER, user);
-    putAuthnToSecuritySession("admin", "admin");
+    List<Assertion> assertions = samlResponse.getAssertions();
+    if (null == assertions || assertions.size() == 0) {
+      throw new RuntimeException("无法获取断言，请重新发起请求！！！");
+    }
+    Assertion assertion = samlResponse.getAssertions().get(0);
+    if (assertion == null) {
+      request.setAttribute(SysConstants.ERROR_LOGIN, true);
+    } else {
+      boolean isSigned = samlService.validate(assertion);
+//      if (!isSigned) {
+//        request.setAttribute(SysConstants.ERROR_LOGIN, true);
+//      } else {
+        HttpSession session = request.getSession(false);
+        User user = new User();
+        List<AttributeStatement> arrtibuteStatements = assertion.getAttributeStatements();
+        if (null == arrtibuteStatements || arrtibuteStatements.size() == 0) {
+          throw new RuntimeException("无法获取属性列表，请重新发起请求");
+        }
+        AttributeStatement attributeStatement = assertion.getAttributeStatements().get(0);
+        List<Attribute> list = attributeStatement.getAttributes();
+        list.forEach(pereAttribute -> {
+          String name = pereAttribute.getName();
+          XSString value = (XSString) pereAttribute.getAttributeValues().get(0);
+          String valueString = value.getValue();
+          if (name.endsWith("Name")) {
+            user.setName(valueString);
+          } else if (name.equals("Id")) {
+            user.setId(Long.parseLong(valueString));
+          } else if (name.equals("LoginId")) {
+            user.setLogin_id(valueString);
+          } else if (name.equals("Email")) {
+            user.setEmail(valueString);
+          }
+        });
+        addSSOCookie(response, samlResponse.getID());
+        session.setAttribute(SysConstants.LOGIN_USER, user);
+        putAuthnToSecuritySession("admin", "admin");
+        request.setAttribute(SysConstants.ERROR_LOGIN, false);
+      }
+//    }
     return "/saml/sp/redirect";
   }
 
@@ -281,8 +329,11 @@ public class SamlController {
     return "/saml/sp/send_artifact_to_idp";
   }
   
-  public void addCookie() {
-    Cookie cookie = new Cookie(SysConstants.SSO_TOKEN_KEY,"");
-    System.out.println(cookie);
+  public void addSSOCookie(HttpServletResponse response, String string) {
+    Cookie cookie = new Cookie(SysConstants.SSO_TOKEN_KEY,string);
+    cookie.setDomain(".soaer.com");
+    cookie.setPath("/");
+    cookie.setMaxAge(24 *60 * 60);
+    response.addCookie(cookie);
   }
 }

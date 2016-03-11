@@ -34,5 +34,8 @@ public interface SysConstants {
   public static final String METHOD_SPILT_CHAR = "?";
   public static final String IPDLOGIN_PAGE = "http://soaer.com:8888/login.jsp";
   public static final String PARAM_VALUE = "=";
+  public static final String ERROR_LOGIN = "errorLogin";
+  public static final String LOGIN_PAGE = "http://soaer.com:8888/loginPage";
+  public static final String SP_INDEX_PAGE = "http://soaer.com:8888/index.html";
   public static final String DEFAULT_SP_RECEIVESPARTIFACT_URL = "http://soaer.com:8888/SAML2/receiveIDPArtifact";
 }

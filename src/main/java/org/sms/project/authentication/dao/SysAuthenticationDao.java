@@ -24,7 +24,7 @@ public class SysAuthenticationDao {
    * @return
    */
   public int create(SysAuthentication sysAuthen) {
-    String sql = "INSERT INTO SYS_AUTHENTICATION(ID,SSO_TOKEN,AUTHENTICATION_TIME, SUBJECT_ID ,END_TIME) VALUES(?,?,?,?)";
+    String sql = "INSERT INTO SYS_AUTHENTICATION(ID,SSO_TOKEN,AUTHENTICATION_TIME, SUBJECT_ID ,END_TIME) VALUES(?,?,?,?,?)";
     Object[] params = new Object[] { sysAuthen.getId(), sysAuthen.getSso_token(), sysAuthen.getAuthentication_time(), sysAuthen.getSubject_id(),
         sysAuthen.getExpire_time() };
     int[] types = new int[] { Types.BIGINT, Types.VARCHAR, Types.TIMESTAMP, Types.VARCHAR, Types.TIMESTAMP };
@@ -37,7 +37,7 @@ public class SysAuthenticationDao {
    */
   public SysAuthentication queryById(String SSOToken) {
     final SysAuthentication sysAuthen = new SysAuthentication();
-    jdbcTemplate.query("SELECT * FROM SYS_AUTHENTICATION WHERE ID = ?", new Object[] { SSOToken }, new RowCallbackHandler() {
+    jdbcTemplate.query("SELECT * FROM SYS_AUTHENTICATION WHERE SSO_TOKEN = ?", new Object[] { SSOToken }, new RowCallbackHandler() {
       public void processRow(ResultSet rs) throws SQLException {
         sysAuthen.setId(rs.getLong("id"));
         sysAuthen.setSso_token(rs.getString("sso_token"));

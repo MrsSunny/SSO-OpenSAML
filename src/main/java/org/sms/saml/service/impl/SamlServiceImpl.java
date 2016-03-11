@@ -9,8 +9,10 @@ import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.List;
+
 import javax.crypto.SecretKey;
 import javax.xml.namespace.QName;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
@@ -89,6 +91,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sms.SysConstants;
 import org.sms.component.idfactory.UUIDFactory;
+import org.sms.organization.user.entity.User;
 import org.sms.saml.service.SamlService;
 import org.sms.util.GZipUtil;
 import org.springframework.stereotype.Service;
@@ -217,29 +220,37 @@ public class SamlServiceImpl implements SamlService {
     AuthnContext authnContext = (AuthnContext) buildXMLObject(AuthnContext.DEFAULT_ELEMENT_NAME);
     AuthnContextClassRef classRef = (AuthnContextClassRef) buildXMLObject(AuthnContextClassRef.DEFAULT_ELEMENT_NAME);
     classRef.setAuthnContextClassRef("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport");
-    AttributeStatement attribStatement = (AttributeStatement) buildXMLObject(AttributeStatement.DEFAULT_ELEMENT_NAME);
-    Attribute nameAttribute = buildStringAttribute("Name", "Sunny");
-    Attribute idAttribute = buildStringAttribute("Id", "10000020000010003");
+    assertion.getAuthnStatements().add(authnStatement);
+    authnStatement.setAuthnContext(authnContext);
     response.setStatus(status);
     response.setIssuer(rIssuer);
     status.setStatusCode(statusCode);
-    
-    /**
-     * 添加断言
-     */
     assertion.setIssuer(aIssuer);
     subject.setNameID(nameID);
     subject.getSubjectConfirmations().add(subjectConfirmation);
     assertion.setSubject(subject);
     authnContext.setAuthnContextClassRef(classRef);
-    authnStatement.setAuthnContext(authnContext);
-    assertion.getAuthnStatements().add(authnStatement);
-    attribStatement.getAttributes().add(nameAttribute);
-    attribStatement.getAttributes().add(idAttribute);
-    assertion.getAttributeStatements().add(attribStatement);
     this.signXMLObject(assertion);
     response.getAssertions().add(assertion);
     return response;
+  }
+  
+  public void addAttribute(Response response, User user) {
+    Assertion assertion = response.getAssertions().get(0);
+    if (assertion == null)
+      return;
+    AttributeStatement attribStatement = (AttributeStatement) buildXMLObject(AttributeStatement.DEFAULT_ELEMENT_NAME);
+    Attribute nameAttribute = buildStringAttribute("Name", user.getName());
+    Attribute idAttribute = buildStringAttribute("Id", user.getId() + "");
+    Attribute emailAttribute = buildStringAttribute("Email", user.getEmail());
+    Attribute phoneAttribute = buildStringAttribute("Phone", user.getPhone());
+    Attribute loginIdAttribute = buildStringAttribute("LoginId", user.getLogin_id());
+    attribStatement.getAttributes().add(nameAttribute);
+    attribStatement.getAttributes().add(idAttribute);
+    attribStatement.getAttributes().add(emailAttribute);
+    attribStatement.getAttributes().add(phoneAttribute);
+    attribStatement.getAttributes().add(loginIdAttribute);
+    assertion.getAttributeStatements().add(attribStatement);
   }
   
   @Override
@@ -247,13 +258,11 @@ public class SamlServiceImpl implements SamlService {
     SignatureBuilder signatureBuilder = (SignatureBuilder) builderFactory.getBuilder(Signature.DEFAULT_ELEMENT_NAME);
     BasicCredential basicCredential = new BasicCredential();
     basicCredential.setPrivateKey(getRSAPrivateKey());
-    
     Signature signature = signatureBuilder.buildObject();
     signature.setCanonicalizationAlgorithm(SysConstants.CANON_ALGORITHM);
     signature.setSignatureAlgorithm(SysConstants.SIGNATURE_METHOD);
     signature.setSigningCredential(basicCredential);
     signableXMLObject.setSignature(signature);
-    
     MarshallerFactory marshallerFactory = Configuration.getMarshallerFactory();
     Marshaller marshaller = marshallerFactory.getMarshaller(signableXMLObject);
     try {
@@ -460,6 +469,21 @@ public class SamlServiceImpl implements SamlService {
       return false;
     }
   }
+  
+  @Override
+  public boolean validate(SignableXMLObject signableXMLObject) {
+    BasicCredential basicCredential = new BasicCredential();
+    basicCredential.setPublicKey(getRSAPublicKey());
+    SignatureValidator signatureValidator = new SignatureValidator(basicCredential);
+    Signature signature = signableXMLObject.getSignature();
+    try {
+      signatureValidator.validate(signature);
+      return true;
+    } catch (ValidationException e) {
+      logger.debug("验证签名错误" + e.getMessage());
+      return false;
+    }
+  }
 
   @Override
   public Artifact buildArtifact() {
@@ -504,5 +528,25 @@ public class SamlServiceImpl implements SamlService {
     }
     status.setStatusCode(statusCode);
     return status;
+  }
+  
+  public static void main(String[] args) {
+    SamlServiceImpl a = new SamlServiceImpl();
+    Response response = a.buildResponse("tyuiop67890-");
+    User user = new User();
+    user.setId(8889999L);
+    user.setLogin_id("admin");
+    user.setEmail("adafa@163.com");
+    a.addAttribute(response, user);
+    
+    Assertion assertion = response.getAssertions().get(0);
+    AttributeStatement attributeStatement = assertion.getAttributeStatements().get(0);
+    List<Attribute> list = attributeStatement.getAttributes();
+    list.forEach(pereAttribute -> {
+      String name = pereAttribute.getName();
+      XSString value = (XSString) pereAttribute.getAttributeValues().get(0);
+      System.out.println(name);
+      System.out.println(value.getValue());
+    });
   }
 }

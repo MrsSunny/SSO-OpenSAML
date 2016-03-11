@@ -2,10 +2,12 @@ package org.sms.project.login;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.sms.SysConstants;
 import org.sms.organization.user.entity.User;
 import org.sms.organization.user.service.UserService;
 import org.sms.project.encrypt.md5.MD5;
+import org.sms.project.helper.SessionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -49,6 +51,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
       throw new AuthenticationServiceException("用户名或者密码错误！");
     UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, salt);
     setDetails(request, authRequest);
+    SessionHelper.put(request, SysConstants.LOGIN_USER, user);
     return this.getAuthenticationManager().authenticate(authRequest);
   }
 }

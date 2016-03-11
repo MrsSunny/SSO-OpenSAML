@@ -1,3 +1,4 @@
+<%@page import="org.sms.SysConstants"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
@@ -8,6 +9,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 </head>
+<%
+	Object user = session.getAttribute(SysConstants.LOGIN_USER);
+	if (null != user) {
+	  response.sendRedirect("/index.html");
+	}
+%>
 <body>
 	<%-- ${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message} --%> <!-- 输出异常信息 -->
 	<form action="loginFilter" method="POST">

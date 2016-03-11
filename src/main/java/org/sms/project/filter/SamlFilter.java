@@ -55,6 +55,9 @@ public class SamlFilter implements Filter {
    * @return
    */
   public boolean isIgnoreUrl(String requestUri) {
+    if (requestUri == null) {
+      return true;
+    }
     final List<String> ignores = SysConfig.INSTANCE.getIgnoreUrls();
     Pattern pattern;
     Matcher matcher;

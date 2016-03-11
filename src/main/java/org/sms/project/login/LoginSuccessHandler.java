@@ -9,6 +9,8 @@ import org.opensaml.saml2.core.Artifact;
 import org.opensaml.saml2.core.Response;
 import org.sms.SysConstants;
 import org.sms.component.idfactory.UUIDFactory;
+import org.sms.organization.user.entity.User;
+import org.sms.project.helper.SessionHelper;
 import org.sms.project.sso.SSOHelper;
 import org.sms.saml.service.SamlService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +36,9 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
       url = SysConstants.DEFAULT_SP_RECEIVESPARTIFACT_URL;
     }
     final Response samlResponse = samlService.buildResponse(UUIDFactory.INSTANCE.getUUID());
+    User user = (User) SessionHelper.get(request, SysConstants.LOGIN_USER);
+    samlService.addAttribute(samlResponse, user);
     SSOHelper.INSTANCE.put(idpArtifact.getArtifact(), samlResponse);
-    
     response.sendRedirect(url.toString() + SysConstants.METHOD_SPILT_CHAR + SysConstants.ARTIFACT_KEY + SysConstants.PARAM_VALUE + samlService.buildXMLObjectToString(idpArtifact));
   }
 }
