@@ -217,7 +217,6 @@ public class SamlController {
     if (assertion == null) {
       request.setAttribute(SysConstants.ERROR_LOGIN, true);
     } else {
-      boolean isSigned = samlService.validate(assertion);
 //      if (!isSigned) {
 //        request.setAttribute(SysConstants.ERROR_LOGIN, true);
 //      } else {
