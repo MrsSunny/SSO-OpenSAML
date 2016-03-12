@@ -120,6 +120,9 @@ public class SamlServiceImpl implements SamlService {
       StringWriter rspWrt = new StringWriter();
       XMLHelper.writeNode(authDOM, rspWrt);
       String messageXML = rspWrt.toString();
+      System.out.println("++++++++++++++++++++++++++++++++++++");
+      System.out.println(messageXML);
+      System.out.println("++++++++++++++++++++++++++++++++++++");
       String samlRequest = GZipUtil.gzip(messageXML);
       return Base64.encodeBytes(samlRequest.getBytes(), Base64.DONT_BREAK_LINES);
     } catch (MarshallingException e) {
@@ -195,9 +198,27 @@ public class SamlServiceImpl implements SamlService {
     Status status = (Status) buildXMLObject(Status.DEFAULT_ELEMENT_NAME);
     StatusCode statusCode = (StatusCode) buildXMLObject(StatusCode.DEFAULT_ELEMENT_NAME);
     statusCode.setValue("urn:oasis:names:tc:SAML:2.0:status:Success");
+    Conditions conditions = (Conditions) buildXMLObject(Conditions.DEFAULT_ELEMENT_NAME);
+    conditions.setNotBefore(new DateTime(2006, 1, 26, 13, 35, 5, 0, ISOChronology.getInstanceUTC()));
+    conditions.setNotOnOrAfter(new DateTime(2006, 1, 26, 13, 45, 5, 0, ISOChronology.getInstanceUTC()));
+    response.setStatus(status);
+    response.setIssuer(rIssuer);
+    status.setStatusCode(statusCode);
+    return response;
+  }
+  
+  public void addAttribute(Response response, User user) {
     Assertion assertion = (Assertion) buildXMLObject(Assertion.DEFAULT_ELEMENT_NAME);
+    AuthnStatement authnStatement = (AuthnStatement) buildXMLObject(AuthnStatement.DEFAULT_ELEMENT_NAME);
+    authnStatement.setAuthnInstant(new DateTime(2006, 1, 26, 13, 35, 5, 0, ISOChronology.getInstanceUTC()));
+    AuthnContext authnContext = (AuthnContext) buildXMLObject(AuthnContext.DEFAULT_ELEMENT_NAME);
+    AuthnContextClassRef classRef = (AuthnContextClassRef) buildXMLObject(AuthnContextClassRef.DEFAULT_ELEMENT_NAME);
+    classRef.setAuthnContextClassRef("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport");
+    authnContext.setAuthnContextClassRef(classRef);
+    authnStatement.setAuthnContext(authnContext);
     assertion.setID(UUIDFactory.INSTANCE.getUUID());
     assertion.setIssueInstant(new DateTime(2006, 1, 26, 13, 35, 5, 0, ISOChronology.getInstanceUTC()));
+    assertion.getAuthnStatements().add(authnStatement);
     Issuer aIssuer = (Issuer) buildXMLObject(Issuer.DEFAULT_ELEMENT_NAME);
     aIssuer.setFormat("urn:oasis:names:tc:SAML:2.0:nameid-format:entity");
     aIssuer.setValue(SysConstants.LOCALDOMAIN);
@@ -207,33 +228,10 @@ public class SamlServiceImpl implements SamlService {
     nameID.setValue("_" + UUIDFactory.INSTANCE.getUUID());
     SubjectConfirmation subjectConfirmation = (SubjectConfirmation) buildXMLObject(SubjectConfirmation.DEFAULT_ELEMENT_NAME);
     subjectConfirmation.setMethod("urn:oasis:names:tc:SAML:2.0:cm:bearer");
-    Conditions conditions = (Conditions) buildXMLObject(Conditions.DEFAULT_ELEMENT_NAME);
-    conditions.setNotBefore(new DateTime(2006, 1, 26, 13, 35, 5, 0, ISOChronology.getInstanceUTC()));
-    conditions.setNotOnOrAfter(new DateTime(2006, 1, 26, 13, 45, 5, 0, ISOChronology.getInstanceUTC()));
-    AuthnStatement authnStatement = (AuthnStatement) buildXMLObject(AuthnStatement.DEFAULT_ELEMENT_NAME);
-    authnStatement.setAuthnInstant(new DateTime(2006, 1, 26, 13, 35, 5, 0, ISOChronology.getInstanceUTC()));
-    AuthnContext authnContext = (AuthnContext) buildXMLObject(AuthnContext.DEFAULT_ELEMENT_NAME);
-    AuthnContextClassRef classRef = (AuthnContextClassRef) buildXMLObject(AuthnContextClassRef.DEFAULT_ELEMENT_NAME);
-    classRef.setAuthnContextClassRef("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport");
-    assertion.getAuthnStatements().add(authnStatement);
-    authnStatement.setAuthnContext(authnContext);
-    response.setStatus(status);
-    response.setIssuer(rIssuer);
-    status.setStatusCode(statusCode);
-    assertion.setIssuer(aIssuer);
     subject.setNameID(nameID);
     subject.getSubjectConfirmations().add(subjectConfirmation);
+    assertion.setIssuer(aIssuer);
     assertion.setSubject(subject);
-    authnContext.setAuthnContextClassRef(classRef);
-    this.signXMLObject(assertion);
-    response.getAssertions().add(assertion);
-    return response;
-  }
-  
-  public void addAttribute(Response response, User user) {
-    Assertion assertion = response.getAssertions().get(0);
-    if (assertion == null)
-      return;
     AttributeStatement attribStatement = (AttributeStatement) buildXMLObject(AttributeStatement.DEFAULT_ELEMENT_NAME);
     Attribute nameAttribute = buildStringAttribute("Name", user.getName());
     Attribute idAttribute = buildStringAttribute("Id", user.getId() + "");
@@ -246,6 +244,8 @@ public class SamlServiceImpl implements SamlService {
     attribStatement.getAttributes().add(phoneAttribute);
     attribStatement.getAttributes().add(loginIdAttribute);
     assertion.getAttributeStatements().add(attribStatement);
+    this.signXMLObject(assertion);
+    response.getAssertions().add(assertion);
   }
   
   @Override
@@ -262,11 +262,9 @@ public class SamlServiceImpl implements SamlService {
     Marshaller marshaller = marshallerFactory.getMarshaller(signableXMLObject);
     try {
       marshaller.marshall(signableXMLObject);
+      Signer.signObject(signature);
     } catch (MarshallingException e) {
       e.printStackTrace();
-    }
-    try {
-      Signer.signObject(signature);
     } catch (SignatureException e) {
       e.printStackTrace();
     }
@@ -516,32 +514,15 @@ public class SamlServiceImpl implements SamlService {
   public Status getStatusCode(boolean success) {
     Status status = (Status) buildXMLObject(Status.DEFAULT_ELEMENT_NAME);
     StatusCode statusCode = (StatusCode) buildXMLObject(StatusCode.DEFAULT_ELEMENT_NAME);
-    if (success) {
-      statusCode.setValue(StatusCode.SUCCESS_URI);
-    } else {
-      statusCode.setValue(StatusCode.AUTHN_FAILED_URI);
-    }
+    statusCode.setValue(success ? StatusCode.SUCCESS_URI : StatusCode.AUTHN_FAILED_URI);
     status.setStatusCode(statusCode);
     return status;
   }
   
   public static void main(String[] args) {
-    SamlServiceImpl a = new SamlServiceImpl();
-    Response response = a.buildResponse("tyuiop67890-");
-    User user = new User();
-    user.setId(8889999L);
-    user.setLogin_id("admin");
-    user.setEmail("adafa@163.com");
-    a.addAttribute(response, user);
-    
-    Assertion assertion = response.getAssertions().get(0);
-    AttributeStatement attributeStatement = assertion.getAttributeStatements().get(0);
-    List<Attribute> list = attributeStatement.getAttributes();
-    list.forEach(pereAttribute -> {
-      String name = pereAttribute.getName();
-      XSString value = (XSString) pereAttribute.getAttributeValues().get(0);
-      System.out.println(name);
-      System.out.println(value.getValue());
-    });
+    SamlService samlService = new SamlServiceImpl();
+    Response response = samlService.buildResponse("idasdfasdfasdfasdf");
+    boolean flag = samlService.validate(response.getAssertions().get(0));
+    System.out.println(flag);
   }
 }

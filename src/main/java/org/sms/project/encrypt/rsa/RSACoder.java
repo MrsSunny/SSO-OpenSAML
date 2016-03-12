@@ -94,7 +94,7 @@ public enum RSACoder {
   }
 
   /**
-   * 私钥加密
+   * 私钥签名
    */
   public byte[] encrypt(RSAPrivateKey privateKey, byte[] plainData) throws Exception {
     if (privateKey == null) {
@@ -121,7 +121,7 @@ public enum RSACoder {
   }
 
   /**
-   * 私钥加密
+   * 私钥签名
    */
   public byte[] encryptByPrivateKey(String privateKey, byte[] plainData) throws Exception {
     RSAPrivateKey key = this.getPrivateKey(privateKey);
@@ -129,7 +129,7 @@ public enum RSACoder {
   }
 
   /**
-   * 私钥解密
+   * 私钥验签
    */
   public byte[] decryptByPrivateKey(RSAPrivateKey privateKey, byte[] cipherData) throws Exception {
     if (privateKey == null) {
@@ -156,7 +156,7 @@ public enum RSACoder {
   }
 
   /**
-   * 私钥解密
+   * 私钥验签
    */
   public byte[] decryptByPrivateKey(String privateKey, byte[] cipherData) throws Exception {
     RSAPrivateKey key = this.getPrivateKey(privateKey);
@@ -172,7 +172,7 @@ public enum RSACoder {
   }
 
   /**
-   * 公钥解密过程
+   * 公钥解密
    */
   public byte[] decryptByPublicKey(RSAPublicKey publicKey, byte[] cipherData) throws Exception {
     if (publicKey == null) {

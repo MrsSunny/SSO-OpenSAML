@@ -52,6 +52,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 处理SAML请求的数据（SSO数据验证）
+ * 
  * @author Sunny
  */
 @Controller
@@ -152,7 +153,7 @@ public class SamlController {
     // 判断令牌是否存在,如果令牌不存在则直接跳转到登录页面
     final SysAuthentication sysAuthen = sysAuthenticationService.queryBySSOToken(requestID);
     if (sysAuthen.getSso_token() == null) {
-      throw new RuntimeException("IDP端错误，无法获取SSO_TOKEN");
+      return "redirect:/loginPage";
     }
     // 判断令牌是否过期，如果令牌过期则直接
     Timestamp expireTimestamp = sysAuthen.getExpire_time();
@@ -221,7 +222,6 @@ public class SamlController {
 
   /**
    * SP 接受SP端的Artifact
-   * 
    * @param request
    * @param response
    * @return
@@ -244,6 +244,9 @@ public class SamlController {
       e.printStackTrace();
       logger.error("访问IDP的" + SysConstants.IDP_ARTIFACT_RESOLUTION_SERVICE + "服务错误");
     }
+    if (null == postResult) {
+      throw new RuntimeException("从" + SysConstants.IDP_ARTIFACT_RESOLUTION_SERVICE + "服务获取的数据为空，请检查IDP端数据格式");
+    }
     ArtifactResponse artifactResponse = (ArtifactResponse) samlService.buildStringToXMLObject(postResult);
     SAMLObject samlObject = artifactResponse.getMessage();
     if (null == samlObject) {
@@ -258,11 +261,14 @@ public class SamlController {
     if (assertion == null) {
       request.setAttribute(SysConstants.ERROR_LOGIN, true);
     } else {
-      // if (!isSigned) {
-      // request.setAttribute(SysConstants.ERROR_LOGIN, true);
-      // } else {
+      /**
+       * 验证签名
+       */
+      boolean signSuccess = samlService.validate(assertion);
+      if (!signSuccess) {
+        throw new RuntimeException("验证签名错误");
+      }
       HttpSession session = request.getSession(false);
-
       List<AttributeStatement> arrtibuteStatements = assertion.getAttributeStatements();
       if (null == arrtibuteStatements || arrtibuteStatements.size() == 0) {
         throw new RuntimeException("无法获取属性列表，请重新发起请求");
@@ -292,7 +298,6 @@ public class SamlController {
       putAuthnToSecuritySession("admin", "admin");
       request.setAttribute(SysConstants.ERROR_LOGIN, false);
     }
-    // }
     return "/saml/sp/redirect";
   }
 
