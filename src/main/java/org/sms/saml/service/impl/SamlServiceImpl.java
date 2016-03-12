@@ -518,11 +518,4 @@ public class SamlServiceImpl implements SamlService {
     status.setStatusCode(statusCode);
     return status;
   }
-  
-  public static void main(String[] args) {
-    SamlService samlService = new SamlServiceImpl();
-    Response response = samlService.buildResponse("idasdfasdfasdfasdf");
-    boolean flag = samlService.validate(response.getAssertions().get(0));
-    System.out.println(flag);
-  }
 }
