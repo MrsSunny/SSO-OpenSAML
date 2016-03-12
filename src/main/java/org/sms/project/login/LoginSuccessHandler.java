@@ -1,22 +1,24 @@
 package org.sms.project.login;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.opensaml.saml2.core.Artifact;
 import org.opensaml.saml2.core.Response;
 import org.sms.SysConstants;
 import org.sms.component.idfactory.UUIDFactory;
 import org.sms.organization.user.entity.User;
+import org.sms.project.helper.SSOHelper;
 import org.sms.project.helper.SessionHelper;
-import org.sms.project.sso.SSOHelper;
 import org.sms.saml.service.SamlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Sunny

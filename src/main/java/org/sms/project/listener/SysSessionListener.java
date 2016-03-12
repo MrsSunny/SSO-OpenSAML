@@ -8,6 +8,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
+import org.sms.SysConstants;
 import org.sms.project.login.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -115,7 +116,7 @@ public class SysSessionListener implements ServletContextListener, HttpSessionLi
   }
 
   private void autoCompleteLogout(HttpSession session) {
-    if (session.getAttribute("login_user") != null) {
+    if (session.getAttribute(SysConstants.LOGIN_USER) != null) {
       loginService.executeDestroyUser(session);
     }
   }

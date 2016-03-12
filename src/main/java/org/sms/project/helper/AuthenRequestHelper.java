@@ -1,4 +1,4 @@
-package org.sms.project.sso;
+package org.sms.project.helper;
 
 import java.util.HashMap;
 import java.util.Map;

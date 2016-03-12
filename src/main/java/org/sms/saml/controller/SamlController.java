@@ -3,11 +3,13 @@ package org.sms.saml.controller;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.opensaml.common.SAMLObject;
 import org.opensaml.common.SAMLVersion;
 import org.opensaml.saml2.core.Artifact;
@@ -32,10 +34,10 @@ import org.sms.project.app.entity.App;
 import org.sms.project.app.service.AppService;
 import org.sms.project.authentication.entity.SysAuthentication;
 import org.sms.project.authentication.service.SysAuthenticationService;
+import org.sms.project.helper.AuthenRequestHelper;
+import org.sms.project.helper.SSOHelper;
 import org.sms.project.helper.SessionHelper;
 import org.sms.project.security.SampleAuthenticationManager;
-import org.sms.project.sso.AuthenRequestHelper;
-import org.sms.project.sso.SSOHelper;
 import org.sms.saml.service.SamlService;
 import org.sms.util.HttpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
