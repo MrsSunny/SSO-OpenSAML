@@ -10,6 +10,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import org.sms.SysConstants;
 
+/**
+ * http请求工具类
+ * @author Sunny
+ */
 public final class HttpUtil {
 
   public static String doPost(String url, String postData) {

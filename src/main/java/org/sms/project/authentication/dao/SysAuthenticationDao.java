@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @author Sunny
- * @since 1.8.0
  */
 @Repository
 public class SysAuthenticationDao {

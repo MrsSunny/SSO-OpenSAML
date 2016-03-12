@@ -20,7 +20,6 @@ import org.sms.project.init.SysConfig;
 
 /**
  * @author Sunny
- * @since 1.8.0
  */
 public class SamlFilter implements Filter {
 

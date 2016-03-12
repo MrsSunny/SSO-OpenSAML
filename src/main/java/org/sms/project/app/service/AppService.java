@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 /**
  * @author Sunny
- * @since 1.8.0
  */
 @Service
 public class AppService {

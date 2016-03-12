@@ -32,6 +32,9 @@ import org.opensaml.xml.validation.ValidationException;
 import org.sms.organization.user.entity.User;
 import org.xml.sax.SAXException;
 
+/**
+ * @author Sunny
+ */
 public interface SamlService {
 
   /**

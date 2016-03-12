@@ -11,7 +11,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 /**
  * @author Sunny
- * @since 1.8.0
  */
 public class SampleAuthenticationManager implements AuthenticationManager {
 

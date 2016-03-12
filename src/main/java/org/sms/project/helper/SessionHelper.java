@@ -5,7 +5,6 @@ import javax.servlet.http.HttpSession;
 
 /**
  * @author Sunny
- * @since 1.8.0
  */
 public class SessionHelper {
 

@@ -9,7 +9,7 @@ import org.opensaml.xml.security.SecurityHelper;
 
 /**
  * @author Sunny
- * @since 1.8.0
+
  */
 public class RSAKetTest {
 

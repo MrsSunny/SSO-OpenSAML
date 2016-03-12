@@ -4,7 +4,6 @@ import org.sms.project.base.SysBase;
 
 /**
  * @author Sunny
- * @since 1.8.0
  */
 public class App extends SysBase {
   

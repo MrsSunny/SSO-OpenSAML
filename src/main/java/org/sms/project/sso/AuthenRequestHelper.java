@@ -6,7 +6,6 @@ import org.opensaml.saml2.core.AuthnRequest;
 
 /**
  * @author Sunny
- * @since 1.8.0
  */
 public enum AuthenRequestHelper {
   

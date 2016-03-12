@@ -2,7 +2,6 @@ package org.sms.component.idfactory;
 
 import java.util.UUID;
 
-
 /**
  * @author Sunny
  */

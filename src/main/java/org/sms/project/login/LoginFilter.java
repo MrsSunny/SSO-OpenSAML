@@ -18,7 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 /**
  * 用户登录Filter
  * @author Sunny
- * @since 1.8.0
  */
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 

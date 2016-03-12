@@ -51,7 +51,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 /**
  * 处理SAML请求的数据（SSO数据验证）
  * @author Sunny
- * @since 1.8.0
  */
 @Controller
 @RequestMapping("/SAML2")

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * @author Sunny
- * @since 1.8.0
  */
 @Controller
 @RequestMapping("/loginPage")

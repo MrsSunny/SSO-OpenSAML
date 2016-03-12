@@ -2,7 +2,7 @@ package org.sms;
 
 /**
  * @author Sunny
- * @since 1.8.0
+
  */
 public interface SysConstants {
   

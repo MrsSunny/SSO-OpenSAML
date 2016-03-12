@@ -6,8 +6,6 @@ import org.sms.project.resource.dao.ResourceDao.ResourceMapping;
 import org.sms.project.resource.entity.Resource;
 
 /**
- * 
- * class_descriptions:
  * @author Sunny
  */
 public interface ResourceService {

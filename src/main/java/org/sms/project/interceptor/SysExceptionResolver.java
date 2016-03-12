@@ -11,7 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 /**
  * 异常拦截器
  * @author Sunny
- * @since 1.8.0
  */
 @Component
 public class SysExceptionResolver implements HandlerExceptionResolver {

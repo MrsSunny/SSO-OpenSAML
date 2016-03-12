@@ -8,6 +8,10 @@ import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.codec.binary.Base64;
 
+/**
+ * 压缩解压工具类
+ * @author Sunny
+ */
 public class GZipUtil {
 
   /**
