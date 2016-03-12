@@ -12,5 +12,6 @@
 		<url>^/loginPage</url>
 		<url>^/loginPage/error</url>
 		<url>^/favicon.ico</url>
+		<url>^/error/.*$</url>
 	</ignoreUrls>
 </root>

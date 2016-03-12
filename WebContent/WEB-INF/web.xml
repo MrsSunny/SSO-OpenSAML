@@ -88,11 +88,11 @@
 	</welcome-file-list>
 	<error-page>
 		<error-code>404</error-code>
-		<location>/error/error404.jsp</location>
+		<location>/jsp/error/404.jsp</location>
 	</error-page>
 	<!-- 500错误拦截 -->
 	<error-page>
 		<error-code>500</error-code>
-		<location>/error/error500.jsp</location>
+		<location>/jsp/error/500.jsp</location>
 	</error-page>
 </web-app>

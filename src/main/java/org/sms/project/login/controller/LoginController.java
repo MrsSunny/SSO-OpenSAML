@@ -21,6 +21,10 @@ public class LoginController {
   
   @RequestMapping(value = "/error")
   public String error(Model model, HttpServletRequest request) {
-    throw new RuntimeException("错误处理");
+//    throw new RuntimeException("错误处理");
+    String a = "sadfasdfas";
+    int s = Integer.parseInt(a);
+    System.out.println(s);
+    return "/login/login_success";
   }
 }
