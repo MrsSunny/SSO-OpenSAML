@@ -9,7 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 public class SysDecisionManager implements AccessDecisionManager {
 

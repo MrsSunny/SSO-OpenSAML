@@ -7,7 +7,7 @@ import org.sms.organization.user.entity.User;
 /**
  * @Title: ISysUser.java
  * @Description: TODO
- * @author <a href="https://github.com/MrsSunny">zhenxing.Liu</a>
+ * @author <a href="https://github.com/MrsSunny">Sunny</a>
  * @date 2015年5月1日 下午7:35:14
  * @version 2.0.0
  */

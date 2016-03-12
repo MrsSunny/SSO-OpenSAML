@@ -3,7 +3,7 @@ package org.sms.project.base;
 import java.sql.Timestamp;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 public class SysBase {
   

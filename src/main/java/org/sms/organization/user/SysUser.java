@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 /**
  * @Title: ISysUser.java
  * @Description: TODO
- * @author <a href="https://github.com/MrsSunny">zhenxing.Liu</a>
+ * @author <a href="https://github.com/MrsSunny">Sunny</a>
  * @date 2015年4月11日 下午4:37:05
  * @version 2.0.0
  */

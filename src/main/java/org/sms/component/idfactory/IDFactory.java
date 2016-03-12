@@ -3,8 +3,7 @@ package org.sms.component.idfactory;
 import org.sms.component.idfactory.KeyFactory.PrimaryKeyType;
 
 /**
- * 
- * @author zhenxing.liu
+ * @author Sunny
  */
 public enum IDFactory {
 

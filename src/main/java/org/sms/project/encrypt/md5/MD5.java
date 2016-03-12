@@ -2,6 +2,10 @@ package org.sms.project.encrypt.md5;
 
 import java.security.MessageDigest;
 
+/**
+ * @author Sunny
+ * @since 1.8.0
+ */
 public class MD5 {
   
   public static String encrypt(String s) {

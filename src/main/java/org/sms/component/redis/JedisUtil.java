@@ -5,7 +5,7 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 public class JedisUtil {
   private static JedisPool jedisPool = null;

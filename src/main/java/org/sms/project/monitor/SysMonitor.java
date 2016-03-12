@@ -3,7 +3,7 @@ package org.sms.project.monitor;
 import org.aspectj.lang.JoinPoint;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 public class SysMonitor {
 

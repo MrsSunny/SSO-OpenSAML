@@ -10,7 +10,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.stereotype.Component;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 @Component
 public class LoginFailureHandler implements AuthenticationFailureHandler {

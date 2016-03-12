@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @Title: SysUserDao.java
- * @author zhenxing.Liu
+ * @author Sunny
  * @date 2015年5月5日 下午1:44:57
  * @version 2.0.0
  */

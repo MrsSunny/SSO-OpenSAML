@@ -8,7 +8,7 @@ import java.util.Set;
 import redis.clients.jedis.Jedis;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 public enum Redis {
 

@@ -15,7 +15,7 @@ import javax.crypto.NoSuchPaddingException;
 import org.apache.commons.codec.binary.Base64;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 public enum RSACoder {
 

@@ -3,7 +3,7 @@ package org.sms.organization.roleuser.entity;
 import org.sms.project.base.SysBase;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 public class RoleUser extends SysBase {
 

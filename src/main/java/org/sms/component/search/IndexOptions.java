@@ -3,7 +3,7 @@ package org.sms.component.search;
 import org.elasticsearch.action.index.IndexRequest;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 public class IndexOptions {
 

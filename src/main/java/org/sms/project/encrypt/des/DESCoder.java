@@ -13,7 +13,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 public enum DESCoder {
 

@@ -9,7 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 public class User implements Serializable, UserDetails {
 

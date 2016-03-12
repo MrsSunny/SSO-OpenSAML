@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 @Component
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {

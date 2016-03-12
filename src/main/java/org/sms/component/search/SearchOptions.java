@@ -9,7 +9,7 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 public class SearchOptions {
 

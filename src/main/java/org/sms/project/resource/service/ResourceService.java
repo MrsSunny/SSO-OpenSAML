@@ -8,7 +8,7 @@ import org.sms.project.resource.entity.Resource;
 /**
  * 
  * class_descriptions:
- * @author zhenxing.Liu
+ * @author Sunny
  */
 public interface ResourceService {
 

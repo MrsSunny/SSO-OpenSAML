@@ -5,7 +5,7 @@ import org.sms.project.login.service.LoginService;
 import org.springframework.stereotype.Service;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 @Service("loginService")
 public class LoginServiceImpl implements LoginService {

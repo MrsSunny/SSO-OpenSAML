@@ -5,7 +5,7 @@ import java.io.Serializable;
 import org.sms.project.base.SysBase;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 public class SysRole extends SysBase implements Serializable {
 

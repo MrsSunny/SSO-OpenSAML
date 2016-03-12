@@ -1,7 +1,7 @@
 package org.sms.project.page;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 public class Page {
 

@@ -9,7 +9,7 @@ import org.sms.saml.service.impl.SamlServiceImpl;
 import org.springframework.web.context.ContextLoaderListener;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 public class SysContextLoaderListener extends ContextLoaderListener {
 

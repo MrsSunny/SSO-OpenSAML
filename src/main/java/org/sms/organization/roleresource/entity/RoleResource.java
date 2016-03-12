@@ -4,7 +4,7 @@ import org.sms.project.base.SysBase;
 
 /**
  * 
- * @author zhenxing.Liu
+ * @author Sunny
  */
 public class RoleResource extends SysBase {
   

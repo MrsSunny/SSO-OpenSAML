@@ -12,7 +12,7 @@ import org.sms.project.login.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 public class SysSessionListener implements ServletContextListener, HttpSessionListener {
 

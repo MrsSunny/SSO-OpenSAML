@@ -1,7 +1,7 @@
 package org.sms.component.search;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 public class UpdateOptions {
 

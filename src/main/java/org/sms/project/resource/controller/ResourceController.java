@@ -9,7 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 @Controller
 @RequestMapping("/resource")

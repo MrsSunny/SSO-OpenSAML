@@ -4,7 +4,7 @@ import java.util.UUID;
 
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 public enum UUIDFactory {
   

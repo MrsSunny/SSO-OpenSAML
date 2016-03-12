@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * @Title: SysUserServiceImpl.java
- * @author zhenxing.Liu
+ * @author Sunny
  * @date 2015年5月1日 下午7:36:13
  * @version 2.0.0
  */

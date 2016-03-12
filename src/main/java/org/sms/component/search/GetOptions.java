@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 public class GetOptions {
 

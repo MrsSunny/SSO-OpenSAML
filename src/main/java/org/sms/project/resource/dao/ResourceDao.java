@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 @Repository
 public class ResourceDao {

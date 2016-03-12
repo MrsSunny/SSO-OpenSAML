@@ -19,7 +19,7 @@ import org.springframework.security.web.access.intercept.FilterInvocationSecurit
 
 /**
  * 资源角色管理器
- * @author zhenxing.Liu
+ * @author Sunny
  */
 @Service("sysMetadataSource")
 public class SysMetadataSource implements FilterInvocationSecurityMetadataSource {

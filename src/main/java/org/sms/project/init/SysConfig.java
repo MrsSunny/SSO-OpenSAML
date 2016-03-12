@@ -20,6 +20,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/**
+ * @author Sunny
+ * @since 1.8.0
+ */
 public enum SysConfig {
 
   INSTANCE;

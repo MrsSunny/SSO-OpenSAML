@@ -3,7 +3,7 @@ package org.sms.component.search;
 import org.elasticsearch.search.sort.SortOrder;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 public class SortOption {
 

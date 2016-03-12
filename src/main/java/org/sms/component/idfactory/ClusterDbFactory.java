@@ -1,7 +1,7 @@
 package org.sms.component.idfactory;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 public enum ClusterDbFactory implements KeyFactory {
   

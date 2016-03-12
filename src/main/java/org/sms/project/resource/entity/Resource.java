@@ -3,7 +3,7 @@ package org.sms.project.resource.entity;
 import org.sms.project.base.SysBase;
 
 /**
- * @author zhenxing.Liu
+ * @author Sunny
  */
 public class Resource extends SysBase {
 
