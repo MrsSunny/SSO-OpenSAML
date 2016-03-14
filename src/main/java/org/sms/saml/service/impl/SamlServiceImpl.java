@@ -9,8 +9,10 @@ import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.List;
+
 import javax.crypto.SecretKey;
 import javax.xml.namespace.QName;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
@@ -21,6 +23,7 @@ import org.opensaml.saml2.core.ArtifactResolve;
 import org.opensaml.saml2.core.ArtifactResponse;
 import org.opensaml.saml2.core.Assertion;
 import org.opensaml.saml2.core.Attribute;
+import org.opensaml.saml2.core.AttributeQuery;
 import org.opensaml.saml2.core.AttributeStatement;
 import org.opensaml.saml2.core.AttributeValue;
 import org.opensaml.saml2.core.Audience;
@@ -120,9 +123,6 @@ public class SamlServiceImpl implements SamlService {
       StringWriter rspWrt = new StringWriter();
       XMLHelper.writeNode(authDOM, rspWrt);
       String messageXML = rspWrt.toString();
-      System.out.println("++++++++++++++++++++++++++++++++++++");
-      System.out.println(messageXML);
-      System.out.println("++++++++++++++++++++++++++++++++++++");
       String samlRequest = GZipUtil.gzip(messageXML);
       return Base64.encodeBytes(samlRequest.getBytes(), Base64.DONT_BREAK_LINES);
     } catch (MarshallingException e) {
@@ -511,6 +511,13 @@ public class SamlServiceImpl implements SamlService {
     return artifactResponse;
   }
   
+  @Override
+  public AttributeQuery buildAttributeQuery() {
+    AttributeQuery attributeQuery = (AttributeQuery) buildXMLObject(AttributeQuery.DEFAULT_ELEMENT_NAME);
+    return attributeQuery;
+  }
+  
+  @Override
   public Status getStatusCode(boolean success) {
     Status status = (Status) buildXMLObject(Status.DEFAULT_ELEMENT_NAME);
     StatusCode statusCode = (StatusCode) buildXMLObject(StatusCode.DEFAULT_ELEMENT_NAME);

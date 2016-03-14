@@ -1,36 +1,25 @@
 package org.sms.saml.service;
 
-import java.io.IOException;
-import java.security.KeyException;
-import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPrivateKey;
-
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.opensaml.saml2.core.Artifact;
 import org.opensaml.saml2.core.ArtifactResolve;
 import org.opensaml.saml2.core.ArtifactResponse;
 import org.opensaml.saml2.core.Assertion;
 import org.opensaml.saml2.core.Attribute;
+import org.opensaml.saml2.core.AttributeQuery;
 import org.opensaml.saml2.core.AuthnRequest;
 import org.opensaml.saml2.core.EncryptedAssertion;
 import org.opensaml.saml2.core.Response;
 import org.opensaml.saml2.core.Status;
 import org.opensaml.saml2.metadata.SSODescriptor;
-import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.opensaml.xml.XMLObject;
-import org.opensaml.xml.encryption.DecryptionException;
-import org.opensaml.xml.encryption.EncryptionException;
-import org.opensaml.xml.security.SecurityException;
 import org.opensaml.xml.security.credential.Credential;
 import org.opensaml.xml.security.x509.X509Credential;
 import org.opensaml.xml.signature.SignableXMLObject;
 import org.opensaml.xml.signature.Signature;
 import org.opensaml.xml.signature.X509Certificate;
-import org.opensaml.xml.validation.ValidationException;
 import org.sms.organization.user.entity.User;
-import org.xml.sax.SAXException;
 
 /**
  * @author Sunny
@@ -78,8 +67,15 @@ public interface SamlService {
    */
   Artifact buildArtifact();
   
+  /**
+   * artifact Bindings
+   * @return
+   */
   ArtifactResolve buildArtifactResolve();
   
+  /**
+   * @return
+   */
   ArtifactResponse buildArtifactResponse();
   
   /**
@@ -102,6 +98,10 @@ public interface SamlService {
    */
   RSAPrivateKey getRSAPrivateKey();
   
+  /**
+   * 给可签名的XML Object做签名
+   * @param signableXMLObject
+   */
   void signXMLObject(SignableXMLObject signableXMLObject);
 
   /**
@@ -118,9 +118,6 @@ public interface SamlService {
    * @param assertion
    * @param receiverCredential
    * @return
-   * @throws EncryptionException
-   * @throws NoSuchAlgorithmException
-   * @throws KeyException
    */
   EncryptedAssertion encrypt(Assertion assertion, X509Credential receiverCredential);
 
@@ -130,13 +127,6 @@ public interface SamlService {
    * @param credential
    * @param federationMetadata
    * @return
-   * @throws DecryptionException
-   * @throws ValidationException
-   * @throws ParserConfigurationException
-   * @throws SAXException
-   * @throws IOException
-   * @throws MetadataProviderException
-   * @throws SecurityException
    */
   Assertion decrypt(EncryptedAssertion enc, Credential credential, String federationMetadata);
 
@@ -146,35 +136,39 @@ public interface SamlService {
    * @param credential
    * @param federationMetadata
    * @return
-   * @throws DecryptionException
-   * @throws ValidationException
-   * @throws ParserConfigurationException
-   * @throws SAXException
-   * @throws IOException
-   * @throws MetadataProviderException
-   * @throws SecurityException
    */
   Signature signature();
 
   /**
    * 验签断言
-   * @param enc
-   * @param credential
-   * @param federationMetadata
+   * @param base64Response
    * @return
-   * @throws DecryptionException
-   * @throws ValidationException
-   * @throws ParserConfigurationException
-   * @throws SAXException
-   * @throws IOException
-   * @throws MetadataProviderException
-   * @throws SecurityException
    */
   boolean validate(String base64Response);
   
+  /**
+   * 验签断言
+   * @param signableXMLObject
+   * @return
+   */
   boolean validate(SignableXMLObject signableXMLObject);
   
+  /**
+   * 获取StatusCode
+   * @param success
+   * @return
+   */
   Status getStatusCode(boolean success);
   
+  /**
+   * 添加属性
+   * @param response
+   * @param user
+   */
   void addAttribute(Response response, User user);
+
+  /**
+   * 进行属性请求查询
+   */
+  AttributeQuery buildAttributeQuery();
 }

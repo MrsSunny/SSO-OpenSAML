@@ -95,6 +95,7 @@ public class SamlController {
     samlService.signXMLObject(artifactResolve);
     String artifactParam = samlService.buildXMLObjectToString(artifactResolve);
     String postResult = null;
+    //根据Artifact信息从SP中获取Auth Request信息
     try {
       postResult = HttpUtil.doPost(SysConstants.SP_ARTIFACT_RESOLUTION_SERVICE, artifactParam);
     } catch (Exception e) {
@@ -377,7 +378,8 @@ public class SamlController {
       sso_token_key = SysConstants.SAML_ID_PREFIX_CHAR + UUIDFactory.INSTANCE.getUUID();
     }
     AuthnRequest authnRequest = samlService.buildAuthnRequest(sso_token_key, SysConstants.SPRECEIVESPARTIFACT_URL);
-    // 把该request放入到authnrequest的全局变量里面，供后面的根据Artifact获取authnRequest做准备
+    //把该request放入到authnrequest的全局变量里面
+    //把artifact 和 authnRequest 绑定在一起，供后面的根据Artifact获取authnRequest做准备
     AuthenRequestHelper.INSTANCE.put(artifact.getArtifact(), authnRequest);
     return "/saml/sp/send_artifact_to_idp";
   }
