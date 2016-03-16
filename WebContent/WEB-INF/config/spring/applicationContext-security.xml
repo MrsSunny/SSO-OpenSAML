@@ -12,11 +12,12 @@
 	<http pattern="/login.jsp" security="none" />
 
 	<!-- Use Form_login_Filter -->
-	<http use-expressions="true" entry-point-ref="authenticationEntryPoint">
+	<http use-expressions="true" entry-point-ref="authenticationEntryPoint" >
 		<csrf disabled="true" />
 		<custom-filter ref="loginFilter" position="FORM_LOGIN_FILTER" />
 		<custom-filter ref="securityFilter" before="FILTER_SECURITY_INTERCEPTOR" />
 	</http>
+
 	<beans:bean id="authenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
 		<beans:constructor-arg value="/html/authen.html" />
 	</beans:bean>
@@ -24,26 +25,18 @@
 		<authentication-provider user-service-ref="sysUserDetailsService"></authentication-provider>
 	</authentication-manager>
 	<!-- Use Form_login_Filter END -->
-
-	<!-- 登录验证器 -->
 	<beans:bean id="loginFilter" class="org.sms.project.login.LoginFilter">
-		<!-- 处理登录的action -->
 		<beans:property name="filterProcessesUrl" value="/loginFilter"></beans:property>
 		<beans:property name="authenticationManager" ref="authenticationManager"></beans:property>
 		<beans:property name="usernameParameter" value="username" />
 		<beans:property name="passwordParameter" value="password" />
-		<!-- 验证成功后的处理 -->
 		<beans:property name="authenticationSuccessHandler" ref="loginSuccessHandler"></beans:property>
-		<!-- 验证失败后的处理 -->
 		<beans:property name="authenticationFailureHandler" ref="loginFailureHandler"></beans:property>
 	</beans:bean>
 
 	<beans:bean id="securityFilter" class="org.sms.project.filter.SecurityFilter">
-		<!-- 注入决策管理器 -->
 		<beans:property name="accessDecisionManager" ref="accessDecisionManager"></beans:property>
-		<!-- 注入资源角色授权管理器 -->
 		<beans:property name="securityMetadataSource" ref="securityMetadataSource"></beans:property>
-		<!-- 注入身份认证管理器 -->
 		<beans:property name="authenticationManager" ref="authenticationManager"></beans:property>
 	</beans:bean>
 

@@ -105,6 +105,9 @@ public class SamlController {
     } catch (Exception e) {
       throw new RuntimeException("访问SP端的：" + SysConstants.SP_ARTIFACT_RESOLUTION_SERVICE + "服务错误" + e.getMessage());
     }
+    if (null == postResult || "".equals(postResult)) {
+      return "redirect:/loginPage";
+    }
     final ArtifactResponse artifactResponse = (ArtifactResponse) samlService.buildStringToXMLObject(postResult);
     final Status status = artifactResponse.getStatus();
     if (null == status) {
