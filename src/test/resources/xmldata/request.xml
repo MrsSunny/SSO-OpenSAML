@@ -8,11 +8,6 @@
 	<saml2:Subject xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">
 		<saml2:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified">sunny@soaer.com</saml2:NameID>
 	</saml2:Subject>
-	<saml2:Conditions xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">
-		<saml2:AudienceRestriction>
-			<saml2:Audience>http://soaer.com</saml2:Audience>
-		</saml2:AudienceRestriction>
-	</saml2:Conditions>
 	<saml2p:RequestedAuthnContext>
 		<saml2:AuthnContextClassRef xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport
 		</saml2:AuthnContextClassRef>

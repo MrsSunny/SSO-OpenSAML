@@ -36,5 +36,8 @@ public interface SysConstants {
   public static final String ERROR_LOGIN = "errorLogin";
   public static final String LOGIN_PAGE = "http://passport.soaer.com:8888/loginPage";
   public static final String SP_INDEX_PAGE = "http://passport.soaer.com:8888/index.html";
+  public static final String IDP_TICKET = "idp_ticket";
   public static final String DEFAULT_SP_RECEIVESPARTIFACT_URL = "http://passport.soaer.com:8888/SAML2/receiveIDPArtifact";
+  public static final int DEFAULT_EXPIRE = 7;
+  public static final String TICKET_SPILT = ",";
 }

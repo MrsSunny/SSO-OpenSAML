@@ -37,11 +37,10 @@ public class SamlFilter implements Filter {
     if (isIgnoreUrl(uri)) {
       chain.doFilter(request, response);
     } else if (session.getAttribute(SysConstants.LOGIN_USER) == null) {
-      String SSOToken = getSSOToken(request);
+      String ticket = getTicket(request);
+      ticket = ticket == null ? "" : ticket;
       session.setAttribute(SysConstants.REDIRECT_URL_KEY, uri.toString());
-      if (null != SSOToken) {
-        session.setAttribute(SysConstants.SSO_TOKEN_KEY, SSOToken);
-      }
+      session.setAttribute(SysConstants.SSO_TOKEN_KEY, ticket);
       response.sendRedirect(SysConstants.SEND_ARTIFACT_URI + SysConstants.METHOD_SPILT_CHAR + URLEncoder.encode(request.getRequestURL().toString(), SysConstants.CHARSET));
     } else {
       chain.doFilter(request, response);
@@ -70,14 +69,14 @@ public class SamlFilter implements Filter {
     return false;
   }
 
-  public String getSSOToken(HttpServletRequest request) {
+  public String getTicket(HttpServletRequest request) {
     final Cookie[] cookies = request.getCookies();
     if (null == cookies)
       return null;
     String SSOToken = null;
     for (Cookie cookie : cookies) {
       String name = cookie.getName();
-      if (SysConstants.SSO_TOKEN_KEY.equals(name.trim())) {
+      if (SysConstants.IDP_TICKET.equals(name.trim())) {
         SSOToken = cookie.getValue().trim();
         break;
       }

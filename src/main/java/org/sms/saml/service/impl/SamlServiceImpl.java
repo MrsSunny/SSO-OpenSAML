@@ -9,10 +9,8 @@ import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.List;
-
 import javax.crypto.SecretKey;
 import javax.xml.namespace.QName;
-
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
@@ -147,10 +145,10 @@ public class SamlServiceImpl implements SamlService {
     }
   }
   
-  public AuthnRequest buildAuthnRequest(String requestId, String setAssertionConsumerServiceURL) {
+  public AuthnRequest buildAuthnRequest(String ticket, String setAssertionConsumerServiceURL) {
     NameID nameid = (NameID) buildXMLObject(NameID.DEFAULT_ELEMENT_NAME);
     nameid.setFormat(NameID.UNSPECIFIED);
-    nameid.setValue("sunny@soaer.com");
+    nameid.setValue(ticket);
     Subject subject = (Subject) buildXMLObject(Subject.DEFAULT_ELEMENT_NAME);
     subject.setNameID(nameid);
     Audience audience= (Audience) buildXMLObject(Audience.DEFAULT_ELEMENT_NAME);
@@ -171,11 +169,7 @@ public class SamlServiceImpl implements SamlService {
     request.setAssertionConsumerServiceURL(setAssertionConsumerServiceURL);
     request.setAttributeConsumingServiceIndex(0);
     request.setProviderName("IDP Provider");
-    if (null == requestId) {
-      request.setID("_" + UUIDFactory.INSTANCE.getUUID());
-    } else {
-      request.setID(requestId);
-    }
+    request.setID("_" + UUIDFactory.INSTANCE.getUUID());
     request.setVersion(SAMLVersion.VERSION_20);
     request.setIssueInstant(new DateTime(2005, 1, 31, 12, 0, 0, 0, ISOChronology.getInstanceUTC()));
     request.setDestination(SysConstants.LOCALDOMAIN);
@@ -224,8 +218,8 @@ public class SamlServiceImpl implements SamlService {
     aIssuer.setValue(SysConstants.LOCALDOMAIN);
     Subject subject = (Subject) buildXMLObject(Subject.DEFAULT_ELEMENT_NAME);
     NameID nameID = (NameID) buildXMLObject(NameID.DEFAULT_ELEMENT_NAME);
-    nameID.setFormat("urn:oasis:names:tc:SAML:2.0:nameid-format:transient");
-    nameID.setValue("_" + UUIDFactory.INSTANCE.getUUID());
+    nameID.setFormat("urn:oasis:names:tc:SAML:2.0:nameid-format:emailAddress");
+    nameID.setValue(user.getEmail());
     SubjectConfirmation subjectConfirmation = (SubjectConfirmation) buildXMLObject(SubjectConfirmation.DEFAULT_ELEMENT_NAME);
     subjectConfirmation.setMethod("urn:oasis:names:tc:SAML:2.0:cm:bearer");
     subject.setNameID(nameID);
@@ -233,16 +227,10 @@ public class SamlServiceImpl implements SamlService {
     assertion.setIssuer(aIssuer);
     assertion.setSubject(subject);
     AttributeStatement attribStatement = (AttributeStatement) buildXMLObject(AttributeStatement.DEFAULT_ELEMENT_NAME);
-    Attribute nameAttribute = buildStringAttribute("Name", user.getName());
     Attribute idAttribute = buildStringAttribute("Id", user.getId() + "");
     Attribute emailAttribute = buildStringAttribute("Email", user.getEmail());
-    Attribute phoneAttribute = buildStringAttribute("Phone", user.getPhone());
-    Attribute loginIdAttribute = buildStringAttribute("LoginId", user.getLogin_id());
-    attribStatement.getAttributes().add(nameAttribute);
     attribStatement.getAttributes().add(idAttribute);
     attribStatement.getAttributes().add(emailAttribute);
-    attribStatement.getAttributes().add(phoneAttribute);
-    attribStatement.getAttributes().add(loginIdAttribute);
     assertion.getAttributeStatements().add(attribStatement);
     this.signXMLObject(assertion);
     response.getAssertions().add(assertion);

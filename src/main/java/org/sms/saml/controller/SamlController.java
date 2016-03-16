@@ -1,15 +1,17 @@
 package org.sms.saml.controller;
 
-import java.sql.Timestamp;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletInputStream;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.opensaml.xml.util.Base64;
 import org.opensaml.common.SAMLObject;
 import org.opensaml.common.SAMLVersion;
 import org.opensaml.saml2.core.Artifact;
@@ -20,9 +22,11 @@ import org.opensaml.saml2.core.Attribute;
 import org.opensaml.saml2.core.AttributeStatement;
 import org.opensaml.saml2.core.AuthnRequest;
 import org.opensaml.saml2.core.Issuer;
+import org.opensaml.saml2.core.NameID;
 import org.opensaml.saml2.core.Response;
 import org.opensaml.saml2.core.Status;
 import org.opensaml.saml2.core.StatusCode;
+import org.opensaml.saml2.core.Subject;
 import org.opensaml.xml.schema.XSString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +38,7 @@ import org.sms.project.app.entity.App;
 import org.sms.project.app.service.AppService;
 import org.sms.project.authentication.entity.SysAuthentication;
 import org.sms.project.authentication.service.SysAuthenticationService;
+import org.sms.project.encrypt.rsa.RSACoder;
 import org.sms.project.helper.AuthenRequestHelper;
 import org.sms.project.helper.SSOHelper;
 import org.sms.project.helper.SessionHelper;
@@ -52,7 +57,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 处理SAML请求的数据（SSO数据验证）
- * 
  * @author Sunny
  */
 @Controller
@@ -123,7 +127,7 @@ public class SamlController {
     }
     final AuthnRequest authnRequest = (AuthnRequest) artifactResponse.getMessage();
     if (authnRequest == null) {
-      throw new RuntimeException("artifact的值和接收端的inResponseTo的值不一致，认证错误");
+      throw new RuntimeException("无法获取AuthRequest数据，认证错误");
     }
     // 获取SP的消费URL，下一步回调需要用到
     final String customerServiceUrl = authnRequest.getAssertionConsumerServiceURL();
@@ -148,38 +152,48 @@ public class SamlController {
     if (app == null) {
       throw new RuntimeException("不支持当前系统: " + appName);
     }
-    final String requestID = authnRequest.getID();
-    logger.debug("AuthRequest的ID为：" + requestID);
-    // 根据AuthnRequest判断用户是否登录
-    // 判断令牌是否存在,如果令牌不存在则直接跳转到登录页面
-    final SysAuthentication sysAuthen = sysAuthenticationService.queryBySSOToken(requestID);
-    if (sysAuthen.getSso_token() == null) {
+    
+    Subject subject = authnRequest.getSubject();
+    NameID nameID = subject.getNameID();
+    String ticket = nameID.getValue();
+    if ("".equals(ticket) || null == ticket) {
       return "redirect:/loginPage";
     }
-    // 判断令牌是否过期，如果令牌过期则直接
-    Timestamp expireTimestamp = sysAuthen.getExpire_time();
-
-    if (null == expireTimestamp) {
-      throw new RuntimeException("IDP端错误，无法获取过期时间");
+    try {
+      ticket = URLDecoder.decode(ticket, SysConstants.CHARSET);
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
     }
-    long expireTime = expireTimestamp.getTime();
+    /**
+     * 解密ticket
+     */
+    PrivateKey privateKey = samlService.getRSAPrivateKey();
+    String[] afterDecode = null;
+    try {
+      byte[] ticketArray = Base64.decode(ticket);
+      byte[] decryptTicketArray = RSACoder.INSTANCE.decryptByPrivateKey(privateKey, ticketArray);
+      String decryptTicket = new String(decryptTicketArray);
+      afterDecode = decryptTicket.split(SysConstants.TICKET_SPILT);
+    } catch (Exception e) {
+      return "redirect:/loginPage";
+    }
+    logger.debug("Ticket验证痛过");
+    // 判断令牌是否过期，如果令牌过期则直接
+    if (afterDecode == null || afterDecode.length != 3) {
+      return "redirect:/loginPage";
+    }
+    long expireTime = Long.parseLong(afterDecode[2]);
     long nowTime = System.currentTimeMillis();
-    if (expireTime > nowTime) {
+    if (expireTime < nowTime) {
       logger.debug("Token已过期");
       return "redirect:/loginPage";
     }
     final Artifact idpArtifact = samlService.buildArtifact();
     final Response samlResponse = samlService.buildResponse(UUIDFactory.INSTANCE.getUUID());
-    String userid = sysAuthen.getSubject_id();
-    if (userid == null) {
-      throw new RuntimeException("无法在认证纪录里获取Subject信息");
-    }
-    long id = Long.parseLong(userid);
-    User user = userService.find(id);
-    if (user == null) {
-      logger.debug("无法根据认证纪录来获取用户信息");
-      return "redirect:/loginPage";
-    }
+    long id = Long.parseLong(afterDecode[0]);
+    User user = new User();
+    user.setId(id);
+    user.setEmail(afterDecode[1]);
     samlService.addAttribute(samlResponse, user);
     SSOHelper.INSTANCE.put(idpArtifact.getArtifact(), samlResponse);
     request.setAttribute(SysConstants.ARTIFACT_KEY, samlService.buildXMLObjectToString(idpArtifact));
@@ -294,7 +308,6 @@ public class SamlController {
           user.setEmail(valueString);
         }
       });
-      addSSOCookie(response, samlResponse.getID());
       session.setAttribute(SysConstants.LOGIN_USER, user);
       putAuthnToSecuritySession("admin", "admin");
       request.setAttribute(SysConstants.ERROR_LOGIN, false);
@@ -373,22 +386,11 @@ public class SamlController {
     request.setAttribute(SysConstants.ARTIFACT_KEY, artifactBase64);
     request.setAttribute(SysConstants.TOKEN_KEY, token);
     // 如果能在Cookie中获取到idp_token 在把这个ID选择为authnRequest的ID
-    String sso_token_key = (String) SessionHelper.get(request, SysConstants.SSO_TOKEN_KEY);
-    if (null == sso_token_key) {
-      sso_token_key = SysConstants.SAML_ID_PREFIX_CHAR + UUIDFactory.INSTANCE.getUUID();
-    }
-    AuthnRequest authnRequest = samlService.buildAuthnRequest(sso_token_key, SysConstants.SPRECEIVESPARTIFACT_URL);
+    String ticket = (String) SessionHelper.get(request, SysConstants.SSO_TOKEN_KEY);
+    AuthnRequest authnRequest = samlService.buildAuthnRequest(ticket, SysConstants.SPRECEIVESPARTIFACT_URL);
     //把该request放入到authnrequest的全局变量里面
     //把artifact 和 authnRequest 绑定在一起，供后面的根据Artifact获取authnRequest做准备
     AuthenRequestHelper.INSTANCE.put(artifact.getArtifact(), authnRequest);
     return "/saml/sp/send_artifact_to_idp";
-  }
-
-  public void addSSOCookie(HttpServletResponse response, String string) {
-    Cookie cookie = new Cookie(SysConstants.SSO_TOKEN_KEY, string);
-    cookie.setDomain(".soaer.com");
-    cookie.setPath("/");
-    cookie.setMaxAge(24 * 60 * 60);
-    response.addCookie(cookie);
   }
 }

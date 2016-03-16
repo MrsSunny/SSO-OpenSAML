@@ -2,16 +2,20 @@ package org.sms.project.encrypt.rsa;
 
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
-import javax.crypto.Cipher;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+
 import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+
 import org.apache.commons.codec.binary.Base64;
 
 /**
@@ -61,7 +65,7 @@ public enum RSACoder {
   /**
    * 公钥加密
    */
-  public byte[] encryptByPublicKey(RSAPublicKey publicKey, byte[] plainData) throws Exception {
+  public byte[] encryptByPublicKey(PublicKey publicKey, byte[] plainData) throws Exception {
     if (publicKey == null) {
       throw new Exception("加密公钥为空, 请设置");
     }
@@ -129,9 +133,9 @@ public enum RSACoder {
   }
 
   /**
-   * 私钥验签
+   * 私钥解密
    */
-  public byte[] decryptByPrivateKey(RSAPrivateKey privateKey, byte[] cipherData) throws Exception {
+  public byte[] decryptByPrivateKey(PrivateKey privateKey, byte[] cipherData) throws Exception {
     if (privateKey == null) {
       throw new Exception("解密私钥为空, 请设置");
     }
