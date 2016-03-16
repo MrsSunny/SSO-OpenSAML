@@ -102,7 +102,7 @@ public class SamlServiceImpl implements SamlService {
   
   private Logger logger = LoggerFactory.getLogger(SamlServiceImpl.class.getName());
 
-  protected static XMLObjectBuilderFactory builderFactory = Configuration.getBuilderFactory();
+  protected static final XMLObjectBuilderFactory builderFactory;
 
   static {
     try {
@@ -111,6 +111,7 @@ public class SamlServiceImpl implements SamlService {
       e.printStackTrace();
     }
     Security.addProvider(new BouncyCastleProvider());
+    builderFactory = Configuration.getBuilderFactory();
   }
 
   public String buildXMLObjectToString(XMLObject xmlObject) {

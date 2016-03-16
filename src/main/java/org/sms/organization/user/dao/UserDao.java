@@ -46,6 +46,5 @@ public class UserDao {
   
   public User findUserByLogin_Id(String loign_id) {
     return jdbcTemplate.selectOne("getByLoginId", loign_id);
-    
   }
 }
