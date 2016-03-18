@@ -40,4 +40,6 @@ public interface SysConstants {
   public static final String DEFAULT_SP_RECEIVESPARTIFACT_URL = "http://passport.soaer.com:8888/SAML2/receiveIDPArtifact";
   public static final int DEFAULT_EXPIRE = 7;
   public static final String TICKET_SPILT = ",";
+  public static final String IGNORE_KEY = "ignoreUrl";
+  public static final String SYS_CONFIG = "config/sys/sysConfig.xml";
 }
