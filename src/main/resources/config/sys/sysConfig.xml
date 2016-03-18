@@ -9,9 +9,12 @@
 		<url>^/(login)/.*$</url>
 		<url>^/(SAML2)/.*$</url>
 		<url>^/loginFilter</url>
+		<url>^/login.html</url>
 		<url>^/loginPage</url>
+		<url>^/logoutFilter</url>
 		<url>^/loginPage/error</url>
 		<url>^/favicon.ico</url>
+		<url>^/j_spring_security_logout</url>
 		<url>^/error/.*$</url>
 	</ignoreUrls>
 </root>

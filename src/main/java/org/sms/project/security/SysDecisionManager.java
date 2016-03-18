@@ -23,7 +23,7 @@ public class SysDecisionManager implements AccessDecisionManager {
         }
       }
     }
-    throw new AccessDeniedException("您访问的资源不存在或者没有权限！！");
+    throw new AccessDeniedException("您访问的资源没有权限！！");
   }
 
   @Override

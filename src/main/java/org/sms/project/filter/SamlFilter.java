@@ -71,17 +71,16 @@ public class SamlFilter implements Filter {
 
   public String getTicket(HttpServletRequest request) {
     final Cookie[] cookies = request.getCookies();
-    if (null == cookies)
-      return null;
-    String SSOToken = null;
+    if (null == cookies) return null;
+    String ticket = null;
     for (Cookie cookie : cookies) {
       String name = cookie.getName();
       if (SysConstants.IDP_TICKET.equals(name.trim())) {
-        SSOToken = cookie.getValue().trim();
+        ticket = cookie.getValue().trim();
         break;
       }
     }
-    return SSOToken;
+    return ticket;
   }
 
   @Override

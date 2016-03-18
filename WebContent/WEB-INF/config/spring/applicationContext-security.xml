@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/security"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:p="http://www.springframework.org/schema/p"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
               http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
@@ -14,10 +15,14 @@
 	<!-- Use Form_login_Filter -->
 	<http use-expressions="true" entry-point-ref="authenticationEntryPoint" >
 		<csrf disabled="true" />
+		<!-- <logout logout-url="/logoutFilter" invalidate-session="true" delete-cookies="idp_ticket, guid" 
+		success-handler-ref="sysLogoutSuccessHandler" /> --> 
+		<logout logout-url="/j_spring_security_logout" invalidate-session="true" delete-cookies="idp_ticket" 
+		success-handler-ref="sysLogoutSuccessHandler" />
+		<!-- <custom-filter ref="logoutFilter" position="LOGOUT_FILTER" /> -->
 		<custom-filter ref="loginFilter" position="FORM_LOGIN_FILTER" />
 		<custom-filter ref="securityFilter" before="FILTER_SECURITY_INTERCEPTOR" />
 	</http>
-
 	<beans:bean id="authenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
 		<beans:constructor-arg value="/html/authen.html" />
 	</beans:bean>
@@ -51,4 +56,7 @@
 		<authentication-provider user-service-ref="sysUserDetailsService"></authentication-provider>
 	</authentication-manager>
 	<beans:bean id="sysUserDetailsService" class="org.sms.project.security.SysUserDetailsService"></beans:bean>
+	
+	<!-- logout handler -->
+	<beans:bean id="sysLogoutSuccessHandler" class="org.sms.project.logout.SysLogoutHandler" />
 </beans:beans>

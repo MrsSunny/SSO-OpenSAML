@@ -1,7 +1,6 @@
 package org.sms.project.listener;
 
 import javax.servlet.ServletContextEvent;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sms.project.init.SysConfig;

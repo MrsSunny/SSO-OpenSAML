@@ -10,9 +10,7 @@
 	  if (object instanceof Boolean) {
 	    boolean success = (Boolean) object;
 	    if (!success) {
-	      	System.out.print("++++++++++++++++++++++++++++++");
 	  		System.out.print((String)session.getAttribute(SysConstants.REDIRECT_URL_KEY));
-	  		System.out.print("++++++++++++++++++++++++++++++");
 	  		Object redirectUrl = session.getAttribute(SysConstants.REDIRECT_URL_KEY);
 	  		if (redirectUrl == null) {
 	  		  response.sendRedirect(SysConstants.SP_INDEX_PAGE);
