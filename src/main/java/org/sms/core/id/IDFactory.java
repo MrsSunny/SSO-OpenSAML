@@ -1,6 +1,6 @@
-package org.sms.component.idfactory;
+package org.sms.core.id;
 
-import org.sms.component.idfactory.KeyFactory.PrimaryKeyType;
+import org.sms.core.id.KeyFactory.PrimaryKeyType;
 
 /**
  * @author Sunny

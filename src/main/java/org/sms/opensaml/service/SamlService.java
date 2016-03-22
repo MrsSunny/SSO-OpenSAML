@@ -1,4 +1,4 @@
-package org.sms.saml.service;
+package org.sms.opensaml.service;
 
 import java.security.PublicKey;
 import java.security.interfaces.RSAPrivateKey;

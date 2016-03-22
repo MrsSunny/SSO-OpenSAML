@@ -1,5 +1,7 @@
 package org.sms.saml.service;
 
+import org.sms.opensaml.service.SamlService;
+
 import base.BaseTest;
 
 /**

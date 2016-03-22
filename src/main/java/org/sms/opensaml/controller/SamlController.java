@@ -1,4 +1,4 @@
-package org.sms.saml.controller;
+package org.sms.opensaml.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.opensaml.xml.util.Base64;
 import org.opensaml.common.SAMLObject;
 import org.opensaml.common.SAMLVersion;
 import org.opensaml.saml2.core.Artifact;
@@ -28,10 +27,12 @@ import org.opensaml.saml2.core.Status;
 import org.opensaml.saml2.core.StatusCode;
 import org.opensaml.saml2.core.Subject;
 import org.opensaml.xml.schema.XSString;
+import org.opensaml.xml.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sms.SysConstants;
-import org.sms.component.idfactory.UUIDFactory;
+import org.sms.core.id.UUIDFactory;
+import org.sms.opensaml.service.SamlService;
 import org.sms.organization.user.entity.User;
 import org.sms.organization.user.service.UserService;
 import org.sms.project.app.entity.App;
@@ -43,7 +44,6 @@ import org.sms.project.helper.AuthenRequestHelper;
 import org.sms.project.helper.SSOHelper;
 import org.sms.project.helper.SessionHelper;
 import org.sms.project.security.SampleAuthenticationManager;
-import org.sms.saml.service.SamlService;
 import org.sms.util.HttpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;

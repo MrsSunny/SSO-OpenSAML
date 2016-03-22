@@ -1,4 +1,4 @@
-package org.sms.saml.service.impl;
+package org.sms.opensaml.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
@@ -9,8 +9,10 @@ import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.List;
+
 import javax.crypto.SecretKey;
 import javax.xml.namespace.QName;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
@@ -89,9 +91,9 @@ import org.opensaml.xml.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sms.SysConstants;
-import org.sms.component.idfactory.UUIDFactory;
+import org.sms.core.id.UUIDFactory;
+import org.sms.opensaml.service.SamlService;
 import org.sms.organization.user.entity.User;
-import org.sms.saml.service.SamlService;
 import org.sms.util.GZipUtil;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;

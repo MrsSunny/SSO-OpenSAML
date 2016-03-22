@@ -1,4 +1,4 @@
-package org.sms.component.idfactory;
+package org.sms.core.id;
 
 /**
  * @author Sunny

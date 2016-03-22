@@ -1,4 +1,4 @@
-package org.sms.component.redis;
+package org.sms.core.cache;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;

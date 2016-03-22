@@ -1,4 +1,4 @@
-package org.sms.component.search;
+package org.sms.core.search;
 
 /**
  * @author Sunny

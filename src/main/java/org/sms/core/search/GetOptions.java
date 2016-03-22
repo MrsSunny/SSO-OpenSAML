@@ -1,4 +1,4 @@
-package org.sms.component.search;
+package org.sms.core.search;
 
 import java.util.ArrayList;
 import java.util.List;
