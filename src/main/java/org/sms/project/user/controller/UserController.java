@@ -1,7 +1,8 @@
-package org.sms.organization.user.controller;
+package org.sms.project.user.controller;
 
 import javax.servlet.http.HttpServletRequest;
-import org.sms.organization.user.service.UserService;
+
+import org.sms.project.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

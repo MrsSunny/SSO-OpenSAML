@@ -2,6 +2,7 @@ package org.sms.opensaml.service;
 
 import java.security.PublicKey;
 import java.security.interfaces.RSAPrivateKey;
+
 import org.opensaml.saml2.core.Artifact;
 import org.opensaml.saml2.core.ArtifactResolve;
 import org.opensaml.saml2.core.ArtifactResponse;
@@ -19,7 +20,7 @@ import org.opensaml.xml.security.x509.X509Credential;
 import org.opensaml.xml.signature.SignableXMLObject;
 import org.opensaml.xml.signature.Signature;
 import org.opensaml.xml.signature.X509Certificate;
-import org.sms.organization.user.entity.User;
+import org.sms.project.user.entity.User;
 
 /**
  * @author Sunny

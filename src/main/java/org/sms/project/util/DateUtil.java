@@ -1,4 +1,4 @@
-package org.sms.util;
+package org.sms.project.util;
 
 import java.text.SimpleDateFormat;
 import java.time.*;

@@ -1,10 +1,10 @@
-package org.sms.organization.user.service.impl;
+package org.sms.project.user.service.impl;
 
 import java.util.List;
 
-import org.sms.organization.user.dao.UserDao;
-import org.sms.organization.user.entity.User;
-import org.sms.organization.user.service.UserService;
+import org.sms.project.user.dao.UserDao;
+import org.sms.project.user.entity.User;
+import org.sms.project.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

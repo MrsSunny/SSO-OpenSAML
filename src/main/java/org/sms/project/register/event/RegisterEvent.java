@@ -1,6 +1,6 @@
 package org.sms.project.register.event;
 
-import org.sms.organization.user.entity.User;
+import org.sms.project.user.entity.User;
 import org.springframework.context.ApplicationEvent;
 
 public class RegisterEvent extends ApplicationEvent {

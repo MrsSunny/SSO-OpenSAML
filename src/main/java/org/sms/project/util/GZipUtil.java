@@ -1,4 +1,4 @@
-package org.sms.util;
+package org.sms.project.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

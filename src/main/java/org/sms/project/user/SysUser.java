@@ -1,4 +1,4 @@
-package org.sms.organization.user;
+package org.sms.project.user;
 
 import java.sql.Timestamp;
 

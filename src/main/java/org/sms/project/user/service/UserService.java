@@ -1,8 +1,8 @@
-package org.sms.organization.user.service;
+package org.sms.project.user.service;
 
 import java.util.List;
 
-import org.sms.organization.user.entity.User;
+import org.sms.project.user.entity.User;
 
 /**
  * @Title: ISysUser.java

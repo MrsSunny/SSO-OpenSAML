@@ -1,4 +1,4 @@
-package org.sms.organization.role.entity;
+package org.sms.project.role.entity;
 
 import java.io.Serializable;
 

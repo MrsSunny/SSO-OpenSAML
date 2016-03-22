@@ -4,10 +4,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.sms.SysConstants;
-import org.sms.organization.user.entity.User;
-import org.sms.organization.user.service.UserService;
 import org.sms.project.encrypt.md5.MD5;
 import org.sms.project.helper.SessionHelper;
+import org.sms.project.user.entity.User;
+import org.sms.project.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

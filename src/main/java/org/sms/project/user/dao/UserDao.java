@@ -1,11 +1,12 @@
-package org.sms.organization.user.dao;
+package org.sms.project.user.dao;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.sms.organization.user.entity.User;
+import org.sms.project.user.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package org.sms.organization.user.entity;
+package org.sms.project.user.entity;
 
 import java.io.Serializable;
 import java.sql.Timestamp;

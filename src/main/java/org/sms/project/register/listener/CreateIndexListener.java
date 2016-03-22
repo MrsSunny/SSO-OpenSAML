@@ -1,7 +1,7 @@
 package org.sms.project.register.listener;
 
-import org.sms.organization.user.entity.User;
 import org.sms.project.register.event.RegisterEvent;
+import org.sms.project.user.entity.User;
 import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;

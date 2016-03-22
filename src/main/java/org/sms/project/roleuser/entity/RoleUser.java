@@ -1,4 +1,4 @@
-package org.sms.organization.roleuser.entity;
+package org.sms.project.roleuser.entity;
 
 import org.sms.project.base.SysBase;
 

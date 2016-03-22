@@ -2,8 +2,9 @@ package org.sms.project.security;
 
 import java.util.HashSet;
 import java.util.Set;
-import org.sms.organization.user.entity.User;
-import org.sms.organization.user.service.UserService;
+
+import org.sms.project.user.entity.User;
+import org.sms.project.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
