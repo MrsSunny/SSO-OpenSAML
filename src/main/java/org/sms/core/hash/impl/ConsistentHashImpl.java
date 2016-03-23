@@ -3,8 +3,6 @@ package org.sms.core.hash.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NavigableMap;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.SortedMap;
 import org.sms.core.hash.ConsistentHash;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -73,17 +71,6 @@ public class ConsistentHashImpl<T> implements ConsistentHash<T> {
   public List<T> getAllMembers() {
     List<T> result = new ArrayList<>();
     result.addAll(membersMap.values());
-    return result;
-  }
-
-  public static <T> Optional<T> getLastKey(NavigableMap<T, ?> map) {
-    T key = null;
-    try {
-      if (!map.isEmpty())
-        key = map.lastKey();
-    } catch (NoSuchElementException e) {
-    }
-    Optional<T> result = Optional.ofNullable(key);
     return result;
   }
 }
