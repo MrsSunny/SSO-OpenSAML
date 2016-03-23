@@ -16,8 +16,8 @@ public enum ClusterDbFactory implements KeyFactory {
   
   private ConsistentHash<Node> consistentHash;
   
-  public void setSourceHash(List<Node> jdbcTempletes) {
-    consistentHash = new ConsistentHashImpl<Node>(10, jdbcTempletes);
+  public void setSourceHash(List<Node> nodes) {
+    consistentHash = new ConsistentHashImpl<Node>(1, nodes);
     consistentHash.addListMember();
   }
   

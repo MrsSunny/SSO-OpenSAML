@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 
 public class ConsistentHashImpl<T> implements ConsistentHash<T> {
 
-  public static final int DEFAULT_VIRRUALNODE_INSTANCE = 5;
+  public static final int DEFAULT_VIRRUALNODE_INSTANCE = 2;
   private final HashFunction hashFunction;
   private final NavigableMap<Integer, T> membersMap;
   private List<T> list;
