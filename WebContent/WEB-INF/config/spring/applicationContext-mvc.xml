@@ -24,9 +24,11 @@
 	<!--默认的mvc注解映射的支持 -->
 	<mvc:annotation-driven />
 	<!-- 加载配置文件 -->
-	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
-	
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	<bean id="validator"
+		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url" value="jdbc:mysql://localhost/sms" />
 		<property name="username" value="sunny" />
@@ -35,6 +37,21 @@
 
 	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
 		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<bean id="sysDataSource" class="org.sms.project.datasource.SysDataSource" init-method="init">
+		<property name="dataSourceList">
+			<list>
+				<ref bean="dataSource" />
+				<!-- <bean id="dataSource"
+					class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+					<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+					<property name="url" value="jdbc:mysql://localhost/sms" />
+					<property name="username" value="sunny" />
+					<property name="password" value="123456" />
+				</bean> -->
+			</list>
+		</property>
 	</bean>
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -70,29 +87,31 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
-	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" order="1" />
+	<tx:annotation-driven transaction-manager="transactionManager"
+		proxy-target-class="true" order="1" />
 	<!-- 配置那些类的方法进行事务管理 -->
 	<aop:config>
-		<aop:pointcut id="allManagerMethod" expression="execution (* org.sms.*.service.*.*(..))" />
+		<aop:pointcut id="allManagerMethod"
+			expression="execution (* org.sms.*.service.*.*(..))" />
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="allManagerMethod" />
 	</aop:config>
 	<aop:config proxy-target-class="true">
-		<aop:advisor pointcut="execution(* com.sms.*..*ServiceImpl.*(..)) ||execution(* org.sms.*..*ServiceImpl.*(..))" advice-ref="txAdvice" order="0" />
+		<aop:advisor
+			pointcut="execution(* com.sms.*..*ServiceImpl.*(..)) ||execution(* org.sms.*..*ServiceImpl.*(..))"
+			advice-ref="txAdvice" order="0" />
 	</aop:config>
-	
-	<!-- <aop:config>
-		<aop:aspect id="DataAspect" ref="sendError">
-			<aop:pointcut id="interfaceDataService" expression="execution(* org.*..*ServiceImpl.*(..)) || execution(* com.*..*ServiceImpl.*(..)) " />
-			<aop:before pointcut-ref="interfaceDataService" method="doBefore" />
-			<aop:after pointcut-ref="interfaceDataService" method="doAfter" />
-			<aop:around pointcut-ref="interfaceDataService" method="doAround" />
-			<aop:after-throwing pointcut-ref="interfaceDataService" method="doThrowing" throwing="ex" />
-		</aop:aspect>
-	</aop:config>
-	<bean id="sendError" class="org.sms.project.monitor.SysMonitor"></bean>
-	<aop:aspectj-autoproxy /> -->
 
-	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+	<!-- <aop:config> <aop:aspect id="DataAspect" ref="sendError"> <aop:pointcut 
+		id="interfaceDataService" expression="execution(* org.*..*ServiceImpl.*(..)) 
+		|| execution(* com.*..*ServiceImpl.*(..)) " /> <aop:before pointcut-ref="interfaceDataService" 
+		method="doBefore" /> <aop:after pointcut-ref="interfaceDataService" method="doAfter" 
+		/> <aop:around pointcut-ref="interfaceDataService" method="doAround" /> <aop:after-throwing 
+		pointcut-ref="interfaceDataService" method="doThrowing" throwing="ex" /> 
+		</aop:aspect> </aop:config> <bean id="sendError" class="org.sms.project.monitor.SysMonitor"></bean> 
+		<aop:aspectj-autoproxy /> -->
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="basename" value="messages" />
 		<property name="useCodeAsDefaultMessage" value="true" />
 	</bean>
