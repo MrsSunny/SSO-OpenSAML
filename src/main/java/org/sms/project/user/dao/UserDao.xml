@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.sms.organization.user.dao.UserDao">
-	<insert id="insert" parameterType="org.sms.organization.user.entity.User">
+<mapper namespace="org.sms.project.user.dao.UserDao">
+	<insert id="insert" parameterType="org.sms.project.user.entity.User">
 		insert into sys_user ( ID,
 		USER_NAME, LOGIN_ID, USER_PASSWORD, EMAIL,
 		PHONE, ADRESS, CONFIRMNUM, EMPLOYEE_ID,
@@ -34,7 +34,7 @@
 		</foreach>
 	</delete>
 
-	<update id="update" parameterType="org.sms.organization.user.entity.User">
+	<update id="update" parameterType="org.sms.project.user.entity.User">
 		update sys_user set
 		USER_NAME=#{user_name,jdbcType=VARCHAR}, LOGIN_ID=#{login_id,jdbcType=VARCHAR},
 		USER_PASSWORD=#{user_password,jdbcType=VARCHAR},
@@ -52,11 +52,11 @@
 		where ID=#{id}
 	</update>
 
-	<select id="get" parameterType="long" resultType="org.sms.organization.user.entity.User">
+	<select id="get" parameterType="long" resultType="org.sms.project.user.entity.User">
 		select * from user where user.ID=#{id}
 	</select>
 	
-	<select id="getByLoginId" parameterType="string" resultType="org.sms.organization.user.entity.User">
+	<select id="getByLoginId" parameterType="string" resultType="org.sms.project.user.entity.User">
 		select * from user where user.login_id=#{login_id}
 	</select>
 
@@ -69,7 +69,7 @@
 	</select>
 
 	<select id="list" parameterType="map"
-		resultType="org.sms.organization.user.entity.User">
+		resultType="org.sms.project.user.entity.User">
 		select sys_user.ID,
 		sys_user.USER_NAME, sys_user.LOGIN_ID, sys_user.USER_PASSWORD, sys_user.EMAIL,
 		sys_user.PHONE, sys_user.ADRESS, sys_user.CONFIRMNUM,
