@@ -10,15 +10,13 @@ public interface UserService {
   
   long insert(User user);
 
-  void update(User user);
+  int update(User user);
 
-  void delete(long id);
+  int delete(long id);
 
-  User find(long id);
-
-  User find(String login_id);
+  User findById(long id);
 
   List<User> queryByCondition(String query, String order, int startIndex, int size);
 
-  User findUserByLogin_Id(String loign_id);
+  User findUserByLoginId(String loign_id);
 }

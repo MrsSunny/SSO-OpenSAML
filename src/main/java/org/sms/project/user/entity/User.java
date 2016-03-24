@@ -1,9 +1,7 @@
 package org.sms.project.user.entity;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Collection;
-
 import org.sms.SysConstants;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,13 +35,13 @@ public class User implements Serializable, UserDetails {
 
   private String last_login_ip;
 
-  private Timestamp create_date;
+  private String create_date;
 
   private String usable_status;
 
-  private Timestamp modify_date;
+  private String modify_date;
 
-  private Timestamp last_login_date;
+  private String last_login_date;
   
   /**
    * 登录凭证，如果是系统内部用户则为密码,如果为其他第三方用户则存凭证
@@ -202,7 +200,7 @@ public class User implements Serializable, UserDetails {
   /**
    * @return the last_login_date
    */
-  public Timestamp getLast_login_date() {
+  public String getLast_login_date() {
     return last_login_date;
   }
 
@@ -210,14 +208,14 @@ public class User implements Serializable, UserDetails {
    * @param last_login_date
    *          the last_login_date to set
    */
-  public void setLast_login_date(Timestamp last_login_date) {
+  public void setLast_login_date(String last_login_date) {
     this.last_login_date = last_login_date;
   }
 
   /**
    * @return the create_date
    */
-  public Timestamp getCreate_date() {
+  public String getCreate_date() {
     return create_date;
   }
 
@@ -225,7 +223,7 @@ public class User implements Serializable, UserDetails {
    * @param create_date
    *          the create_date to set
    */
-  public void setCreate_date(Timestamp create_date) {
+  public void setCreate_date(String create_date) {
     this.create_date = create_date;
   }
 
@@ -247,7 +245,7 @@ public class User implements Serializable, UserDetails {
   /**
    * @return the modify_date
    */
-  public Timestamp getModify_date() {
+  public String getModify_date() {
     return modify_date;
   }
 
@@ -255,7 +253,7 @@ public class User implements Serializable, UserDetails {
    * @param modify_date
    *          the modify_date to set
    */
-  public void setModify_date(Timestamp modify_date) {
+  public void setModify_date(String modify_date) {
     this.modify_date = modify_date;
   }
 
@@ -265,7 +263,7 @@ public class User implements Serializable, UserDetails {
 
   @Override
   public String toString() {
-    return "[{" + "name:" + name + " ," + "email:" + email + "," + "adress:" + adress + " ," + "usable_status:" + usable_status + " ," + "Role_name:" + authorities.toString() + "}]";
+    return "[{" + "login_id:" + login_id + "}]";
   }
 
   @Override

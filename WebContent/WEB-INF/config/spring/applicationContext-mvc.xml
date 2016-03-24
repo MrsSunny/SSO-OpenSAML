@@ -24,9 +24,7 @@
 	<!--默认的mvc注解映射的支持 -->
 	<mvc:annotation-driven />
 	<!-- 加载配置文件 -->
-	<bean id="validator"
-		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
-
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
@@ -62,7 +60,7 @@
 				<prop key="dialect">${mybatis.dialect}</prop>
 			</props>
 		</property>
-	</bean>
+	</bean>	
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg index="0" ref="sqlSessionFactory" />
 	</bean>
