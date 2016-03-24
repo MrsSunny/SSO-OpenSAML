@@ -5,12 +5,10 @@ import java.net.URLDecoder;
 import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.opensaml.common.SAMLObject;
 import org.opensaml.common.SAMLVersion;
 import org.opensaml.saml2.core.Artifact;
@@ -35,8 +33,6 @@ import org.sms.core.id.UUIDFactory;
 import org.sms.opensaml.service.SamlService;
 import org.sms.project.app.entity.App;
 import org.sms.project.app.service.AppService;
-import org.sms.project.authentication.entity.SysAuthentication;
-import org.sms.project.authentication.service.SysAuthenticationService;
 import org.sms.project.encrypt.rsa.RSACoder;
 import org.sms.project.helper.AuthenRequestHelper;
 import org.sms.project.helper.SSOHelper;
@@ -71,9 +67,6 @@ public class SamlController {
 
   @Autowired
   private UserService userService;
-
-  @Autowired
-  private SysAuthenticationService sysAuthenticationService;
 
   private Logger logger = LoggerFactory.getLogger(SamlController.class.getName());
 
@@ -227,11 +220,6 @@ public class SamlController {
       }
       artifactResponse.setMessage(samlResponse);
       SSOHelper.INSTANCE.remove(artifact.getArtifact());
-      SysAuthentication sysAuthen = new SysAuthentication();
-      sysAuthen.setSso_token(samlResponse.getID());
-      sysAuthen.setId(System.currentTimeMillis());
-      sysAuthen.setSubject_id(1 + "");
-      sysAuthenticationService.create(sysAuthen);
       return samlService.buildXMLObjectToString(artifactResponse);
     } catch (Exception e) {
       return null;

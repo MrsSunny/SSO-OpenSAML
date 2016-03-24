@@ -1,5 +1,6 @@
 package org.sms.project.app.service;
 
+import java.util.List;
 import org.sms.project.app.entity.App;
 
 /**
@@ -7,9 +8,15 @@ import org.sms.project.app.entity.App;
  */
 public interface AppService {
   
-  public int insert(App app);
+  List<App> getApp(String query, String order, int startIndex, int size);
   
-  public App findAppById(long id);
+  int insert(App app);
   
-  public App findAppByAppName(String appName);
+  App findAppById(long id);
+  
+  App findAppByAppName(String appName);
+  
+  int update(App roleUser);
+
+  int delete(long id);
 }

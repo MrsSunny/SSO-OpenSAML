@@ -7,6 +7,7 @@ public interface SysConstants {
   
   public static final String LOGIN_USER = "user";
   public static final String ENABLE = "0";
+  public static final String DISABLE = "1";
   public static final String CHARSET = "UTF-8";
   public static final String TICKETID = "ticket";
   public static final String AUTHREQUEST = "authRequest";

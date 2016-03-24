@@ -11,7 +11,7 @@ public class Role extends SysBase implements Serializable {
 
   private static final long serialVersionUID = -1788927575820591286L;
 
-  private String id;
+  private long id;
 
   private String name;
 
@@ -20,14 +20,14 @@ public class Role extends SysBase implements Serializable {
   /**
    * @return the id
    */
-  public String getId() {
+  public long getId() {
     return id;
   }
 
   /**
    * @param id the id to set
    */
-  public void setId(String id) {
+  public void setId(long id) {
     this.id = id;
   }
 
