@@ -42,4 +42,5 @@ public interface SysConstants {
   public static final String TICKET_SPILT = ",";
   public static final String IGNORE_KEY = "ignoreUrl";
   public static final String SYS_CONFIG = "config/sys/sysConfig.xml";
+  public static final String DOMAIN = "soaer.com";
 }

@@ -83,7 +83,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
   
   private void addSSOCookie(HttpServletResponse response, String string) throws UnsupportedEncodingException {
     Cookie cookie = new Cookie(SysConstants.IDP_TICKET, URLEncoder.encode(string, SysConstants.CHARSET));
-    cookie.setDomain(".soaer.com");
+    cookie.setDomain("." + SysConstants.DOMAIN);
     cookie.setPath("/");
     cookie.setMaxAge(24 * 60 * 60);
     response.addCookie(cookie);

@@ -13,7 +13,7 @@ public class SysBase {
 
   private long create_user_id;
 
-  private Timestamp modify_date;
+  private String modify_date;
 
   private long modify_user_id;
 
@@ -33,11 +33,11 @@ public class SysBase {
     this.create_user_id = create_user_id;
   }
 
-  public final Timestamp getModify_date() {
+  public final String getModify_date() {
     return modify_date;
   }
 
-  public final void setModify_date(Timestamp modify_date) {
+  public final void setModify_date(String modify_date) {
     this.modify_date = modify_date;
   }
 

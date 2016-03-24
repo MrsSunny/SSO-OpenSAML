@@ -10,7 +10,7 @@ import org.sms.project.resource.entity.Resource;
  */
 public interface ResourceService {
 
-  List<Resource> getResources();
+  List<Resource> getResources(String query, String order, int startIndex, int size);
   
   List<ResourceMapping> getResourceMappings();
   
@@ -18,7 +18,7 @@ public interface ResourceService {
   
   int update(Resource resources);
   
-  int delete(Resource resources);
+  int delete(long id);
   
-  Resource findById(int id);
+  Resource findById(long id);
 }

@@ -1,7 +1,7 @@
 package org.sms.project.resource.service.impl;
 
 import java.util.List;
-
+import org.sms.core.id.IDFactory;
 import org.sms.project.resource.dao.ResourceDao;
 import org.sms.project.resource.dao.ResourceDao.ResourceMapping;
 import org.sms.project.resource.entity.Resource;
@@ -11,12 +11,14 @@ import org.springframework.stereotype.Service;
 
 @Service("resourceService")
 public class ResourceServiceImpl implements ResourceService {
+  
+  public static final String TABLE_NAME = "resource_sequence";
 
   @Autowired
   private ResourceDao resourceDao;
 
-  public List<Resource> getResources() {
-    return resourceDao.getResources();
+  public List<Resource> getResources(String query, String order, int startIndex, int size) {
+    return resourceDao.getResources(query, order, startIndex, size);
   }
   
   public List<ResourceMapping> getResourceMappings() {
@@ -24,6 +26,8 @@ public class ResourceServiceImpl implements ResourceService {
   }
 
   public int insert(Resource resources) {
+    long id = IDFactory.INSTANCE.getId(TABLE_NAME);
+    resources.setId(id);
     return resourceDao.insert(resources);
   }
 
@@ -31,11 +35,11 @@ public class ResourceServiceImpl implements ResourceService {
     return resourceDao.update(resources);
   }
 
-  public int delete(Resource resources) {
-    return resourceDao.delete(resources);
+  public int delete(long id) {
+    return resourceDao.delete(id);
   }
 
-  public Resource findById(int id) {
+  public Resource findById(long id) {
     return resourceDao.findById(id);
   }
 }

@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 import org.sms.core.hash.ConsistentHash;
 import org.sms.core.hash.impl.ConsistentHashImpl;
 import org.sms.project.datasource.SysDataSource.Node;
@@ -14,7 +13,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-
 import com.mysql.jdbc.Statement;
 
 /**

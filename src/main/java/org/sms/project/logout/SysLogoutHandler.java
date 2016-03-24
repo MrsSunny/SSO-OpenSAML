@@ -23,7 +23,7 @@ public class SysLogoutHandler implements LogoutSuccessHandler {
         Cookie cookieTicket = new Cookie(SysConstants.IDP_TICKET, null);
         cookieTicket.setMaxAge(0);
         cookieTicket.setPath("/");
-        cookieTicket.setDomain(".soaer.com");
+        cookieTicket.setDomain("." + SysConstants.DOMAIN);
         cookieTicket.setValue(null);
         response.addCookie(cookieTicket);
         break;

@@ -42,11 +42,17 @@
 	</update>
 
 	<select id="get" parameterType="long" resultType="org.sms.project.user.entity.User">
-		select * from user where user.ID=#{id}
+		select user.ID,
+		user.NAME, user.LOGIN_ID, user.EMAIL,
+		user.PHONE, user.ADRESS 
+		from user where user.ID=#{id}
 	</select>
 	
 	<select id="getByLoginId" parameterType="string" resultType="org.sms.project.user.entity.User">
-		select * from user where user.login_id=#{login_id}
+		select user.ID,
+		user.NAME, user.LOGIN_ID, user.EMAIL,
+		user.PHONE, user.ADRESS 
+		from user where user.login_id=#{login_id}
 	</select>
 
 	<select id="getCount" parameterType="string" resultType="int"

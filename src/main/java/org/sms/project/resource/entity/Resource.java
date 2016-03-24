@@ -11,7 +11,7 @@ public class Resource extends SysBase {
   private String url;
   private String type;
   private String name;
-  private long parentId;
+  private long parent_id;
   private String description;
   
   public final long getId() {
@@ -31,11 +31,11 @@ public class Resource extends SysBase {
   }
 
   public final long getParentId() {
-    return parentId;
+    return parent_id;
   }
 
-  public final void setParentId(long parentId) {
-    this.parentId = parentId;
+  public final void setParentId(long parent_id) {
+    this.parent_id = parent_id;
   }
 
   public final String getType() {

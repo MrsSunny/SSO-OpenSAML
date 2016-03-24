@@ -36,6 +36,10 @@
 	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
+	
+	<bean id="sysJdbcTemplate" class="org.sms.project.helper.jdbc.SysJdbcTemplate">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
 
 	<bean id="sysDataSource" class="org.sms.project.datasource.SysDataSource" init-method="init">
 		<property name="dataSourceList">
