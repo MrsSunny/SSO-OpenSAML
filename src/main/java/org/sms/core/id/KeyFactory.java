@@ -10,7 +10,7 @@ public interface KeyFactory {
    * @param tableName
    * @return
    */
-  long getPrimaryKey(String tableName);
+  Long getPrimaryKey(String tableName);
 
   /**
    * 多租户环境下实现共享schemaer ID获取
@@ -18,8 +18,6 @@ public interface KeyFactory {
    * @param tableName
    * @return
    */
-  long getPrimaryKey(String groupName, String tableName);
-  
   public enum PrimaryKeyType {
     
     /**

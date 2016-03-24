@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
  */
 @Service("sysUserService")
 public class UserServiceImpl implements UserService {
+  
+  public static final String TABLE_NAME = "USER";
 
   @Autowired
   private UserDao sysUserDao;

@@ -8,9 +8,9 @@ import org.sms.core.id.KeyFactory.PrimaryKeyType;
 public enum IDFactory {
 
   INSTANCE;
-  
+
   public Long getId(PrimaryKeyType typeName, String tableName) {
-    
+
     KeyFactory factory = null;
     switch (typeName) {
     case CLUSTERDB:
@@ -25,5 +25,9 @@ public enum IDFactory {
       throw new RuntimeException("不能解析的主键获取类型");
     }
     return factory.getPrimaryKey(tableName);
+  }
+
+  public Long getId(String tableName) {
+    return getId(PrimaryKeyType.CLUSTERDB, tableName);
   }
 }
