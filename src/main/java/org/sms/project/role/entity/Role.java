@@ -7,7 +7,7 @@ import org.sms.project.base.SysBase;
 /**
  * @author Sunny
  */
-public class SysRole extends SysBase implements Serializable {
+public class Role extends SysBase implements Serializable {
 
   private static final long serialVersionUID = -1788927575820591286L;
 
