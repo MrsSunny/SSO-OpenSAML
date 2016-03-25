@@ -12,6 +12,6 @@ public class CreateIndexListener implements ApplicationListener<RegisterEvent> {
   @Async
   @Override
   public void onApplicationEvent(final RegisterEvent event) {
-    System.out.println("创建索引信息" + ((User) event.getSource()).getUsername());
+    System.out.println("创建索引信息" + ((User) event.getSource()));
   }
 }
