@@ -29,12 +29,9 @@ public class AppDao {
    */
   public App findAppById(long id) {
     final App app = new App();
-    sysJdbcTemplate.query("SELECT ID,APP_DOMAIN,CREATE_DATE,APP_INDEX FROM SYS_APP WHERE id = ?", new Object[] { id }, new RowCallbackHandler() {
+    sysJdbcTemplate.query("SELECT ID,APP_DOMAIN,CREATE_DATE,APP_INDEX FROM SYS_APP WHERE ID = ?", new Object[] { id }, new RowCallbackHandler() {
       public void processRow(ResultSet rs) throws SQLException {
-        app.setId(rs.getLong("id"));
-        app.setCreate_date(rs.getTimestamp("create_date"));
-        app.setApp_domain(rs.getString("app_name"));
-        app.setApp_index(rs.getString("app_index"));
+        AutoBuildBean.INSTANCE.buildBean(app, rs);
       }
     });
     return app;

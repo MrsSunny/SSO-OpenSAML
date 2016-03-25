@@ -49,7 +49,7 @@ public class RoleResourceDao {
    * @return
    */
   public int update(RoleResource roleResource) {
-    String sql = "UPDATE ROLE_RESOURCE SET usable_status = ?, modify_date = ?, modify_user_id = ?  WHERE id = ?";
+    String sql = "UPDATE ROLE_RESOURCE SET USABLE_STATUS = ?, MODIFY_DATE = ?, MODIFY_USER_ID = ?  WHERE ID = ?";
     Object[] params = new Object[] { roleResource.getUsable_status(), roleResource.getModify_date(), roleResource.getModify_user_id(), roleResource.getId() };
     int[] types = new int[] { Types.VARCHAR, Types.VARCHAR, Types.BIGINT, Types.BIGINT};
     return sysJdbcTemplate.update(sql, params, types);
@@ -59,7 +59,7 @@ public class RoleResourceDao {
    * @return
    */
   public int delete(long id) {
-    String sql = "DELETE FROM ROLE_RESOURCE WHERE id = ?";
+    String sql = "DELETE FROM ROLE_RESOURCE WHERE ID = ?";
     Object[] params = new Object[] { id };
     int[] types = new int[] { Types.INTEGER };
     return sysJdbcTemplate.update(sql, params, types);
@@ -71,7 +71,7 @@ public class RoleResourceDao {
    */
   public RoleResource findById(long id) {
     final RoleResource roleResource = new RoleResource();
-    sysJdbcTemplate.query("SELECT ID,ROLE_ID,RESOURCE_ID,CREATE_DATE FROM ROLE_RESOURCE WHERE id = ?", new Object[] { id }, new RowCallbackHandler() {
+    sysJdbcTemplate.query("SELECT ID,ROLE_ID,RESOURCE_ID,CREATE_DATE FROM ROLE_RESOURCE WHERE ID = ?", new Object[] { id }, new RowCallbackHandler() {
       public void processRow(ResultSet rs) throws SQLException {
         AutoBuildBean.INSTANCE.buildBean(roleResource, rs);
       }

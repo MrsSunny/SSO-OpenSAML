@@ -30,7 +30,7 @@ public class ResourceDao {
   }
 
   public List<ResourceMapping> getResourceMapping() {
-    List<ResourceMapping> resourceMappings = sysJdbcTemplate.query("select resource.url, role.name from role_resource left join resource on role_resource.resource_id = resource.id left join role on role_resource.role_id = role.id", new ResourceMappingRowMapper());
+    List<ResourceMapping> resourceMappings = sysJdbcTemplate.query("SELECT RESOURCE.URL, ROLE.NAME FROM ROLE_RESOURCE LEFT JOIN RESOURCE ON ROLE_RESOURCE.RESOURCE_ID = RESOURCE.ID LEFT JOIN ROLE ON ROLE_RESOURCE.ROLE_ID = ROLE.ID", new ResourceMappingRowMapper());
     return resourceMappings;
   }
 
@@ -42,14 +42,14 @@ public class ResourceDao {
   }
 
   public int update(Resource resources) {
-    String sql = "UPDATE RESOURCE SET type = ?, name = ?, description = ?, usable_status = ? ,modify_date = ?, modify_user_id = ?  WHERE id = ?";
+    String sql = "UPDATE RESOURCE SET TYPE = ?, NAME = ?, DESCRIPTION = ?, USABLE_STATUS = ? ,MODIFY_DATE = ?, MODIFY_USER_ID = ?  WHERE ID = ?";
     Object[] params = new Object[] { resources.getType(), resources.getName(), resources.getDescription(), resources.getUsable_status(), resources.getModify_date(), resources.getModify_user_id(), resources.getId() };
     int[] types = new int[] { Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.BIGINT, Types.BIGINT};
     return sysJdbcTemplate.update(sql, params, types);
   }
 
   public int delete(long id) {
-    String sql = "DELETE FROM RESOURCE WHERE id = ?";
+    String sql = "DELETE FROM RESOURCE WHERE ID = ?";
     Object[] params = new Object[] { id };
     int[] types = new int[] { Types.INTEGER };
     return sysJdbcTemplate.update(sql, params, types);

@@ -22,11 +22,11 @@ public class SysJdbcTemplate extends JdbcTemplate {
   }
 
   public <T> List<T> queryPage(String sql, int startRow, int rowsCount) throws DataAccessException {
-    return querySP(sql, startRow, rowsCount, getColumnMapRowMapper());
+    return queryPage(sql, startRow, rowsCount, getColumnMapRowMapper());
   }
 
   @SuppressWarnings("unchecked")
-  public <T> List<T> querySP(String sql, int startRow, int rowsCount, RowMapper<?> rowMapper) throws DataAccessException {
+  public <T> List<T> queryPage(String sql, int startRow, int rowsCount, RowMapper<?> rowMapper) throws DataAccessException {
     return (List<T>) query(sql, new SysResultSetExtractor(rowMapper, startRow, rowsCount));
   }
 

@@ -51,7 +51,7 @@ public class RoleDao {
    * @return
    */
   public int delete(long id) {
-    String sql = "DELETE FROM ROLE WHERE id = ?";
+    String sql = "DELETE FROM ROLE WHERE ID = ?";
     Object[] params = new Object[] { id };
     int[] types = new int[] { Types.INTEGER };
     return sysJdbcTemplate.update(sql, params, types);
@@ -62,7 +62,7 @@ public class RoleDao {
    * @return
    */
   public int update(Role role) {
-    String sql = "UPDATE ROLE SET name =?, description =?, usable_status = ?, modify_date = ?, modify_user_id = ?  WHERE id = ?";
+    String sql = "UPDATE ROLE SET NAMe =?, DESCRIPTION =?, USABLE_STATUS = ?, MODIFY_DATE = ?, MODIFY_USER_ID = ?  WHERE ID = ?";
     Object[] params = new Object[] { role.getName(), role.getDescription(), role.getUsable_status(), role.getModify_date(), role.getModify_user_id(),
         role.getId() };
     int[] types = new int[] { Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.BIGINT, Types.BIGINT };
@@ -75,7 +75,7 @@ public class RoleDao {
    */
   public Role findById(long id) {
     final Role role = new Role();
-    sysJdbcTemplate.query("SELECT ID, NAME, CREATE_DATE,DESCRIPTION FROM ROLE WHERE id = ?", new Object[] { id }, new RowCallbackHandler() {
+    sysJdbcTemplate.query("SELECT ID, NAME, CREATE_DATE,DESCRIPTION FROM ROLE WHERE ID = ?", new Object[] { id }, new RowCallbackHandler() {
       public void processRow(ResultSet rs) throws SQLException {
         AutoBuildBean.INSTANCE.buildBean(role, rs);
       }

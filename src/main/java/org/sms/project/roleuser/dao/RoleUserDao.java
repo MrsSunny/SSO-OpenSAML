@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
-
 import org.sms.SysConstants;
 import org.sms.project.helper.ben.AutoBuildBean;
 import org.sms.project.helper.jdbc.SysJdbcTemplate;
@@ -51,7 +50,7 @@ public class RoleUserDao {
    * @return
    */
   public int update(RoleUser roleUser) {
-    String sql = "UPDATE ROLE_USER SET usable_status = ?, modify_date = ?, modify_user_id = ?  WHERE id = ?";
+    String sql = "UPDATE ROLE_USER SET USABLE_STATUS = ?, MODIFY_DATE = ?, MODIFY_USER_ID = ?  WHERE ID = ?";
     Object[] params = new Object[] { roleUser.getUsable_status(), roleUser.getModify_date(), roleUser.getModify_user_id(), roleUser.getId() };
     int[] types = new int[] { Types.VARCHAR, Types.VARCHAR, Types.BIGINT, Types.BIGINT};
     return sysJdbcTemplate.update(sql, params, types);
@@ -62,7 +61,7 @@ public class RoleUserDao {
    * @return
    */
   public int delete(long id) {
-    String sql = "DELETE FROM ROLE_USER WHERE id = ?";
+    String sql = "DELETE FROM ROLE_USER WHERE ID = ?";
     Object[] params = new Object[] { id };
     int[] types = new int[] { Types.INTEGER };
     return sysJdbcTemplate.update(sql, params, types);
@@ -74,7 +73,7 @@ public class RoleUserDao {
    */
   public RoleUser findById(long id) {
     final RoleUser roleUser = new RoleUser();
-    sysJdbcTemplate.query("SELECT ID, USER_ID, ROLE_ID, CREATE_DATE FROM ROLE_USER WHERE id = ?", new Object[] { id }, new RowCallbackHandler() {
+    sysJdbcTemplate.query("SELECT ID, USER_ID, ROLE_ID, CREATE_DATE FROM ROLE_USER WHERE ID = ?", new Object[] { id }, new RowCallbackHandler() {
       public void processRow(ResultSet rs) throws SQLException {
         AutoBuildBean.INSTANCE.buildBean(roleUser, rs);
       }
