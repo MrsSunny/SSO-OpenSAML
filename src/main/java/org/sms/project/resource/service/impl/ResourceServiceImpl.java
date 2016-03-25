@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service("resourceService")
 public class ResourceServiceImpl implements ResourceService {
   
-  public static final String TABLE_NAME = "resource_sequence";
+  public static final String TABLE_NAME = "SEQUENCE_RESOURCE";
 
   @Autowired
   private ResourceDao resourceDao;

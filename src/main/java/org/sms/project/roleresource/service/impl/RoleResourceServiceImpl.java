@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class RoleResourceServiceImpl implements RoleResourceService {
   
-  public static final String TABLE_NAME = "role_resource_sequence";
+  public static final String TABLE_NAME = "SEQUENCE_ROLE_RESOURCE";
   
   @Autowired
   private RoleResourceDao roleResourceDao;

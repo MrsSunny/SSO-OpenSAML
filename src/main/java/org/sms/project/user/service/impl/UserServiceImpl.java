@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
    * 比如实体类的表名称是User，对应的获取ID的表名称是user_sequence，
    * 这里的定义应该定义成user_sequence
    */
-  public static final String TABLE_NAME = "USER_SEQUENCE";
+  public static final String TABLE_NAME = "SEQUENCE_USER";
 
   @Autowired
   private UserDao sysUserDao;

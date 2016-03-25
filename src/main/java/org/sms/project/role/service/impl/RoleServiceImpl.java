@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class RoleServiceImpl implements RoleService {
   
-  public static final String TABLE_NAME = "role_sequence";
+  public static final String TABLE_NAME = "SEQUENCE_ROLE";
   
   @Autowired
   private RoleDao roleDao;

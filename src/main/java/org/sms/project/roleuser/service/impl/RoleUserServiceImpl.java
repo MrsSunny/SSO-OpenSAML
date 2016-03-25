@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service("roleUserService")
 public class RoleUserServiceImpl implements RoleUserService {
   
-  public static final String TABLE_NAME = "role_user_sequence";
+  public static final String TABLE_NAME = "SEQUENCE_ROLE_USER";
   
   @Autowired
   private RoleUserDao roleUserDao;

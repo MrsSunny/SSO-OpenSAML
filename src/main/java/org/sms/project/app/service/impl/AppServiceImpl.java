@@ -1,6 +1,7 @@
 package org.sms.project.app.service.impl;
 
 import java.util.List;
+
 import org.sms.project.app.dao.AppDao;
 import org.sms.project.app.entity.App;
 import org.sms.project.app.service.AppService;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class AppServiceImpl implements AppService {
+  
+  public static final String TABLE_NAME = "SEQUENCE_SYS_APP";
 
   @Autowired
   private AppDao appDao;
