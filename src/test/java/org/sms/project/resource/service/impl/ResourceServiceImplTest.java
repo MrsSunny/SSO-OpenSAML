@@ -67,9 +67,9 @@ public class ResourceServiceImplTest extends BaseTest {
   /**
    * Test method for {@link org.sms.project.resource.service.impl.ResourceServiceImpl#delete(org.sms.project.resource.entity.Resource)}.
    */
-  @Test
+//  @Test
   public void testDelete() {
-    int i = resourceService.delete(12L);
+    int i = resourceService.delete(47L);
     Assert.assertNotSame(0, i);
   }
 
@@ -78,7 +78,7 @@ public class ResourceServiceImplTest extends BaseTest {
    */
   @Test
   public void testFindById() {
-    Resource resource = resourceService.findById(10L);
+    Resource resource = resourceService.findById(13L);
     Assert.assertNotNull(resource);
   }
 }

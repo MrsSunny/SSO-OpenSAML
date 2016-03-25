@@ -57,10 +57,4 @@ public enum ClusterDbFactory implements KeyFactory {
     }
     return (Long)keys.get(0).get("GENERATED_KEY");
   }
-  
-  public static void main(String[] args) {
-    String tableName = "user_sequence";
-    String sql = REPLACE_INTO + tableName + "(other) values " + "(" + "'"+ DEFAULT_REPLACE_VALUE +"'" + ")";
-    System.out.println(sql);
-  }
 }

@@ -5,8 +5,10 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
 
+import org.sms.project.helper.ben.AutoBuildBean;
 import org.sms.project.helper.jdbc.SysJdbcTemplate;
 import org.sms.project.resource.entity.Resource;
+import org.sms.project.resource.entity.ResourceMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
@@ -57,13 +59,7 @@ public class ResourceDao {
     final Resource resource = new Resource();
     sysJdbcTemplate.query("SELECT NAME, ID,URL,CREATE_DATE,DESCRIPTION,PARENT_ID, TYPE FROM RESOURCE WHERE id = ?", new Object[] { id }, new RowCallbackHandler() {
       public void processRow(ResultSet rs) throws SQLException {
-        resource.setName(rs.getString("name"));
-        resource.setId(rs.getLong("id"));
-        resource.setUrl(rs.getString("url"));
-        resource.setCreate_date(rs.getTimestamp("create_date"));
-        resource.setDescription(rs.getString("description"));
-        resource.setParentId(rs.getLong("parent_id"));
-        resource.setType(rs.getString("type"));
+        AutoBuildBean.INSTANCE.buildBean(resource, rs);
       }
     });
     return resource;
@@ -73,31 +69,8 @@ public class ResourceDao {
     @Override
     public ResourceMapping mapRow(ResultSet rs, int i) throws SQLException {
       ResourceMapping resourceMapping = new ResourceMapping();
-      resourceMapping.setUrl(rs.getString("url"));
-      resourceMapping.setRole_name(rs.getString("name"));
+      AutoBuildBean.INSTANCE.buildBean(resourceMapping, rs);
       return resourceMapping;
-    }
-  }
-
-  public class ResourceMapping {
-    private String url;
-
-    private String role_name;
-
-    public final String getUrl() {
-      return url;
-    }
-
-    public final void setUrl(String url) {
-      this.url = url;
-    }
-
-    public final String getRole_name() {
-      return role_name;
-    }
-
-    public final void setRole_name(String role_name) {
-      this.role_name = role_name;
     }
   }
 }

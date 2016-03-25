@@ -1,10 +1,11 @@
 package org.sms.project.resource.service.impl;
 
 import java.util.List;
+
 import org.sms.core.id.IDFactory;
 import org.sms.project.resource.dao.ResourceDao;
-import org.sms.project.resource.dao.ResourceDao.ResourceMapping;
 import org.sms.project.resource.entity.Resource;
+import org.sms.project.resource.entity.ResourceMapping;
 import org.sms.project.resource.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

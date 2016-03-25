@@ -30,11 +30,11 @@ public class Resource extends SysBase {
     this.name = name;
   }
 
-  public final long getParentId() {
+  public final long getParent_id() {
     return parent_id;
   }
 
-  public final void setParentId(long parent_id) {
+  public final void setParent_id(long parent_id) {
     this.parent_id = parent_id;
   }
 
