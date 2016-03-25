@@ -21,7 +21,7 @@ public class SysJdbcTemplate extends JdbcTemplate {
     super.setDataSource(dataSource);
   }
 
-  public <T> List<T> querySP(String sql, int startRow, int rowsCount) throws DataAccessException {
+  public <T> List<T> queryPage(String sql, int startRow, int rowsCount) throws DataAccessException {
     return querySP(sql, startRow, rowsCount, getColumnMapRowMapper());
   }
 

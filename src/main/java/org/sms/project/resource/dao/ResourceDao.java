@@ -25,7 +25,7 @@ public class ResourceDao {
 
   public List<Resource> getResources(String query, String order, int startIndex, int size) {
     String sql = "SELECT * FROM RESOURCE";
-    List<Resource> list = sysJdbcTemplate.querySP(sql, startIndex, size);
+    List<Resource> list = sysJdbcTemplate.queryPage(sql, startIndex, size);
     return list;
   }
 

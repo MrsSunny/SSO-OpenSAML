@@ -4,7 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
+
 import org.sms.SysConstants;
+import org.sms.project.helper.ben.AutoBuildBean;
 import org.sms.project.helper.jdbc.SysJdbcTemplate;
 import org.sms.project.roleuser.entity.RoleUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +31,11 @@ public class RoleUserDao {
    */
   public List<RoleUser> getRoleUser(String query, String order, int startIndex, int size) {
     String sql = "SELECT * FROM ROLE_USER";
-    List<RoleUser> list = sysJdbcTemplate.querySP(sql, startIndex, size);
+    List<RoleUser> list = sysJdbcTemplate.queryPage(sql, startIndex, size);
     return list;
   }
 
   /**
-   * insert_descriptions:
    * @param roleUser
    * @return
    */
@@ -46,11 +47,9 @@ public class RoleUserDao {
   }
 
   /**
-   * update_descriptions:
    * @param roleUser
    * @return
    */
-  
   public int update(RoleUser roleUser) {
     String sql = "UPDATE ROLE_USER SET usable_status = ?, modify_date = ?, modify_user_id = ?  WHERE id = ?";
     Object[] params = new Object[] { roleUser.getUsable_status(), roleUser.getModify_date(), roleUser.getModify_user_id(), roleUser.getId() };
@@ -59,7 +58,6 @@ public class RoleUserDao {
   }
 
   /**
-   * delete_descriptions:
    * @param id
    * @return
    */
@@ -71,19 +69,14 @@ public class RoleUserDao {
   }
 
   /**
-   * findById_descriptions:
    * @param id
    * @return
    */
-  
   public RoleUser findById(long id) {
     final RoleUser roleUser = new RoleUser();
     sysJdbcTemplate.query("SELECT ID, USER_ID, ROLE_ID, CREATE_DATE FROM ROLE_USER WHERE id = ?", new Object[] { id }, new RowCallbackHandler() {
       public void processRow(ResultSet rs) throws SQLException {
-        roleUser.setId(rs.getLong("id"));
-        roleUser.setUser_id(rs.getLong("user_id"));
-        roleUser.setRole_id(rs.getLong("role_id"));
-        roleUser.setCreate_date(rs.getTimestamp("create_date"));
+        AutoBuildBean.INSTANCE.buildBean(roleUser, rs);
       }
     });
     return roleUser;
