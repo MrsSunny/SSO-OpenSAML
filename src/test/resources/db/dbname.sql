@@ -23,18 +23,19 @@ DROP TABLE IF EXISTS `resource`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `resource` (
-  `id` bigint(20) NOT NULL,
-  `url` varchar(45) NOT NULL,
-  `type` varchar(45) DEFAULT NULL,
-  `name` varchar(45) DEFAULT NULL,
-  `parentId` bigint(20) DEFAULT NULL,
-  `description` varchar(300) DEFAULT NULL,
-  `usable_status` varchar(45) NOT NULL,
-  `create_user_id` bigint(20) NOT NULL,
-  `modify_date` timestamp NULL DEFAULT NULL,
-  `modify_user_id` bigint(20) DEFAULT NULL,
-  `create_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`)
+  `id` bigint(32) NOT NULL,
+  `url` varchar(200) NOT NULL,
+  `type` varchar(45) DEFAULT 'N/A',
+  `name` varchar(45) DEFAULT 'N/A',
+  `parent_id` bigint(32) DEFAULT '0',
+  `description` varchar(300) DEFAULT 'N/A',
+  `usable_status` varchar(45) NOT NULL DEFAULT '1',
+  `create_user_id` bigint(32) NOT NULL,
+  `modify_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `modify_user_id` bigint(32) DEFAULT '0',
+  `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `url_UNIQUE` (`url`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -44,7 +45,7 @@ CREATE TABLE `resource` (
 
 LOCK TABLES `resource` WRITE;
 /*!40000 ALTER TABLE `resource` DISABLE KEYS */;
-INSERT INTO `resource` VALUES (1,'/sysuser/list',NULL,NULL,NULL,NULL,'1',1,'2015-04-05 16:00:00',1,'2015-04-05 16:00:00'),(2,'/sysuser/list',NULL,NULL,NULL,NULL,'',0,NULL,NULL,'0000-00-00 00:00:00');
+INSERT INTO `resource` VALUES (1,'/sysuser/list',NULL,NULL,NULL,NULL,'1',1,'2015-04-05 16:00:00',1,'2015-04-05 16:00:00'),(5,'/baidu/create','page','Opnine',NULL,'dfghjkl','1',67,'2016-03-24 09:00:44',NULL,'2015-04-05 16:00:00'),(8,'/baidu/create/6aa106603f724f9bb1b25387220877d1','page','Opnine',NULL,'dfghjkl','1',67,'2016-03-25 03:26:54',67,'2016-03-25 03:26:54'),(9,'/baidu/create/1286e4d9138a4c70bc8e54c68a0d9200','page','Opnine',NULL,'dfghjkl','1',67,'2016-03-24 09:00:44',NULL,'2015-04-05 16:00:00'),(13,'/baidu/create/809c0d4861de4fefa11558b19e5256e1','page','Opnine',NULL,'dfghjkl','1',67,'2016-03-24 09:00:44',NULL,'2015-04-05 16:00:00'),(14,'/baidu/create/3d266b0230584893b573b8ae3019a756','page','Opnine',0,'dfghjkl','1',67,'2016-03-24 09:01:08',0,'2016-03-24 09:01:08'),(15,'/baidu/create/31d5b88937fb44fdb1af48d1ac11efb1','page','Opnine',0,'dfghjkl','1',67,'2016-03-24 09:04:01',0,'2016-03-24 09:04:01'),(16,'/baidu/create/99a6818e2dca4b35ac7a40d0315f85a3','page','Opnine',0,'dfghjkl','1',67,'2016-03-24 09:06:34',0,'2016-03-24 09:06:34'),(17,'/baidu/create/df7b3bdca1c9402194030d220744d28c','page','Opnine',0,'dfghjkl','1',67,'2016-03-24 10:51:39',0,'2016-03-24 10:51:39'),(48,'/baidu/create/f194c3aaac364515a959ceb6bdbde38b','page','Opnine',0,'dfghjkl','1',67,'2016-03-25 03:24:30',0,'2016-03-25 03:24:30'),(49,'/baidu/create/ef0f09b9857c42ab950e42bd09892d11','page','Opnine',0,'dfghjkl','1',67,'2016-03-25 03:26:54',0,'2016-03-25 03:26:54');
 /*!40000 ALTER TABLE `resource` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -56,15 +57,16 @@ DROP TABLE IF EXISTS `role`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `role` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(32) NOT NULL,
   `name` varchar(45) NOT NULL,
-  `description` varchar(200) DEFAULT NULL,
-  `usable_status` varchar(45) NOT NULL,
-  `create_user_id` bigint(20) NOT NULL,
-  `modify_date` timestamp NULL DEFAULT NULL,
-  `modify_user_id` bigint(20) NOT NULL,
-  `create_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`)
+  `description` varchar(200) DEFAULT 'N/A',
+  `usable_status` varchar(45) NOT NULL DEFAULT '0',
+  `create_user_id` bigint(32) NOT NULL DEFAULT '0',
+  `modify_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `modify_user_id` bigint(32) NOT NULL DEFAULT '0',
+  `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -74,7 +76,7 @@ CREATE TABLE `role` (
 
 LOCK TABLES `role` WRITE;
 /*!40000 ALTER TABLE `role` DISABLE KEYS */;
-INSERT INTO `role` VALUES (1,'ADMIN',NULL,'1',1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00'),(2,'USER',NULL,'1',1,NULL,0,'0000-00-00 00:00:00'),(3,'ADMIN',NULL,'1',0,NULL,0,'0000-00-00 00:00:00');
+INSERT INTO `role` VALUES (1,'ADMIN',NULL,'1',1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00'),(2,'USER',NULL,'1',1,NULL,0,'0000-00-00 00:00:00');
 /*!40000 ALTER TABLE `role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -86,14 +88,14 @@ DROP TABLE IF EXISTS `role_resource`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `role_resource` (
-  `id` bigint(20) NOT NULL,
-  `role_id` bigint(20) DEFAULT NULL,
-  `resource_id` bigint(20) DEFAULT NULL,
+  `id` bigint(32) NOT NULL,
+  `role_id` bigint(32) DEFAULT NULL,
+  `resource_id` bigint(32) DEFAULT NULL,
   `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `usable_status` varchar(45) NOT NULL,
-  `create_user_id` bigint(20) NOT NULL,
+  `create_user_id` bigint(32) NOT NULL,
   `modify_date` timestamp NULL DEFAULT NULL,
-  `modify_user_id` bigint(20) DEFAULT NULL,
+  `modify_user_id` bigint(32) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -116,14 +118,14 @@ DROP TABLE IF EXISTS `role_user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `role_user` (
-  `id` bigint(20) NOT NULL,
-  `user_id` bigint(20) NOT NULL,
-  `role_id` bigint(20) DEFAULT NULL,
+  `id` bigint(32) NOT NULL,
+  `user_id` bigint(32) NOT NULL DEFAULT '0',
+  `role_id` bigint(32) DEFAULT '0',
   `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `usable_status` varchar(45) NOT NULL,
-  `create_user_id` bigint(20) NOT NULL,
-  `modify_date` timestamp NULL DEFAULT NULL,
-  `modify_user_id` bigint(20) DEFAULT NULL,
+  `usable_status` varchar(45) DEFAULT '0',
+  `create_user_id` bigint(32) DEFAULT '0',
+  `modify_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `modify_user_id` bigint(32) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -139,6 +141,152 @@ INSERT INTO `role_user` VALUES (1,1,1,'0000-00-00 00:00:00','1',1,'0000-00-00 00
 UNLOCK TABLES;
 
 --
+-- Table structure for table `sequence_resource`
+--
+
+DROP TABLE IF EXISTS `sequence_resource`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sequence_resource` (
+  `id` bigint(32) NOT NULL AUTO_INCREMENT,
+  `other` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `other_UNIQUE` (`other`)
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sequence_resource`
+--
+
+LOCK TABLES `sequence_resource` WRITE;
+/*!40000 ALTER TABLE `sequence_resource` DISABLE KEYS */;
+INSERT INTO `sequence_resource` VALUES (49,'1');
+/*!40000 ALTER TABLE `sequence_resource` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sequence_role`
+--
+
+DROP TABLE IF EXISTS `sequence_role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sequence_role` (
+  `id` bigint(32) NOT NULL AUTO_INCREMENT,
+  `other` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `other_UNIQUE` (`other`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sequence_role`
+--
+
+LOCK TABLES `sequence_role` WRITE;
+/*!40000 ALTER TABLE `sequence_role` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sequence_role` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sequence_role_resource`
+--
+
+DROP TABLE IF EXISTS `sequence_role_resource`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sequence_role_resource` (
+  `id` bigint(32) NOT NULL AUTO_INCREMENT,
+  `other` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `other_UNIQUE` (`other`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sequence_role_resource`
+--
+
+LOCK TABLES `sequence_role_resource` WRITE;
+/*!40000 ALTER TABLE `sequence_role_resource` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sequence_role_resource` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sequence_role_user`
+--
+
+DROP TABLE IF EXISTS `sequence_role_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sequence_role_user` (
+  `id` bigint(32) NOT NULL AUTO_INCREMENT,
+  `other` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `other_UNIQUE` (`other`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sequence_role_user`
+--
+
+LOCK TABLES `sequence_role_user` WRITE;
+/*!40000 ALTER TABLE `sequence_role_user` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sequence_role_user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sequence_sys_app`
+--
+
+DROP TABLE IF EXISTS `sequence_sys_app`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sequence_sys_app` (
+  `id` bigint(32) NOT NULL AUTO_INCREMENT,
+  `other` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `other_UNIQUE` (`other`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sequence_sys_app`
+--
+
+LOCK TABLES `sequence_sys_app` WRITE;
+/*!40000 ALTER TABLE `sequence_sys_app` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sequence_sys_app` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sequence_user`
+--
+
+DROP TABLE IF EXISTS `sequence_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sequence_user` (
+  `id` bigint(32) NOT NULL AUTO_INCREMENT,
+  `other` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `other_UNIQUE` (`other`)
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sequence_user`
+--
+
+LOCK TABLES `sequence_user` WRITE;
+/*!40000 ALTER TABLE `sequence_user` DISABLE KEYS */;
+INSERT INTO `sequence_user` VALUES (65,'1');
+/*!40000 ALTER TABLE `sequence_user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `sys_app`
 --
 
@@ -146,15 +294,16 @@ DROP TABLE IF EXISTS `sys_app`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `sys_app` (
-  `id` bigint(20) NOT NULL,
-  `app_domain` varchar(45) DEFAULT NULL,
-  `create_date` timestamp NULL DEFAULT NULL,
-  `usable_status` varchar(2) DEFAULT NULL,
-  `create_user_id` bigint(20) DEFAULT NULL,
-  `modify_date` timestamp NULL DEFAULT NULL,
-  `modify_user_id` bigint(20) DEFAULT NULL,
-  `app_index` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `id` bigint(32) NOT NULL,
+  `app_domain` varchar(45) NOT NULL,
+  `create_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `usable_status` varchar(2) DEFAULT '0',
+  `create_user_id` bigint(32) DEFAULT '0',
+  `modify_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `modify_user_id` bigint(32) DEFAULT '0',
+  `app_index` varchar(45) DEFAULT 'N/A',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `app_domain_UNIQUE` (`app_domain`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -169,33 +318,6 @@ INSERT INTO `sys_app` VALUES (10000,'soaer.com',NULL,NULL,NULL,NULL,NULL,NULL);
 UNLOCK TABLES;
 
 --
--- Table structure for table `sys_authentication`
---
-
-DROP TABLE IF EXISTS `sys_authentication`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `sys_authentication` (
-  `id` bigint(20) NOT NULL,
-  `sso_token` varchar(45) DEFAULT 'N/A',
-  `authentication_time` timestamp NULL DEFAULT NULL,
-  `subject_id` varchar(45) NOT NULL DEFAULT 'N/A',
-  `end_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `sys_authentication`
---
-
-LOCK TABLES `sys_authentication` WRITE;
-/*!40000 ALTER TABLE `sys_authentication` DISABLE KEYS */;
-INSERT INTO `sys_authentication` VALUES (1000000009,'3ecb2d9feddc406aa8ef22b25ea772ad',NULL,'1','2016-03-11 07:03:27'),(1457680281682,'3c691312426841edaaf3474501b1c972',NULL,'1','2016-03-11 07:11:21'),(1457680329799,'6dfd481e75e34bcab8c2de6c01fb678a',NULL,'1','2016-03-11 07:12:09'),(1457680756304,'874aa29658994704b16e9ac9753645a0',NULL,'1','2016-03-11 07:19:16'),(1457680908277,'d477d510b12046b7bb0f11e0b44c8aee',NULL,'1','2016-03-11 07:21:48'),(1457681712800,'15a47c6cec98406aac3e94b9f0acca9e',NULL,'1','2016-03-11 07:35:12'),(1457681717894,'b96ca3ee61274b6a917785af32900fdd',NULL,'1','2016-03-11 07:35:17'),(1457681722064,'3edbaee00e984334b271e059a9b566dd',NULL,'1','2016-03-11 07:35:22'),(1457681722360,'94f60335412c4c60bddbe172af6139fb',NULL,'1','2016-03-11 07:35:22'),(1457681722665,'178821c39da548d992afac533f2c8821',NULL,'1','2016-03-11 07:35:22'),(1457681722960,'656e04002ce24ac98e96469b0c04a7b5',NULL,'1','2016-03-11 07:35:22'),(1457681723239,'ccc1b331f7154c0db032bef92012804a',NULL,'1','2016-03-11 07:35:23'),(1457681723489,'90b53581de9e480398df265bb5aa1a8e',NULL,'1','2016-03-11 07:35:23'),(1457681723767,'89eab0b7db7a40619aaa1465d6d03791',NULL,'1','2016-03-11 07:35:23'),(1457681724051,'3d602c9285d245e28f7bbb23f65bb76a',NULL,'1','2016-03-11 07:35:24'),(1457681724345,'59ec3e9e0c834ebebef64e9730543ad6',NULL,'1','2016-03-11 07:35:24'),(1457681724636,'c29b66d6cb584969a4934a0e36ad0773',NULL,'1','2016-03-11 07:35:24'),(1457681724934,'a2998f0a415346af98b33fb8d5d25971',NULL,'1','2016-03-11 07:35:24'),(1457681725195,'7cda50832b814156929ef75a404f8c3b',NULL,'1','2016-03-11 07:35:25'),(1457681725484,'78f18b7d858942e091813509e04b6887',NULL,'1','2016-03-11 07:35:25'),(1457681725742,'0998912b799c46d9b1bf74f1ce4dcf7f',NULL,'1','2016-03-11 07:35:25'),(1457681725998,'7ebafc405a694d13ab0f7d25267c97d8',NULL,'1','2016-03-11 07:35:26'),(1457681726267,'485d4d6ff8024288ad34e99fd93b53b5',NULL,'1','2016-03-11 07:35:26'),(1457681726545,'61e4ceb05ea04af5aa7f29e3056bd33d',NULL,'1','2016-03-11 07:35:26'),(1457681726777,'127d9432e98d4560a9d1e827ea6bddc8',NULL,'1','2016-03-11 07:35:26'),(1457681727022,'88c5e530f4884025814e49ca3a0dc134',NULL,'1','2016-03-11 07:35:27'),(1457681727277,'6fd134b61a794d21bda1d5ef317eb540',NULL,'1','2016-03-11 07:35:27'),(1457681727537,'d9803761fb1e4a86b98fe6643dbff883',NULL,'1','2016-03-11 07:35:27'),(1457681727776,'49acddf37ba249098e08b740dd0b4f08',NULL,'1','2016-03-11 07:35:27'),(1457681728124,'2515805df42c425fb7dd954653f33de2',NULL,'1','2016-03-11 07:35:28'),(1457681822521,'ea29d4f183694447b1fa20835dd3d874',NULL,'1','2016-03-11 07:37:02'),(1457682171299,'54914c6a1b6745e2bbb9e8fd8fe22e28',NULL,'1','2016-03-11 07:42:51'),(1457682172523,'a0f4cd99a32d4faba313c582ddac130f',NULL,'1','2016-03-11 07:42:52'),(1457682172882,'c1071d23f40b4dfe809b912f9e85201a',NULL,'1','2016-03-11 07:42:52'),(1457682173221,'bf007ae4d2f9441ca24014562e12a813',NULL,'1','2016-03-11 07:42:53'),(1457682173557,'5b2e8f68814849c9bf8daa84a71f1528',NULL,'1','2016-03-11 07:42:53'),(1457682173849,'ed93d90c5c96436a9f4dc8ed372d6e2e',NULL,'1','2016-03-11 07:42:53'),(1457682174141,'c878b59f57af4cfc980476d80e17202b',NULL,'1','2016-03-11 07:42:54'),(1457682174485,'16528f30b1404e8d9764aaa4e53d362c',NULL,'1','2016-03-11 07:42:54'),(1457682174792,'454d8b86bb2c4358a9731b5601cbf978',NULL,'1','2016-03-11 07:42:54'),(1457682175074,'c6463c2328e44838b1bebd172369dd47',NULL,'1','2016-03-11 07:42:55'),(1457682175371,'3599f90e965540b89fa14c00af053d1c',NULL,'1','2016-03-11 07:42:55'),(1457682175666,'fc7f96c3a87046298fabae99cc934cb6',NULL,'1','2016-03-11 07:42:55'),(1457682175945,'8d6242f7c8fc464987bfbe4eab854b24',NULL,'1','2016-03-11 07:42:55'),(1457682176220,'51a415a447674ca79ff82d2b91799e02',NULL,'1','2016-03-11 07:42:56'),(1457682176480,'b60080887f9044638fcf67a681945c00',NULL,'1','2016-03-11 07:42:56'),(1457682176726,'0512ce18d44f4b38914df1cc28af64bb',NULL,'1','2016-03-11 07:42:56'),(1457682176988,'006012b809064b2aac458ca2131d440d',NULL,'1','2016-03-11 07:42:56'),(1457682177269,'6bd30b958e0341e8ac986791b0d4b203',NULL,'1','2016-03-11 07:42:57'),(1457682177547,'74c9326970454476b8f299e62aec0ee7',NULL,'1','2016-03-11 07:42:57'),(1457682177822,'57c5a0bf12f149d1bed7a705cc69f2fc',NULL,'1','2016-03-11 07:42:57'),(1457682178076,'ba6d0c937f3d411988f31437e3c142be',NULL,'1','2016-03-11 07:42:58'),(1457682178368,'583ddd087b484c8d9da1fd2d9bf55fe4',NULL,'1','2016-03-11 07:42:58'),(1457682178598,'205889b1446b4575b0cc37e84706f7d9',NULL,'1','2016-03-11 07:42:58'),(1457682178833,'1cbb7fca257d45d1b0d9fd5c07e45dbf',NULL,'1','2016-03-11 07:42:58'),(1457682179038,'0bd32ded39dd4eff8420aa5200bf810e',NULL,'1','2016-03-11 07:42:59'),(1457682179263,'16f0c7acb82748c8abfd193590c193aa',NULL,'1','2016-03-11 07:42:59'),(1457682180048,'c0dfbd71ca6f43afb4c1f117ba7bfcda',NULL,'1','2016-03-11 07:43:00'),(1457682180373,'b879cba3f1bd429e81b1894ab8bdbd47',NULL,'1','2016-03-11 07:43:00'),(1457682180645,'3f8cf732f2ed40b99b98b52807280e3b',NULL,'1','2016-03-11 07:43:00'),(1457682180912,'b8c80998210843a596d25cfe9e2cf0f2',NULL,'1','2016-03-11 07:43:00'),(1457682181150,'1722b7202a2e4b2eb1fddd499f71446e',NULL,'1','2016-03-11 07:43:01'),(1457682181427,'f53aa238cd024a74a1d1bb95fa9b8f90',NULL,'1','2016-03-11 07:43:01'),(1457682181751,'cbfc2bfa7220464bb608fe4351d7fc71',NULL,'1','2016-03-11 07:43:01'),(1457682182004,'b4c298fa822b47cb8c8f886b7eb1329d',NULL,'1','2016-03-11 07:43:02'),(1457682250328,'2e8bcb5b87ca4de0abfe640c593f23e2',NULL,'1','2016-03-11 07:44:10'),(1457682323363,'10707923c9d04deea8f2f00b29b60d28',NULL,'1','2016-03-11 07:45:23'),(1457682397675,'dd66b30a33b04b41966c0ddcc593cf1a',NULL,'1','2016-03-11 07:46:37'),(1457682448960,'f72da2d0ec8a4b2da2a9403669a80716',NULL,'1','2016-03-11 07:47:28'),(1457682948145,'4dbd77d67524419b93e3c814bbfcf9b1',NULL,'1','2016-03-11 07:55:48'),(1457683101551,'3da985164ec943d2a0ec316101ebd9b6',NULL,'1','2016-03-11 07:58:21'),(1457683860306,'c52fec8876d64cc7a0cc2f80a66d313f',NULL,'1','2016-03-11 08:11:00'),(1457683907678,'b38bfdd97a514acab4d06212808db1b5',NULL,'1','2016-03-11 08:11:47'),(1457683925560,'4fe82e87387b4b45a59cc1775321dd63',NULL,'1','2016-03-11 08:12:05'),(1457683944770,'ae134f288175406d8e395d912c25f1f2',NULL,'1','2016-03-11 08:12:24'),(1457683996591,'a47257e4a0164e99b541ce3ed9944969',NULL,'1','2016-03-11 08:13:16'),(1457684011862,'f6e3cfa173f84f7fae0ea1ca0126c555',NULL,'1','2016-03-11 08:13:31'),(1457684116941,'1d6423fe0ab248f09c2507edd06ec5a8',NULL,'1','2016-03-11 08:15:16'),(1457684197505,'183ddc96207a4fd7b16a7486906490c5',NULL,'1','2016-03-11 08:16:37'),(1457690431030,'4c4ebe7e66ea4544a0209e2e77bc1b4f',NULL,'1','2016-03-11 10:00:31'),(1457745903888,'8185ab54723446aabbe43fe08dbad90d',NULL,'1','2016-03-12 01:25:03'),(1457747451169,'db99f1ca3eec4ae3be8e499dee2ae156',NULL,'1','2016-03-12 01:50:51'),(1457747700993,'35b337a2d8bd49948c401b157f2e7009',NULL,'1','2016-03-12 01:55:01'),(1457747777962,'6f0e7b4cd6b14f9aaa9753b3730d43dd',NULL,'1','2016-03-12 01:56:17'),(1457764225690,'65b2e3cc1e8849478fc3be247311d124',NULL,'1','2016-03-12 06:30:25'),(1457773056682,'3faa8f93baae4856abddc8ddccf99c96',NULL,'1','2016-03-12 08:57:36'),(1457773332262,'31d2b084a9744bcc9351c28589f7cbd6',NULL,'1','2016-03-12 09:02:12'),(1457773478869,'2839a99516b743a3a84e1065c117236d',NULL,'1','2016-03-12 09:04:38'),(1457773560816,'e4afdfadcd56452688125571f55b9f64',NULL,'1','2016-03-12 09:06:00'),(1457774158793,'815efd8001624cb3a9b991b616b4c697',NULL,'1','2016-03-12 09:15:58'),(1457774198475,'ed50aeb6d9674a168c8de61df7153e53',NULL,'1','2016-03-12 09:16:38'),(1458106442444,'d91488461bd74fb08291bb3e595f6ffa',NULL,'1','2016-03-16 05:34:02'),(1458106825566,'f7d6f44d5a33493a825588bf2caa7f00',NULL,'1','2016-03-16 05:40:25'),(1458109540742,'7f6738397c4a41c194fc925227aac0d0',NULL,'1','2016-03-16 06:25:40'),(1458109585554,'a51855799bfb44a898f0b8d3eb836bf8',NULL,'1','2016-03-16 06:26:25'),(1458110116396,'e0a56855790044f481a07759741cc944',NULL,'1','2016-03-16 06:35:16'),(1458115872862,'6dee82b700c143cba89a5b4463044d61',NULL,'1','2016-03-16 08:11:12'),(1458116038458,'3ca16878c6bb4422b72cc9f1761098e4',NULL,'1','2016-03-16 08:13:58'),(1458287961077,'558d47b003284d0fb817dfb70e7ff2c4',NULL,'1','2016-03-18 07:59:21'),(1458288469826,'584f088ce69144c1868b366197fa3af4',NULL,'1','2016-03-18 08:07:49'),(1458288731547,'59b936ba52ab4e7281e2243905f7fef1',NULL,'1','2016-03-18 08:12:11'),(1458288842090,'9f738dbea8314830942c876004fb5d8d',NULL,'1','2016-03-18 08:14:02'),(1458291265650,'94bdfcbcc8de4016bc5029542a411dc0',NULL,'1','2016-03-18 08:54:25'),(1458291450689,'5e03cadc1c5b4578aa54672dd081c1f0',NULL,'1','2016-03-18 08:57:30');
-/*!40000 ALTER TABLE `sys_authentication` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `user`
 --
 
@@ -203,24 +325,25 @@ DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(32) NOT NULL,
   `name` varchar(200) NOT NULL,
-  `image_path` varchar(100) DEFAULT NULL,
+  `image_path` varchar(100) DEFAULT '""',
   `login_id` varchar(100) NOT NULL,
   `password` varchar(100) NOT NULL,
   `email` varchar(45) DEFAULT NULL,
   `phone` varchar(45) DEFAULT NULL,
-  `adress` varchar(45) DEFAULT NULL,
-  `confirmnum` varchar(45) DEFAULT NULL,
-  `login_sum` int(11) DEFAULT NULL,
-  `last_login_ip` varchar(100) DEFAULT NULL,
+  `adress` varchar(45) DEFAULT 'N/A',
+  `confirmnum` int(11) DEFAULT '0',
+  `login_sum` int(11) DEFAULT '0',
+  `last_login_ip` varchar(100) DEFAULT 'N/A',
   `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `usable_status` varchar(45) NOT NULL,
-  `modify_date` timestamp(6) NULL DEFAULT NULL,
-  `token` varchar(200) DEFAULT NULL,
-  `login_type` varchar(45) DEFAULT NULL,
-  `last_login_date` timestamp(6) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `usable_status` varchar(45) NOT NULL DEFAULT '1',
+  `modify_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `token` varchar(200) DEFAULT 'N/A',
+  `login_type` varchar(45) DEFAULT 'N/A',
+  `last_login_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `login_id_UNIQUE` (`login_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -230,33 +353,8 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'admin','http://soaer.com/1/jpeg','admin','EFD9D1B8BFB00E8E3647990F7D74D1D8','lzx@163.com',NULL,NULL,NULL,NULL,NULL,'2016-02-23 06:06:49','0','2014-12-31 16:00:00.000000',NULL,NULL,'2014-12-31 16:00:00.000000');
+INSERT INTO `user` VALUES (1,'admin','http://soaer.com/1/jpeg','admin','EFD9D1B8BFB00E8E3647990F7D74D1D8','lzx@163.com',NULL,NULL,NULL,NULL,NULL,'2016-02-23 06:06:49','0','2014-12-31 16:00:00',NULL,NULL,'2014-12-31 16:00:00'),(42,'Sunny','','zhenxingLiu','beijingshi','domain@163.com',NULL,'Beijing shi',0,NULL,'192.168.1.1','2016-03-24 04:10:15','1','2016-03-24 04:10:15',NULL,NULL,NULL),(44,'Sunny','','1cc74fe7843f478690d5b87565dab3bb','beijingshi','domain@163.com',NULL,'Beijing shi',0,NULL,'192.168.1.1','2016-03-24 04:26:52','1','2016-03-24 04:26:52',NULL,NULL,NULL),(46,'Sunny','','b290714d74c441c09e0be254220b0b37','beijingshi','domain@163.com',NULL,'Beijing shi',0,NULL,'192.168.1.1','2016-03-24 04:30:16','1','2016-03-24 04:30:16',NULL,NULL,NULL),(48,'Sunny. Liu','http://domain.com/persion.jpg','fef26f1400e64ad8b4b602d57183784e','beijingshi','domain@hotmail.com','13166666666','Shanghai shi',0,NULL,'192.168.1.2','2016-03-24 07:35:07','1','2016-03-24 07:35:07',NULL,NULL,NULL),(50,'Sunny','','d1de33457c2545639028a409446a63ab','beijingshi','domain@163.com',NULL,'Beijing shi',0,NULL,'192.168.1.1','2016-03-24 05:36:06','1','2016-03-24 05:36:06',NULL,NULL,NULL),(54,'Sunny','','e69276b697704d6ebc38477c758f12c8','beijingshi','domain@163.com',NULL,'Beijing shi',0,NULL,'192.168.1.1','2016-03-24 05:41:08','1','2016-03-24 05:41:08',NULL,NULL,NULL),(58,'Sunny','','2b7e1774f88e4cc6aae9c36800d8b9bd','beijingshi','domain@163.com',NULL,'Beijing shi',0,NULL,'192.168.1.1','2016-03-24 07:26:26','1','2016-03-24 07:26:26',NULL,NULL,NULL),(60,'Sunny','','13d4fc81442140d89545cb38e1f9ce5c','beijingshi','domain@163.com',NULL,'Beijing shi',0,NULL,'192.168.1.1','2016-03-24 07:29:52','1','2016-03-24 07:29:52',NULL,NULL,NULL),(64,'Sunny','','863c78cedb484c52b4a18fae194e1b27','beijingshi','domain@163.com',NULL,'Beijing shi',0,NULL,'192.168.1.1','2016-03-24 07:35:07','1','2016-03-24 07:35:07',NULL,NULL,NULL),(65,'Sunny','','53e45b874ff348c587269c390045ce5d','beijingshi','domain@163.com',NULL,'Beijing shi',0,NULL,'192.168.1.1','2016-03-25 07:47:32','1','2016-03-25 07:47:32',NULL,NULL,'2016-03-25 07:47:32');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `user_sequence`
---
-
-DROP TABLE IF EXISTS `user_sequence`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user_sequence` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `other` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `other_UNIQUE` (`other`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user_sequence`
---
-
-LOCK TABLES `user_sequence` WRITE;
-/*!40000 ALTER TABLE `user_sequence` DISABLE KEYS */;
-INSERT INTO `user_sequence` VALUES (4,'dddd');
-/*!40000 ALTER TABLE `user_sequence` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -268,4 +366,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-03-23 18:22:49
+-- Dump completed on 2016-03-25 15:49:07
