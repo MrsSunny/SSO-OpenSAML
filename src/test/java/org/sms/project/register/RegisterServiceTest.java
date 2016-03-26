@@ -17,7 +17,7 @@ public class RegisterServiceTest extends BaseTest {
   public void testRequest() {
     User user = new User();
     user.setAdress("Beijing shi");
-    user.setEmail("domain@163.com");
+    user.setEmail("3232323@163.com");
     user.setUsable_status("1");
     user.setPassword("beijingshi");
     user.setConfirmnum(0);

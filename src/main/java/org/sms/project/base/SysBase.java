@@ -1,13 +1,11 @@
 package org.sms.project.base;
 
-import java.sql.Timestamp;
-
 /**
  * @author Sunny
  */
 public class SysBase {
   
-  private Timestamp create_date;
+  private String create_date;
 
   private String usable_status;
 
@@ -49,11 +47,11 @@ public class SysBase {
     this.modify_user_id = modify_user_id;
   }
 
-  public final Timestamp getCreate_date() {
+  public final String getCreate_date() {
     return create_date;
   }
 
-  public final void setCreate_date(Timestamp create_date) {
+  public final void setCreate_date(String create_date) {
     this.create_date = create_date;
   }
 }

@@ -1,20 +1,24 @@
 package org.sms.project.roleuser.service.impl;
 
-import static org.junit.Assert.*;
-
+import org.junit.Assert;
 import org.junit.Test;
+import org.sms.project.roleuser.entity.RoleUser;
+import org.sms.project.roleuser.service.RoleUserService;
+
+import base.BaseTest;
 
 /**
  * @author Sunny
  */
-public class RoleUserServiceImplTest {
-
+public class RoleUserServiceImplTest extends BaseTest {
+  
+  private RoleUserService roleUserService = (RoleUserService) aCtx.getBean("roleUserService");
   /**
    * Test method for {@link org.sms.project.roleuser.service.impl.RoleUserServiceImpl#getRoleUser(java.lang.String, java.lang.String, int, int)}.
    */
-  @Test
+//  @Test
   public void testGetRoleUser() {
-    fail("Not yet implemented");
+    roleUserService.getRoleUser(null, null, 1, 2);
   }
 
   /**
@@ -22,7 +26,11 @@ public class RoleUserServiceImplTest {
    */
   @Test
   public void testInsert() {
-    fail("Not yet implemented");
+    RoleUser roleUser = new RoleUser();
+    roleUser.setUser_id(123L);
+    roleUser.setRole_id(234L);
+    int u = roleUserService.insert(roleUser);
+    Assert.assertNotSame(0, u);
   }
 
   /**
@@ -30,7 +38,12 @@ public class RoleUserServiceImplTest {
    */
   @Test
   public void testUpdate() {
-    fail("Not yet implemented");
+    RoleUser roleUser = new RoleUser();
+    roleUser.setUser_id(123L);
+    roleUser.setRole_id(234L);
+    roleUser.setId(1);
+    int u = roleUserService.update(roleUser);
+    Assert.assertNotSame(0, u);
   }
 
   /**
@@ -38,7 +51,8 @@ public class RoleUserServiceImplTest {
    */
   @Test
   public void testDelete() {
-    fail("Not yet implemented");
+    int u = roleUserService.delete(0L);
+    Assert.assertNotSame(0, u);
   }
 
   /**
@@ -46,7 +60,7 @@ public class RoleUserServiceImplTest {
    */
   @Test
   public void testFindById() {
-    fail("Not yet implemented");
+    RoleUser roleUser = roleUserService.findById(3L);
+    Assert.assertNotNull(roleUser);
   }
-
 }

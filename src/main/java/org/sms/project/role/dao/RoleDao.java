@@ -11,10 +11,12 @@ import org.sms.project.helper.jdbc.SysJdbcTemplate;
 import org.sms.project.role.entity.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author Sunny
  */
+@Repository
 public class RoleDao {
 
   @Autowired
@@ -63,7 +65,7 @@ public class RoleDao {
    * @return
    */
   public int update(Role role) {
-    String sql = "UPDATE ROLE SET NAMe =?, DESCRIPTION =?, USABLE_STATUS = ?, MODIFY_DATE = ?, MODIFY_USER_ID = ?  WHERE ID = ?";
+    String sql = "UPDATE ROLE SET NAME =?, DESCRIPTION =?, USABLE_STATUS = ?, MODIFY_DATE = ?, MODIFY_USER_ID = ?  WHERE ID = ?";
     Object[] params = new Object[] { role.getName(), role.getDescription(), role.getUsable_status(), role.getModify_date(), role.getModify_user_id(),
         role.getId() };
     int[] types = new int[] { Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.BIGINT, Types.BIGINT };

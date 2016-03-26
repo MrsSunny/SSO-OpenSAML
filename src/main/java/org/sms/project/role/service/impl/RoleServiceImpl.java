@@ -7,10 +7,12 @@ import org.sms.project.role.dao.RoleDao;
 import org.sms.project.role.entity.Role;
 import org.sms.project.role.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author Sunny
  */
+@Service("roleService")
 public class RoleServiceImpl implements RoleService {
   
   public static final String TABLE_NAME = "SEQUENCE_ROLE";
