@@ -22,7 +22,7 @@ public class SysUserDetailsService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    User user = sysUserService.findUserByLoginId(email);
+    User user = sysUserService.findUserByEmail(email);
     this.buildAuths(user);
     return user;
   }

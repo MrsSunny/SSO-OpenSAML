@@ -39,7 +39,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     if (null == username || null == password || "".equals(username.trim()))
       throw new AuthenticationServiceException("用户名或者密码为空！");
     username = username.trim();
-    User user = this.userService.findUserByLoginId(username);
+    User user = this.userService.findUserByEmail(username);
     if (null == user)
       throw new AuthenticationServiceException("用户不存在！");
     if (!user.isEnabled())

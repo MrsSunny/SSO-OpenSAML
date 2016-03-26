@@ -9,7 +9,7 @@ import org.sms.project.helper.ben.AutoBuildBean;
 import org.sms.project.helper.jdbc.SysJdbcTemplate;
 import org.sms.project.roleuser.entity.RoleUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.RowCallbackHandler;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class RoleUserDao {
-  
+
   @Autowired
   private SysJdbcTemplate sysJdbcTemplate;
 
@@ -41,7 +41,7 @@ public class RoleUserDao {
   public int insert(RoleUser roleUser) {
     String sql = "INSERT INTO ROLE_USER(ID, USER_ID, ROLE_ID, USABLE_STATUS, CREATE_USER_ID) VALUES(?,?,?,?,?)";
     Object[] params = new Object[] { roleUser.getId(), roleUser.getUser_id(), roleUser.getRole_id(), SysConstants.ENABLE, roleUser.getCreate_user_id() };
-    int[] types = new int[] { Types.BIGINT, Types.BIGINT, Types.BIGINT, Types.VARCHAR , Types.BIGINT };
+    int[] types = new int[] { Types.BIGINT, Types.BIGINT, Types.BIGINT, Types.VARCHAR, Types.BIGINT };
     return sysJdbcTemplate.update(sql, params, types);
   }
 
@@ -52,7 +52,7 @@ public class RoleUserDao {
   public int update(RoleUser roleUser) {
     String sql = "UPDATE ROLE_USER SET USABLE_STATUS = ?, MODIFY_DATE = ?, MODIFY_USER_ID = ?  WHERE ID = ?";
     Object[] params = new Object[] { roleUser.getUsable_status(), roleUser.getModify_date(), roleUser.getModify_user_id(), roleUser.getId() };
-    int[] types = new int[] { Types.VARCHAR, Types.VARCHAR, Types.BIGINT, Types.BIGINT};
+    int[] types = new int[] { Types.VARCHAR, Types.VARCHAR, Types.BIGINT, Types.BIGINT };
     return sysJdbcTemplate.update(sql, params, types);
   }
 
@@ -72,12 +72,14 @@ public class RoleUserDao {
    * @return
    */
   public RoleUser findById(long id) {
-    final RoleUser roleUser = new RoleUser();
-    sysJdbcTemplate.query("SELECT ID, USER_ID, ROLE_ID, CREATE_DATE FROM ROLE_USER WHERE ID = ?", new Object[] { id }, new RowCallbackHandler() {
-      public void processRow(ResultSet rs) throws SQLException {
-        AutoBuildBean.INSTANCE.buildBean(roleUser, rs);
-      }
-    });
-    return roleUser;
+    return sysJdbcTemplate.queryForObject("SELECT ID, USER_ID, ROLE_ID, CREATE_DATE FROM ROLE_USER WHERE ID = ?", new Object[] { id },
+        new RowMapper<RoleUser>() {
+          @Override
+          public RoleUser mapRow(ResultSet rs, int rowNum) throws SQLException {
+            RoleUser roleUser = new RoleUser();
+            AutoBuildBean.INSTANCE.buildBean(roleUser, rs);
+            return roleUser;
+          }
+        });
   }
 }

@@ -18,5 +18,5 @@ public interface UserService {
 
   List<User> queryByCondition(String query, String order, int startIndex, int size);
 
-  User findUserByLoginId(String loign_id);
+  User findUserByEmail(String loign_id);
 }

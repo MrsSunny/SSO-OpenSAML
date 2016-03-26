@@ -4,22 +4,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
-
 import org.sms.SysConstants;
 import org.sms.project.app.entity.App;
 import org.sms.project.helper.ben.AutoBuildBean;
 import org.sms.project.helper.jdbc.SysJdbcTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.RowCallbackHandler;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 /**
  * @author Sunny
-
  */
 @Repository
 public class AppDao {
-  
+
   @Autowired
   private SysJdbcTemplate sysJdbcTemplate;
 
@@ -28,13 +26,14 @@ public class AppDao {
    * @return
    */
   public App findAppById(long id) {
-    final App app = new App();
-    sysJdbcTemplate.query("SELECT ID,APP_DOMAIN,CREATE_DATE,APP_INDEX FROM SYS_APP WHERE ID = ?", new Object[] { id }, new RowCallbackHandler() {
-      public void processRow(ResultSet rs) throws SQLException {
+    return sysJdbcTemplate.queryForObject("SELECT ID,APP_DOMAIN,CREATE_DATE,APP_INDEX FROM SYS_APP WHERE ID = ?", new Object[] { id }, new RowMapper<App>() {
+      @Override
+      public App mapRow(ResultSet rs, int rowNum) throws SQLException {
+        App app = new App();
         AutoBuildBean.INSTANCE.buildBean(app, rs);
+        return app;
       }
     });
-    return app;
   }
 
   /**
@@ -42,13 +41,14 @@ public class AppDao {
    * @return
    */
   public App findAppByAppName(String appName) {
-    final App app = new App();
-    sysJdbcTemplate.query("SELECT * FROM SYS_APP WHERE APP_DOMAIN = ?", new Object[] { appName }, new RowCallbackHandler() {
-      public void processRow(ResultSet rs) throws SQLException {
+    return sysJdbcTemplate.queryForObject("SELECT * FROM SYS_APP WHERE APP_DOMAIN = ?", new Object[] { appName }, new RowMapper<App>() {
+      @Override
+      public App mapRow(ResultSet rs, int rowNum) throws SQLException {
+        App app = new App();
         AutoBuildBean.INSTANCE.buildBean(app, rs);
+        return app;
       }
     });
-    return app;
   }
 
   /**
@@ -56,10 +56,10 @@ public class AppDao {
    * @return
    */
   public int insert(App app) {
-    
+
     String sql = "INSERT INTO SYS_APP(ID, APP_DOMAIN, USABLE_STATUS, CREATE_USER_ID) VALUES(?,?,?,?)";
     Object[] params = new Object[] { app.getId(), app.getApp_domain(), SysConstants.ENABLE, app.getCreate_user_id() };
-    int[] types = new int[] { Types.BIGINT, Types.VARCHAR, Types.VARCHAR, Types.BIGINT};
+    int[] types = new int[] { Types.BIGINT, Types.VARCHAR, Types.VARCHAR, Types.BIGINT };
     return sysJdbcTemplate.update(sql, params, types);
   }
 
@@ -82,8 +82,9 @@ public class AppDao {
    */
   public int update(App app) {
     String sql = "UPDATE ROLE SET app_domain =?, usable_status = ?, modify_date = ?, modify_user_id = ?, app_index=?  WHERE id = ?";
-    Object[] params = new Object[] { app.getApp_domain(), app.getUsable_status(), app.getModify_date(), app.getModify_user_id(), app.getApp_index(), app.getId() };
-    int[] types = new int[] { Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.BIGINT, Types.VARCHAR, Types.BIGINT};
+    Object[] params = new Object[] { app.getApp_domain(), app.getUsable_status(), app.getModify_date(), app.getModify_user_id(), app.getApp_index(),
+        app.getId() };
+    int[] types = new int[] { Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.BIGINT, Types.VARCHAR, Types.BIGINT };
     return sysJdbcTemplate.update(sql, params, types);
   }
 

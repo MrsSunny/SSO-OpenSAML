@@ -2,6 +2,7 @@ package org.sms.project.helper.ben;
 
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Map;
 import org.springframework.beans.BeanWrapper;
@@ -23,33 +24,38 @@ public enum AutoBuildBean {
    * @return
    */
   public Object buildBean(Object object, ResultSet rs, Map<String, String> fieldMapping) {
+    
+    ResultSetMetaData rsm = null;
     BeanWrapper beanWrapper = new BeanWrapperImpl(object);
     Class<?> zclass = object.getClass();
+    
+    /**
+     * 获取object的全部字段
+     */
     Field[] fields = zclass.getDeclaredFields();
-    final int fSize = fields.length;
-    String fieldName = null;
     try {
-      for (int f = 0; f < fSize; f++) {
-        fieldName = fields[f].getName();
-        int find = rs.findColumn(fieldName);
-        if (find != 0) {
-          String target = null;
-          if (null != fieldMapping) {
-            target = fieldMapping.get(fieldName);
-          }
-          if (target == null) {
-            if (null != rs.getObject(fieldName)) {
-              beanWrapper.setPropertyValue(fieldName, rs.getObject(fieldName));
-            }
-          } else {
-            if (null != rs.getObject(fieldName)) {
-              beanWrapper.setPropertyValue(fieldName, rs.getObject(target));
-            }
-          }
-        }
+      rsm = rs.getMetaData();
+      
+      /**
+       * 获取总列数
+       */
+      int count = rsm.getColumnCount();
+      for (int i = 0; i < count; i ++) {
+        
+        /**
+         * 获取列的名称
+         */
+        String fieldName = rsm.getColumnName(i);
+        /**
+         * 获取列的类型
+         */
+        int typeNo = rsm.getColumnType(i);
+        
+        
+        beanWrapper.setPropertyValue(fieldName, rs.getObject(fieldName));
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      throw new RuntimeException("组装Bean错误");
     }
     return object;
   }

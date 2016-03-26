@@ -4,12 +4,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
+
 import org.sms.SysConstants;
 import org.sms.project.helper.ben.AutoBuildBean;
 import org.sms.project.helper.jdbc.SysJdbcTemplate;
 import org.sms.project.role.entity.Role;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.RowCallbackHandler;
+import org.springframework.jdbc.core.RowMapper;
 
 /**
  * @author Sunny
@@ -74,12 +75,13 @@ public class RoleDao {
    * @return
    */
   public Role findById(long id) {
-    final Role role = new Role();
-    sysJdbcTemplate.query("SELECT ID, NAME, CREATE_DATE,DESCRIPTION FROM ROLE WHERE ID = ?", new Object[] { id }, new RowCallbackHandler() {
-      public void processRow(ResultSet rs) throws SQLException {
+    return sysJdbcTemplate.queryForObject("SELECT ID, NAME, CREATE_DATE,DESCRIPTION FROM ROLE WHERE ID = ?", new Object[] { id }, new RowMapper<Role>() {
+      @Override
+      public Role mapRow(ResultSet rs, int rowNum) throws SQLException {
+        Role role = new Role();
         AutoBuildBean.INSTANCE.buildBean(role, rs);
+        return role;
       }
     });
-    return role;
   }
 }

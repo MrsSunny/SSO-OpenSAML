@@ -1,7 +1,6 @@
 package org.sms.project.register;
 
 import org.junit.Test;
-import org.sms.core.id.UUIDFactory;
 import org.sms.project.register.service.RegisterService;
 import org.sms.project.user.entity.User;
 
