@@ -21,7 +21,7 @@ public class UserServiceImplTest extends BaseTest {
    * {@link org.sms.project.user.service.impl.UserServiceImpl#insert(org.sms.project.user.entity.User)}
    * .
    */
-//  @Test
+  @Test
   public void testInsert() {
     User user = new User();
     user.setAdress("Beijing shi");
@@ -40,7 +40,7 @@ public class UserServiceImplTest extends BaseTest {
    * {@link org.sms.project.user.service.impl.UserServiceImpl#update(org.sms.project.user.entity.User)}
    * .
    */
-//  @Test
+  @Test
   public void testUpdate() {
     User user = new User();
     user.setId(67L);
@@ -62,7 +62,7 @@ public class UserServiceImplTest extends BaseTest {
    * Test method for
    * {@link org.sms.project.user.service.impl.UserServiceImpl#delete(long)}.
    */
-//  @Test
+  @Test
   public void testDelete() {
     int i = userService.delete(67L);
     System.out.println(i);
@@ -74,7 +74,7 @@ public class UserServiceImplTest extends BaseTest {
    * {@link org.sms.project.user.service.impl.UserServiceImpl#queryByCondition(java.lang.String, java.lang.String, int, int)}
    * .
    */
-//  @Test
+  @Test
   public void testQueryByCondition() {
     List<User> list = userService.queryByCondition(null, null, 1, 2);
     System.out.println(list);
@@ -92,9 +92,9 @@ public class UserServiceImplTest extends BaseTest {
     Assert.assertNotNull(user);
   }
 
-//  @Test
+  @Test
   public void testFindUserById() {
-    User user = userService.findById(50L);
+    User user = userService.findById(51L);
     Assert.assertNotNull(user);
   }
 }

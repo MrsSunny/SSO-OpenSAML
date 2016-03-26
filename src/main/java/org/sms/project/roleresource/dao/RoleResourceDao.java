@@ -4,8 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
+
 import org.sms.SysConstants;
-import org.sms.project.helper.ben.AutoBuildBean;
+import org.sms.project.helper.ben.BeanHelper;
 import org.sms.project.helper.jdbc.SysJdbcTemplate;
 import org.sms.project.roleresource.entity.RoleResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +78,7 @@ public class RoleResourceDao {
           @Override
           public RoleResource mapRow(ResultSet rs, int rowNum) throws SQLException {
             RoleResource roleResource = new RoleResource();
-            AutoBuildBean.INSTANCE.buildBean(roleResource, rs);
+            BeanHelper.INSTANCE.buildBean(roleResource, rs);
             return roleResource;
           }
         });

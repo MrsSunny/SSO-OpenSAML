@@ -4,11 +4,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
+
 import org.sms.SysConstants;
-import org.sms.project.helper.ben.AutoBuildBean;
+import org.sms.project.helper.ben.BeanHelper;
 import org.sms.project.helper.jdbc.SysJdbcTemplate;
 import org.sms.project.roleuser.entity.RoleUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -72,14 +74,18 @@ public class RoleUserDao {
    * @return
    */
   public RoleUser findById(long id) {
-    return sysJdbcTemplate.queryForObject("SELECT ID, USER_ID, ROLE_ID, CREATE_DATE FROM ROLE_USER WHERE ID = ?", new Object[] { id },
-        new RowMapper<RoleUser>() {
-          @Override
-          public RoleUser mapRow(ResultSet rs, int rowNum) throws SQLException {
-            RoleUser roleUser = new RoleUser();
-            AutoBuildBean.INSTANCE.buildBean(roleUser, rs);
-            return roleUser;
-          }
-        });
+    try {
+      return sysJdbcTemplate.queryForObject("SELECT ID, USER_ID, ROLE_ID, CREATE_DATE FROM ROLE_USER WHERE ID = ?", new Object[] { id },
+          new RowMapper<RoleUser>() {
+            @Override
+            public RoleUser mapRow(ResultSet rs, int rowNum) throws SQLException {
+              RoleUser roleUser = new RoleUser();
+              BeanHelper.INSTANCE.buildBean(roleUser, rs);
+              return roleUser;
+            }
+          });
+    } catch (EmptyResultDataAccessException e) {
+      return null;
+    }
   }
 }

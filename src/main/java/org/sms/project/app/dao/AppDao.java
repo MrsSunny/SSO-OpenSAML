@@ -4,9 +4,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
+
 import org.sms.SysConstants;
 import org.sms.project.app.entity.App;
-import org.sms.project.helper.ben.AutoBuildBean;
+import org.sms.project.helper.ben.BeanHelper;
 import org.sms.project.helper.jdbc.SysJdbcTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
@@ -30,7 +31,7 @@ public class AppDao {
       @Override
       public App mapRow(ResultSet rs, int rowNum) throws SQLException {
         App app = new App();
-        AutoBuildBean.INSTANCE.buildBean(app, rs);
+        BeanHelper.INSTANCE.buildBean(app, rs);
         return app;
       }
     });
@@ -45,7 +46,7 @@ public class AppDao {
       @Override
       public App mapRow(ResultSet rs, int rowNum) throws SQLException {
         App app = new App();
-        AutoBuildBean.INSTANCE.buildBean(app, rs);
+        BeanHelper.INSTANCE.buildBean(app, rs);
         return app;
       }
     });

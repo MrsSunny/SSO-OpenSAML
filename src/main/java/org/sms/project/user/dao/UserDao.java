@@ -4,11 +4,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
+
 import org.sms.SysConstants;
-import org.sms.project.helper.ben.AutoBuildBean;
+import org.sms.project.helper.ben.BeanHelper;
 import org.sms.project.helper.jdbc.SysJdbcTemplate;
 import org.sms.project.user.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -52,27 +54,36 @@ public class UserDao {
   }
 
   public User findById(Long id) {
-    return sysJdbcTemplate.queryForObject("SELECT ID, NAME, EMAIL, PHONE, ADRESS, CREATE_DATE FROM USER WHERE ID = ?", new Object[] { id },
-        new RowMapper<User>() {
-          @Override
-          public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-            User user = new User();
-            AutoBuildBean.INSTANCE.buildBean(user, rs);
-            return user;
-          }
-        });
+    try {
+      return sysJdbcTemplate.queryForObject("SELECT ID, NAME, EMAIL, PHONE, ADRESS, CREATE_DATE FROM USER WHERE ID = ?", new Object[] { id },
+          new RowMapper<User>() {
+            @Override
+            public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+              User user = new User();
+              BeanHelper.INSTANCE.buildBean(user, rs);
+              return user;
+            }
+          });
+    } catch (EmptyResultDataAccessException e) {
+      return null;
+    }
   }
 
   public User findUserByEmail(String email) {
-    return sysJdbcTemplate.queryForObject("SELECT ID, NAME, EMAIL, PHONE, ADRESS, CREATE_DATE FROM USER WHERE EMAIL = ?", new Object[] { email },
-        new RowMapper<User>() {
-          @Override
-          public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-            User user = new User();
-            AutoBuildBean.INSTANCE.buildBean(user, rs);
-            return user;
-          }
-        });
+    try {
+      return sysJdbcTemplate.queryForObject("SELECT ID, NAME, EMAIL, PHONE, ADRESS, CREATE_DATE FROM USER WHERE EMAIL = ?", new Object[] { email },
+          new RowMapper<User>() {
+
+            @Override
+            public User mapRow(ResultSet rs, int rowNum) {
+              User user = new User();
+              BeanHelper.INSTANCE.buildBean(user, rs);
+              return user;
+            }
+          });
+    } catch (EmptyResultDataAccessException e) {
+      return null;
+    }
   }
 
   public int lockUser(long id) {

@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
 
-import org.sms.project.helper.ben.AutoBuildBean;
+import org.sms.project.helper.ben.BeanHelper;
 import org.sms.project.helper.jdbc.SysJdbcTemplate;
 import org.sms.project.resource.entity.Resource;
 import org.sms.project.resource.entity.ResourceMapping;
@@ -59,7 +59,7 @@ public class ResourceDao {
     final Resource resource = new Resource();
     sysJdbcTemplate.query("SELECT NAME, ID,URL,CREATE_DATE,DESCRIPTION,PARENT_ID, TYPE FROM RESOURCE WHERE id = ?", new Object[] { id }, new RowCallbackHandler() {
       public void processRow(ResultSet rs) throws SQLException {
-        AutoBuildBean.INSTANCE.buildBean(resource, rs);
+        BeanHelper.INSTANCE.buildBean(resource, rs);
       }
     });
     return resource;
@@ -69,7 +69,7 @@ public class ResourceDao {
     @Override
     public ResourceMapping mapRow(ResultSet rs, int i) throws SQLException {
       ResourceMapping resourceMapping = new ResourceMapping();
-      AutoBuildBean.INSTANCE.buildBean(resourceMapping, rs);
+      BeanHelper.INSTANCE.buildBean(resourceMapping, rs);
       return resourceMapping;
     }
   }

@@ -6,7 +6,7 @@ import java.sql.Types;
 import java.util.List;
 
 import org.sms.SysConstants;
-import org.sms.project.helper.ben.AutoBuildBean;
+import org.sms.project.helper.ben.BeanHelper;
 import org.sms.project.helper.jdbc.SysJdbcTemplate;
 import org.sms.project.role.entity.Role;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +79,7 @@ public class RoleDao {
       @Override
       public Role mapRow(ResultSet rs, int rowNum) throws SQLException {
         Role role = new Role();
-        AutoBuildBean.INSTANCE.buildBean(role, rs);
+        BeanHelper.INSTANCE.buildBean(role, rs);
         return role;
       }
     });
