@@ -21,8 +21,8 @@ public class SysUserDetailsService implements UserDetailsService {
   private UserService sysUserService;
 
   @Override
-  public UserDetails loadUserByUsername(String login_id) throws UsernameNotFoundException {
-    User user = sysUserService.findUserByLoginId(login_id);
+  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    User user = sysUserService.findUserByLoginId(email);
     this.buildAuths(user);
     return user;
   }

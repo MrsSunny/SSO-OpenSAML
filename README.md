@@ -87,6 +87,8 @@ SSO-OpenSAML项目既可以作为应用服务器，也可以作为SSO服务器�
 
 ###ID生成方式
 
+
+
 ID生成流程图如下：
 
 ![](WebContent/images/hash.jpg)  
@@ -100,6 +102,8 @@ ID生成流程图如下：
 4.*可以根据表名来获取当前表的最大ID值*
 
 5.*利用mysql的ID自增特性，使用replace into来获取自增ID的最新值。*
+
+###配置ID生成器集群
 
 ⚠️ ID生成服务器可以有多台数据库服务器组成，假如有1台服务器，那么久不需要设置增长的步长了，假如有N台服务器的话需要设置服务器自增ID的时候的步长是N。MYSQL 中 AUTO_INCRMENT_OFFSET 和AUTO_INCREMENT_INCREMENT 这两个参数变量,就是用来控制 AUTO_INCREMENT 列的列的起点值和插入新纪录时的增量值。
 这样ID就不回重复，而且一致性hash也能实现高可用，即使一台ID集群服务器宕机也能马上找到下个节点来获取ID，而且不会重复。

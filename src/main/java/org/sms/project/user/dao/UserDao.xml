@@ -5,12 +5,12 @@
 <mapper namespace="org.sms.project.user.dao.UserDao">
 	<insert id="insert" parameterType="org.sms.project.user.entity.User">
 		insert into user (ID,
-		NAME, IMAGE_PATH, LOGIN_ID, PASSWORD,
+		NAME, IMAGE_PATH, PASSWORD,
 		EMAIL, PHONE, ADRESS, CONFIRMNUM,
 		LOGIN_SUM, LAST_LOGIN_IP, USABLE_STATUS, TOKEN,
 		LOGIN_TYPE)
 		values ( #{id},
-		#{name,jdbcType=VARCHAR}, #{image_path,jdbcType=VARCHAR}, #{login_id,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR}, #{image_path,jdbcType=VARCHAR},
 		#{password,jdbcType=VARCHAR},
 		#{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{adress,jdbcType=VARCHAR},
 		#{confirmnum},
@@ -34,7 +34,6 @@
 	<update id="update" parameterType="org.sms.project.user.entity.User">
 		update user set
 		NAME=#{name}, IMAGE_PATH=#{image_path},
-		EMAIL=#{email},
 		PHONE=#{phone}, ADRESS=#{adress,jdbcType=VARCHAR}, 
 		LAST_LOGIN_IP=#{last_login_ip},
 		MODIFY_DATE='${modify_date}'
@@ -43,16 +42,16 @@
 
 	<select id="get" parameterType="long" resultType="org.sms.project.user.entity.User">
 		select user.ID,
-		user.NAME, user.LOGIN_ID, user.EMAIL,
+		user.NAME, user.EMAIL,
 		user.PHONE, user.ADRESS 
 		from user where user.ID=#{id}
 	</select>
 	
-	<select id="getByLoginId" parameterType="string" resultType="org.sms.project.user.entity.User">
+	<select id="getByEmail" parameterType="string" resultType="org.sms.project.user.entity.User">
 		select user.ID,
 		user.NAME, user.LOGIN_ID, user.EMAIL,
 		user.PHONE, user.ADRESS 
-		from user where user.login_id=#{login_id}
+		from user where user.email=#{email}
 	</select>
 
 	<select id="getCount" parameterType="string" resultType="int"
@@ -65,7 +64,7 @@
 
 	<select id="list" parameterType="map" resultType="org.sms.project.user.entity.User">
 		select user.ID,
-		user.NAME, user.LOGIN_ID, user.EMAIL,
+		user.NAME, user.EMAIL,
 		user.PHONE, user.ADRESS
 		from user
 		<if test="query != null and query != ''">

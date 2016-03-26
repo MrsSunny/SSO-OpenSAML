@@ -34,7 +34,6 @@ public class UserServiceImplTest extends BaseTest {
     user.setImage_path("");
     user.setLast_login_ip("192.168.1.1");
     user.setName("Sunny");
-    user.setLogin_id(UUIDFactory.INSTANCE.getUUID());
     userService.insert(user);
   }
 

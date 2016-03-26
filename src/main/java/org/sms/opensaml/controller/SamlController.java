@@ -293,8 +293,6 @@ public class SamlController {
           user.setName(valueString);
         } else if (name.equals("Id")) {
           user.setId(Long.parseLong(valueString));
-        } else if (name.equals("LoginId")) {
-          user.setLogin_id(valueString);
         } else if (name.equals("Email")) {
           user.setEmail(valueString);
         }

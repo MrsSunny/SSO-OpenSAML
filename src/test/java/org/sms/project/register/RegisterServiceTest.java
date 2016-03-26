@@ -25,7 +25,6 @@ public class RegisterServiceTest extends BaseTest {
     user.setImage_path("");
     user.setLast_login_ip("192.168.1.1");
     user.setName("Sunny");
-    user.setLogin_id(UUIDFactory.INSTANCE.getUUID());
     registerService.register(user);
   }
 }

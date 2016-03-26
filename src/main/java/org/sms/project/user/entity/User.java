@@ -19,8 +19,6 @@ public class User implements Serializable, UserDetails {
   
   private String image_path;
 
-  private String login_id;
-
   private String password;
 
   private String email;
@@ -82,21 +80,6 @@ public class User implements Serializable, UserDetails {
    */
   public void setName(String name) {
     this.name = name;
-  }
-
-  /**
-   * @return the login_id
-   */
-  public String getLogin_id() {
-    return login_id;
-  }
-
-  /**
-   * @param login_id
-   *          the login_id to set
-   */
-  public void setLogin_id(String login_id) {
-    this.login_id = login_id;
   }
 
   /**
@@ -262,16 +245,11 @@ public class User implements Serializable, UserDetails {
   }
 
   @Override
-  public String toString() {
-    return "[{" + "login_id:" + login_id + "}]";
-  }
-
-  @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((id == null) ? 0 : id.hashCode());
-    result = prime * result + ((login_id == null) ? 0 : login_id.hashCode());
+    result = prime * result + ((email == null) ? 0 : email.hashCode());
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     return result;
   }
@@ -289,11 +267,6 @@ public class User implements Serializable, UserDetails {
       if (other.id != null)
         return false;
     } else if (!id.equals(other.id))
-      return false;
-    if (login_id == null) {
-      if (other.login_id != null)
-        return false;
-    } else if (!login_id.equals(other.login_id))
       return false;
     if (name == null) {
       if (other.name != null)
@@ -327,13 +300,12 @@ public class User implements Serializable, UserDetails {
     this.image_path = image_path;
   }
 
-  public User(String login_id, String password, String usable_status, Collection<? extends GrantedAuthority> authorities) {
-    this(login_id, password, usable_status);
+  public User(String password, String usable_status, Collection<? extends GrantedAuthority> authorities) {
+    this(password, usable_status);
     this.authorities = authorities;
   }
 
-  public User(String login_id, String password, String usable_status) {
-    this.login_id = login_id;
+  public User(String password, String usable_status) {
     this.password = password;
     this.usable_status = usable_status;
   }
@@ -353,7 +325,7 @@ public class User implements Serializable, UserDetails {
 
   @Override
   public String getUsername() {
-    return login_id;
+    return this.email;
   }
 
   @Override

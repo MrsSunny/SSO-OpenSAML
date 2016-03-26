@@ -33,7 +33,7 @@
 	<beans:bean id="loginFilter" class="org.sms.project.login.LoginFilter">
 		<beans:property name="filterProcessesUrl" value="/loginFilter"></beans:property>
 		<beans:property name="authenticationManager" ref="authenticationManager"></beans:property>
-		<beans:property name="usernameParameter" value="username" />
+		<beans:property name="usernameParameter" value="email" />
 		<beans:property name="passwordParameter" value="password" />
 		<beans:property name="authenticationSuccessHandler" ref="loginSuccessHandler"></beans:property>
 		<beans:property name="authenticationFailureHandler" ref="loginFailureHandler"></beans:property>
