@@ -99,7 +99,7 @@ public class SamlController {
       throw new RuntimeException("访问SP端的：" + SysConstants.SP_ARTIFACT_RESOLUTION_SERVICE + "服务错误" + e.getMessage());
     }
     if (null == postResult || "".equals(postResult)) {
-      return "redirect:/loginPage";
+      return "redirect:/login.html";
     }
     final ArtifactResponse artifactResponse = (ArtifactResponse) samlService.buildStringToXMLObject(postResult);
     final Status status = artifactResponse.getStatus();
@@ -146,14 +146,14 @@ public class SamlController {
     // 判断issure的里面的值是否在SSO系统中注册过
     final App app = appService.findAppByAppName(appName.trim());
     if (app == null) {
-      throw new RuntimeException("不支持当前系统: " + appName);
+      return "redirect:/login.html";
     }
     
     Subject subject = authnRequest.getSubject();
     NameID nameID = subject.getNameID();
     String ticket = nameID.getValue();
     if ("".equals(ticket) || null == ticket) {
-      return "redirect:/loginPage";
+      return "redirect:/login.html";
     }
     try {
       ticket = URLDecoder.decode(ticket, SysConstants.CHARSET);
@@ -171,18 +171,18 @@ public class SamlController {
       String decryptTicket = new String(decryptTicketArray);
       afterDecode = decryptTicket.split(SysConstants.TICKET_SPILT);
     } catch (Exception e) {
-      return "redirect:/loginPage";
+      return "redirect:/login.html";
     }
     logger.debug("Ticket验证痛过");
     // 判断令牌是否过期，如果令牌过期则直接
     if (afterDecode == null || afterDecode.length != 3) {
-      return "redirect:/loginPage";
+      return "redirect:/login.html";
     }
     long expireTime = Long.parseLong(afterDecode[2]);
     long nowTime = System.currentTimeMillis();
     if (expireTime < nowTime) {
       logger.debug("Token已过期");
-      return "redirect:/loginPage";
+      return "redirect:/login.html";
     }
     final Artifact idpArtifact = samlService.buildArtifact();
     final Response samlResponse = samlService.buildResponse(UUIDFactory.INSTANCE.getUUID());

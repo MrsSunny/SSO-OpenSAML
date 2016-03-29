@@ -20,8 +20,8 @@ public class RegisterService {
   private UserService userService;
   
   public long register(User user) {
-    long id = userService.insert(user);
+//    long id = userService.insert(user);
     context.publishEvent(new RegisterEvent(user));
-    return id;
+    return 88L;
   }
 }

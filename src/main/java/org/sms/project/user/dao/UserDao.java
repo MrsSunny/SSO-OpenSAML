@@ -71,7 +71,7 @@ public class UserDao {
 
   public User findUserByEmail(String email) {
     try {
-      return sysJdbcTemplate.queryForObject("SELECT ID, NAME, EMAIL, PHONE, ADRESS, CREATE_DATE FROM USER WHERE EMAIL = ?", new Object[] { email },
+      return sysJdbcTemplate.queryForObject("SELECT ID, NAME, PASSWORD,EMAIL, PHONE, ADRESS, USABLE_STATUS, CREATE_DATE FROM USER WHERE EMAIL = ?", new Object[] { email },
           new RowMapper<User>() {
 
             @Override

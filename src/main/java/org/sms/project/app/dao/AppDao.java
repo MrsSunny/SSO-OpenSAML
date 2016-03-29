@@ -10,6 +10,7 @@ import org.sms.project.app.entity.App;
 import org.sms.project.helper.ben.BeanHelper;
 import org.sms.project.helper.jdbc.SysJdbcTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -42,14 +43,19 @@ public class AppDao {
    * @return
    */
   public App findAppByAppName(String appName) {
-    return sysJdbcTemplate.queryForObject("SELECT * FROM SYS_APP WHERE APP_DOMAIN = ?", new Object[] { appName }, new RowMapper<App>() {
-      @Override
-      public App mapRow(ResultSet rs, int rowNum) throws SQLException {
-        App app = new App();
-        BeanHelper.INSTANCE.buildBean(app, rs);
-        return app;
-      }
-    });
+
+    try {
+      return sysJdbcTemplate.queryForObject("SELECT * FROM SYS_APP WHERE APP_DOMAIN = ?", new Object[] { appName }, new RowMapper<App>() {
+        @Override
+        public App mapRow(ResultSet rs, int rowNum) throws SQLException {
+          App app = new App();
+          BeanHelper.INSTANCE.buildBean(app, rs);
+          return app;
+        }
+      });
+    } catch (EmptyResultDataAccessException e) {
+      return null;
+    }
   }
 
   /**

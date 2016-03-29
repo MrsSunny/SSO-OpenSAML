@@ -13,7 +13,7 @@
 	  		System.out.print((String)session.getAttribute(SysConstants.REDIRECT_URL_KEY));
 	  		Object redirectUrl = session.getAttribute(SysConstants.REDIRECT_URL_KEY);
 	  		if (redirectUrl == null) {
-	  		  response.sendRedirect(SysConstants.SP_INDEX_PAGE);
+	  		  response.sendRedirect(SysConstants.DEFAULT_CUSTOMER_INDEX);
 	  		} else {
 	  		  response.sendRedirect((String)session.getAttribute(SysConstants.REDIRECT_URL_KEY));
 	  		}

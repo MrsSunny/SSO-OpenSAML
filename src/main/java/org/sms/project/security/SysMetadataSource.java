@@ -77,7 +77,7 @@ public class SysMetadataSource implements FilterInvocationSecurityMetadataSource
       final List<ConfigAttribute> list = new ArrayList<ConfigAttribute>(1);
       final String url = resourceMapping.getUrl();
       final String role_name = resourceMapping.getRole_name();
-      if (null != url) {
+      if (null != url && role_name != null) {
         ConfigAttribute configAttribute = new SecurityConfig(role_name);
         list.add(configAttribute);
         final List<ConfigAttribute> isExit = configAttributes.get(url);
