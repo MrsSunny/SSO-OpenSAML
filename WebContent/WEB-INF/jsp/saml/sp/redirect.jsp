@@ -10,7 +10,6 @@
 	  if (object instanceof Boolean) {
 	    boolean success = (Boolean) object;
 	    if (!success) {
-	  		System.out.print((String)session.getAttribute(SysConstants.REDIRECT_URL_KEY));
 	  		Object redirectUrl = session.getAttribute(SysConstants.REDIRECT_URL_KEY);
 	  		if (redirectUrl == null) {
 	  		  response.sendRedirect(SysConstants.DEFAULT_CUSTOMER_INDEX);
