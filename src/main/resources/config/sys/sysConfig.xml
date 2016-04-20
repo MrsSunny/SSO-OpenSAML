@@ -14,6 +14,7 @@
 		<url>^/(SAML2)/.*$</url>
 		<url>^/loginFilter</url>
 		<url>^/login.*$</url>
+		<url>^/adminLogin.*$</url>
 		<url>^/index.*$</url>
 		<url>^/loginPage</url>
 		<url>^/logoutFilter</url>

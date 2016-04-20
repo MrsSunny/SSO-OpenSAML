@@ -18,12 +18,10 @@
 	<!-- Use Form_login_Filter -->
 	<http use-expressions="true" entry-point-ref="authenticationEntryPoint" >
 		<csrf disabled="true" />
-		<!-- <logout logout-url="/logoutFilter" invalidate-session="true" delete-cookies="idp_ticket, guid" 
-		success-handler-ref="sysLogoutSuccessHandler" /> --> 
 		<logout logout-url="/j_spring_security_logout" invalidate-session="true" delete-cookies="idp_ticket" 
 		success-handler-ref="sysLogoutSuccessHandler" />
-		<!-- <custom-filter ref="logoutFilter" position="LOGOUT_FILTER" /> -->
-		<custom-filter ref="loginFilter" position="FORM_LOGIN_FILTER" />
+		<custom-filter ref="loginFilter" before="FORM_LOGIN_FILTER" />
+		<custom-filter ref="adminLogin" position="FORM_LOGIN_FILTER" />
 		<custom-filter ref="securityFilter" before="FILTER_SECURITY_INTERCEPTOR" />
 	</http>
 	<beans:bean id="authenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
@@ -40,6 +38,15 @@
 		<beans:property name="passwordParameter" value="password" />
 		<beans:property name="authenticationSuccessHandler" ref="loginSuccessHandler"></beans:property>
 		<beans:property name="authenticationFailureHandler" ref="loginFailureHandler"></beans:property>
+	</beans:bean>
+	
+	<beans:bean id="adminLogin" class="org.sms.project.admin.LoginFilter">
+		<beans:property name="filterProcessesUrl" value="/adminLogin"></beans:property>
+		<beans:property name="authenticationManager" ref="authenticationManager"></beans:property>
+		<beans:property name="usernameParameter" value="email" />
+		<beans:property name="passwordParameter" value="password" />
+		<beans:property name="authenticationSuccessHandler" ref="adminLoginSuccessHandler"></beans:property>
+		<beans:property name="authenticationFailureHandler" ref="adminLoginFailureHandler"></beans:property>
 	</beans:bean>
 
 	<beans:bean id="securityFilter" class="org.sms.project.filter.SecurityFilter">
