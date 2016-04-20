@@ -11,7 +11,10 @@
 	<http pattern="/logout*" security="none" />
 	<http pattern="/index.html" security="none" />
 	<http pattern="/login.jsp" security="none" />
-
+	<http pattern="/css/**" security="none" />
+	<http pattern="/html/**" security="none" />
+	<http pattern="/image/**" security="none" />
+	<http pattern="/js/**" security="none" />
 	<!-- Use Form_login_Filter -->
 	<http use-expressions="true" entry-point-ref="authenticationEntryPoint" >
 		<csrf disabled="true" />
