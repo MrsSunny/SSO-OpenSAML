@@ -53,7 +53,7 @@ public class SysMetadataSource implements FilterInvocationSecurityMetadataSource
       this.load();
     final List<ConfigAttribute> list = new ArrayList<ConfigAttribute>();
     configAttributes.forEach((K, V) -> {
-      requestMatcher = new AntPathRequestMatcher(K);
+      requestMatcher = new AntPathRequestMatcher(K + "/**");
       if (null != K) {
         if (requestMatcher.matches(request)) {
           if (null != V) {
@@ -73,10 +73,10 @@ public class SysMetadataSource implements FilterInvocationSecurityMetadataSource
     if (resourceMappings.size() == 0)
       return;
     this.configAttributes = new HashMap<String, List<ConfigAttribute>>();
+    final List<ConfigAttribute> list = new ArrayList<ConfigAttribute>(1);
     resourceMappings.forEach(resourceMapping -> {
-      final List<ConfigAttribute> list = new ArrayList<ConfigAttribute>(1);
       final String url = resourceMapping.getUrl();
-      final String role_name = resourceMapping.getRole_name();
+      final String role_name = resourceMapping.getName();
       if (null != url && role_name != null) {
         ConfigAttribute configAttribute = new SecurityConfig(role_name);
         list.add(configAttribute);

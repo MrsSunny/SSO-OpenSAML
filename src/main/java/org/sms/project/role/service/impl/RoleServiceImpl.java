@@ -45,4 +45,9 @@ public class RoleServiceImpl implements RoleService {
   public Role findById(long id) {
     return roleDao.findById(id);
   }
+
+  @Override
+  public List<String> getRoleNameByEmail(long id) {
+    return roleDao.getRoleNameByEmail(id);
+  }
 }

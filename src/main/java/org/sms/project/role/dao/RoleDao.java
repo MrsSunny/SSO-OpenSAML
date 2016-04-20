@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
-
 import org.sms.SysConstants;
 import org.sms.project.helper.ben.BeanHelper;
 import org.sms.project.helper.jdbc.SysJdbcTemplate;
@@ -36,19 +35,28 @@ public class RoleDao {
   }
 
   /**
-   * insert_descriptions:
-   * 
    * @param role
    * @return
    */
-
   public int insert(Role role) {
     String sql = "INSERT INTO ROLE(ID, NAME, DESCRIPTION, USABLE_STATUS, CREATE_USER_ID) VALUES(?,?,?,?,?)";
     Object[] params = new Object[] { role.getId(), role.getName(), role.getDescription(), SysConstants.ENABLE, role.getCreate_user_id() };
     int[] types = new int[] { Types.BIGINT, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.BIGINT };
     return sysJdbcTemplate.update(sql, params, types);
   }
-
+  
+  public List<String> getRoleNameByEmail(long id) {
+    List<String> roleNames = sysJdbcTemplate.query("SELECT ROLE.NAME FROM ROLE_USER  LEFT JOIN ROLE ON ROLE_USER.ROLE_ID = ROLE.ID where ROLE_USER.USER_ID = " + id, new RowNameRowMapper());
+    return roleNames;
+  }
+  
+  private class RowNameRowMapper implements RowMapper<String> {
+    
+    @Override
+    public String mapRow(ResultSet rs, int i) throws SQLException {
+      return rs.getString("name");
+    }
+  }
   /**
    * @param id
    * @return

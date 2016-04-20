@@ -1,9 +1,18 @@
+function showResponse(responseText, statusText) {
+	if (statusText == 'success') {
+		$("#result").html(responseText);
+	}
+}
+
+function showRequest(formData, jqForm, options) {
+	return $("#commentForm").valid();
+}
+
 var Login = function() {
-//	var xx = $.getUrlParam('error');
-	alert("sdfsd");
 	return {
 		init : function() {
-			$('.login-form').validate(
+			$('.login-form')
+					.validate(
 							{
 								errorElement : 'label', // default input error
 								errorClass : 'help-inline', // default input
@@ -31,7 +40,7 @@ var Login = function() {
 									$('.alert-error', $('.login-form')).show();
 								},
 								highlight : function(element) { // hightlight
-																// error inputs
+									// error inputs
 									$(element).closest('.control-group')
 											.addClass('error'); // set error
 								},
@@ -44,13 +53,21 @@ var Login = function() {
 									error.addClass('help-small no-left-padding').insertAfter(element.closest('.input-icon'));
 								},
 								submitHandler : function(form) {
-									 form.submit();
+									form.submit();
+//									$(form).ajaxSubmit({
+//										url : '/loginFilter',
+//										type : 'POST',
+//										success : function(res) {
+//											alert(res);
+//										}
+//									});
+//									return false;
 								}
 							});
 			$('.login-form input').keypress(function(e) {
 				if (e.which == 13) {
 					if ($('.login-form').validate().form()) {
-						window.location.href = "/loginFilter";
+						form.submit();
 					}
 					return false;
 				}
@@ -76,7 +93,7 @@ var Login = function() {
 								invalidHandler : function(event, validator) { // display
 								},
 								highlight : function(element) { // hightlight
-																// error inputs
+									// error inputs
 									$(element).closest('.control-group')
 											.addClass('error'); // set error
 								},
@@ -86,24 +103,17 @@ var Login = function() {
 									label.remove();
 								},
 								errorPlacement : function(error, element) {
-									error.addClass(
+									error
+											.addClass(
 													'help-small no-left-padding')
 											.insertAfter(
 													element
 															.closest('.input-icon'));
 								},
 								submitHandler : function(form) {
-									window.location.href = "index.html";
+									form.submit();
 								}
 							});
-			$('.forget-form input').keypress(function(e) {
-				if (e.which == 13) {
-					if ($('.forget-form').validate().form()) {
-						window.location.href = "index.html";
-					}
-					return false;
-				}
-			});
 			jQuery('#forget-password').click(function() {
 				jQuery('.login-form').hide();
 				jQuery('.forget-form').show();
@@ -111,14 +121,6 @@ var Login = function() {
 			jQuery('#back-btn').click(function() {
 				jQuery('.login-form').show();
 				jQuery('.forget-form').hide();
-			});
-			jQuery('#register-btn').click(function() {
-				jQuery('.login-form').hide();
-				jQuery('.register-form').show();
-			});
-			jQuery('#register-back-btn').click(function() {
-				jQuery('.login-form').show();
-				jQuery('.register-form').hide();
 			});
 		}
 	};

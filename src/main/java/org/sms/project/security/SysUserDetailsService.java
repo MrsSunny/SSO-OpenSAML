@@ -1,8 +1,9 @@
 package org.sms.project.security;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-
+import org.sms.project.role.service.RoleService;
 import org.sms.project.user.entity.User;
 import org.sms.project.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class SysUserDetailsService implements UserDetailsService {
 
   @Autowired
   private UserService sysUserService;
+  
+  @Autowired
+  private RoleService roleService;
 
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -29,7 +33,10 @@ public class SysUserDetailsService implements UserDetailsService {
 
   private void buildAuths(User user) {
     Set<GrantedAuthority> auths = new HashSet<GrantedAuthority>();
-    auths.add(new SimpleGrantedAuthority("ADMIN"));
+    List<String> roles = roleService.getRoleNameByEmail(user.getId());
+    roles.forEach(role -> {
+      auths.add(new SimpleGrantedAuthority(role));
+    });
     user.setAuthorities(auths);
   }
 }

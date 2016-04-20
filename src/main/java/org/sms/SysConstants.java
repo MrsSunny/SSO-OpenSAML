@@ -35,7 +35,7 @@ public interface SysConstants {
   public static final String IPDLOGIN_PAGE = "http://passport.soaer.com:8888/login.jsp";
   public static final String PARAM_VALUE = "=";
   public static final String ERROR_LOGIN = "errorLogin";
-  public static final String LOGIN_PAGE = "http://passport.soaer.com:8888/loginPage";
+  public static final String LOGIN_PAGE = "http://passport.soaer.com:8888/login.html";
   public static final String SP_INDEX_PAGE = "http://passport.soaer.com:8888/index.html";
   public static final String DEFAULT_CUSTOMER_INDEX = "/indexPage";
   public static final String IDP_TICKET = "idp_ticket";

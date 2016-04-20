@@ -18,4 +18,6 @@ public interface RoleService {
   int delete(long id);
 
   Role findById(long id);
+  
+  List<String> getRoleNameByEmail(long id);
 }

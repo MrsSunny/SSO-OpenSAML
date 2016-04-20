@@ -12,19 +12,15 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 <meta content="" name="description" />
 <meta content="" name="author" />
-<!-- BEGIN GLOBAL MANDATORY STYLES -->
 <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-<link href="/css/bootstrap-responsive.min.css" rel="stylesheet"
-	type="text/css" />
+<link href="/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
 <link href="/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 <link href="/css/style-metro.css" rel="stylesheet" type="text/css" />
 <link href="/css/style.css" rel="stylesheet" type="text/css" />
 <link href="/css/style-responsive.css" rel="stylesheet" type="text/css" />
-<link href="/css/default.css" rel="stylesheet" type="text/css"
-	id="style_color" />
+<link href="/css/default.css" rel="stylesheet" type="text/css" id="style_color" />
 <link href="/css/uniform.default.css" rel="stylesheet" type="text/css" />
-<link href="/css/bootstrap-fileupload.css" rel="stylesheet"
-	type="text/css" />
+<link href="/css/bootstrap-fileupload.css" rel="stylesheet" type="text/css" />
 <link href="/css/chosen.css" rel="stylesheet" type="text/css" />
 <link href="/css/profile.css" rel="stylesheet" type="text/css" />
 <link rel="shortcut icon" href="/image/favicon.ico" />
@@ -32,7 +28,6 @@
 
 <body class="page-header-fixed">
 	<div class="header navbar navbar-inverse navbar-fixed-top">
-		<!-- BEGIN TOP NAVIGATION BAR -->
 		<div class="navbar-inner">
 			<div class="container-fluid">
 				<ul class="nav pull-right">

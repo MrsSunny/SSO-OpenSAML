@@ -6,6 +6,11 @@
 		<url>^/(|(index)\.jsp)$</url>
 		<url>^/(|(index)\.html)$</url>
 		<url>^/(login)/.*$</url>
+		<url>^/(image)/.*$</url>
+		<url>^/(css)/.*$</url>
+		<url>^/(js)/.*$</url>
+		<url>^/(html)/.*$</url>
+		<url>^/(jsp)/.*$</url>
 		<url>^/(SAML2)/.*$</url>
 		<url>^/loginFilter</url>
 		<url>^/login.*$</url>

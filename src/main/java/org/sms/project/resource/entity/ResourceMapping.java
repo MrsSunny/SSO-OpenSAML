@@ -7,7 +7,7 @@ public class ResourceMapping {
 
   private String url;
 
-  private String role_name;
+  private String name;
 
   public final String getUrl() {
     return url;
@@ -17,11 +17,11 @@ public class ResourceMapping {
     this.url = url;
   }
 
-  public final String getRole_name() {
-    return role_name;
+  public final String getName() {
+    return name;
   }
 
-  public final void setRole_name(String role_name) {
-    this.role_name = role_name;
+  public final void setName(String name) {
+    this.name = name;
   }
 }
