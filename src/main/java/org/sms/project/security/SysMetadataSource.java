@@ -5,9 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.sms.project.resource.entity.ResourceMapping;
 import org.sms.project.resource.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * 资源角色管理器
+ * 
  * @author Sunny
  */
 @Service("sysMetadataSource")
@@ -79,7 +78,11 @@ public class SysMetadataSource implements FilterInvocationSecurityMetadataSource
       final String role_name = resourceMapping.getName();
       if (null != url && role_name != null) {
         ConfigAttribute configAttribute = new SecurityConfig(role_name);
-        list.add(configAttribute);
+        list.forEach(action -> {
+          if (!role_name.equals(action.getAttribute())) {
+            list.add(configAttribute);
+          }
+        });
         final List<ConfigAttribute> isExit = configAttributes.get(url);
         if (isExit == null) {
           configAttributes.put(url, list);
@@ -94,8 +97,8 @@ public class SysMetadataSource implements FilterInvocationSecurityMetadataSource
       }
     });
   }
-  
-  public void addResourceToConfigAttributes(String url, String ...role_names) {
+
+  public void addResourceToConfigAttributes(String url, String... role_names) {
     if (null == url || null == role_names || role_names.length == 0)
       return;
     ConfigAttribute configAttribute = null;
