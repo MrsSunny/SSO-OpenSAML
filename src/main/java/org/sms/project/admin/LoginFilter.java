@@ -1,10 +1,12 @@
 package org.sms.project.admin;
 
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.sms.SysConstants;
 import org.sms.project.encrypt.md5.MD5;
 import org.sms.project.helper.SessionHelper;
+import org.sms.project.role.service.RoleService;
 import org.sms.project.user.entity.User;
 import org.sms.project.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
   @Autowired
   private UserService userService;
+  
+  @Autowired
+  private RoleService roleService;
 
   @Override
   public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -47,6 +52,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     salt = MD5.encrypt(salt);
     if (!salt.equals(user.getPassword()))
       throw new AuthenticationServiceException("用户名或者密码错误！");
+    List<String> roles = roleService.getRoleNameByEmail(user.getId());
+    boolean isAdmain = false;
+    for (String role : roles) {
+      if (SysConstants.ROLE_ADMAIN_NAME.equals(role)) {
+        isAdmain = true;
+        break;
+      }
+    }
+    if (!isAdmain) throw new AuthenticationServiceException("用户名或者密码错误！");
     UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, salt);
     setDetails(request, authRequest);
     SessionHelper.put(request, SysConstants.LOGIN_USER, user);
