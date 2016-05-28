@@ -1,9 +1,12 @@
 package org.sms.core.hash;
 
 import java.util.List;
-
 import com.google.common.hash.Hashing;
 
+/**
+ * 一致性hash接口
+ * @author Sunny
+ */
 public interface ConsistentHash<T> {
 
   void addMember(T t);
