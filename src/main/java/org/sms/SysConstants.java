@@ -32,7 +32,7 @@ public interface SysConstants {
   public static final String ACTION_KEY = "doAction";
   public static final String SAML_ID_PREFIX_CHAR = "_";
   public static final String METHOD_SPILT_CHAR = "?";
-  public static final String IPDLOGIN_PAGE = "http://passport.soaer.com:8888/login.jsp";
+  public static final String IPDLOGIN_PAGE = "http://passport.soaer.com:8888";
   public static final String PARAM_VALUE = "=";
   public static final String ERROR_LOGIN = "errorLogin";
   public static final String LOGIN_PAGE = "http://passport.soaer.com:8888/login.html";

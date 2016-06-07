@@ -32,18 +32,29 @@ public class SamlFilter implements Filter {
 
     HttpServletRequest request = (HttpServletRequest) servletRequest;
     HttpServletResponse response = (HttpServletResponse) servletResponse;
-    HttpSession session = request.getSession(true);
+    HttpSession session = request.getSession(false);
     final String uri = request.getRequestURI();
-    if (isIgnoreUrl(uri)) {
+    if (isIgnoreUrl(uri) ||session.getAttribute(SysConstants.LOGIN_USER) != null) {
       chain.doFilter(request, response);
     } else if (session.getAttribute(SysConstants.LOGIN_USER) == null) {
+      
+      /**
+       * 查看是否有票据
+       */
       String ticket = getTicket(request);
-      ticket = ticket == null ? "" : ticket;
+      /**
+       * 如果没有票据则直接跳转至登录页面
+       */
+      if (ticket == null) {
+        response.sendRedirect(SysConstants.IPDLOGIN_PAGE);
+        return;
+      }
+      /**
+       * 验证票据
+       */
       session.setAttribute(SysConstants.REDIRECT_URL_KEY, uri.toString());
       session.setAttribute(SysConstants.SSO_TOKEN_KEY, ticket);
       response.sendRedirect(SysConstants.SEND_ARTIFACT_URI + SysConstants.METHOD_SPILT_CHAR + URLEncoder.encode(request.getRequestURL().toString(), SysConstants.CHARSET));
-    } else {
-      chain.doFilter(request, response);
     }
   }
   

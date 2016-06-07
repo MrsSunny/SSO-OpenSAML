@@ -87,7 +87,7 @@
 		<session-timeout>60</session-timeout>
 	</session-config>
 	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
+		<welcome-file>login.html</welcome-file>
 	</welcome-file-list>
 	<error-page>
 		<error-code>404</error-code>
