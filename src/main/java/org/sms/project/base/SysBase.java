@@ -1,6 +1,7 @@
 package org.sms.project.base;
 
 /**
+ * 模块基类
  * @author Sunny
  */
 public class SysBase {

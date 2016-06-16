@@ -4,15 +4,10 @@ import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.security.KeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
 import java.security.Security;
-import java.security.cert.CertificateException;
-import java.security.interfaces.RSAPrivateKey;
 import java.util.List;
-
 import javax.crypto.SecretKey;
 import javax.xml.namespace.QName;
-
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
@@ -93,6 +88,7 @@ import org.slf4j.LoggerFactory;
 import org.sms.SysConstants;
 import org.sms.core.id.UUIDFactory;
 import org.sms.opensaml.service.SamlService;
+import org.sms.project.helper.CertificateHelper;
 import org.sms.project.user.entity.User;
 import org.sms.project.util.GZipUtil;
 import org.springframework.stereotype.Service;
@@ -243,7 +239,7 @@ public class SamlServiceImpl implements SamlService {
   public void signXMLObject(SignableXMLObject signableXMLObject) {
     SignatureBuilder signatureBuilder = (SignatureBuilder) builderFactory.getBuilder(Signature.DEFAULT_ELEMENT_NAME);
     BasicCredential basicCredential = new BasicCredential();
-    basicCredential.setPrivateKey(getRSAPrivateKey());
+    basicCredential.setPrivateKey(CertificateHelper.getRSAPrivateKey());
     Signature signature = signatureBuilder.buildObject();
     signature.setCanonicalizationAlgorithm(SysConstants.CANON_ALGORITHM);
     signature.setSignatureAlgorithm(SysConstants.SIGNATURE_METHOD);
@@ -283,40 +279,6 @@ public class SamlServiceImpl implements SamlService {
       return entityDescriptor.getIDPSSODescriptor("urn:oasis:names:tc:SAML:2.0:protocol");
     }
     return entityDescriptor.getSPSSODescriptor("urn:oasis:names:tc:SAML:2.0:protocol");
-  }
-
-  @Override
-  public PublicKey getRSAPublicKey() {
-    SSODescriptor _SPSSODescriptor = buildSSODescriptor(SysConstants.SPSSPXMLFILE, SPSSODescriptor.class);
-    List<KeyDescriptor> keyDescriptors = _SPSSODescriptor.getKeyDescriptors();
-    KeyDescriptor keyDescriptor = keyDescriptors.get(0);
-    KeyInfo keyInfo = keyDescriptor.getKeyInfo();
-    List<X509Data> x509Datas = keyInfo.getX509Datas();
-    List<X509Certificate> x509Certificates = x509Datas.get(0).getX509Certificates();
-    X509Certificate x509Certificate = x509Certificates.get(0);
-    String _x509Value = x509Certificate.getValue();
-    try {
-      java.security.cert.X509Certificate cert = SecurityHelper.buildJavaX509Cert(_x509Value);
-      return cert.getPublicKey();
-    } catch (CertificateException e) {
-      throw new RuntimeException("获取公钥错误 :" + e.getMessage());
-    }
-  }
-
-  @Override
-  public RSAPrivateKey getRSAPrivateKey() {
-    SSODescriptor _IDPSSODescriptor = buildSSODescriptor(SysConstants.IDPSSPXMLFILE, IDPSSODescriptor.class);
-    List<KeyDescriptor> keyDescriptors = _IDPSSODescriptor.getKeyDescriptors();
-    KeyDescriptor keyDescriptor = keyDescriptors.get(0);
-    KeyInfo keyInfo = keyDescriptor.getKeyInfo();
-    List<X509Data> x509Datas = keyInfo.getX509Datas();
-    List<X509Certificate> x509Certificates = x509Datas.get(0).getX509Certificates();
-    X509Certificate x509Certificate = x509Certificates.get(0);
-    try {
-      return SecurityHelper.buildJavaRSAPrivateKey(x509Certificate.getValue());
-    } catch (KeyException e) {
-      throw new RuntimeException("获取私钥错误:" + e.getMessage());
-    }
   }
 
   @Override
@@ -425,7 +387,7 @@ public class SamlServiceImpl implements SamlService {
     SignatureBuilder signatureBuilder = (SignatureBuilder) builderFactory.getBuilder(Signature.DEFAULT_ELEMENT_NAME);
     BasicCredential basicCredential = new BasicCredential();
     Signature signature = signatureBuilder.buildObject();
-    basicCredential.setPrivateKey(getRSAPrivateKey());
+    basicCredential.setPrivateKey(CertificateHelper.getRSAPrivateKey());
     signature.setCanonicalizationAlgorithm(SysConstants.CANON_ALGORITHM);
     signature.setSignatureAlgorithm(SysConstants.SIGNATURE_METHOD);
     return signature;
@@ -442,7 +404,7 @@ public class SamlServiceImpl implements SamlService {
   public boolean validate(String base64Response) {
     SignableXMLObject signableXMLObject = (SignableXMLObject) buildStringToXMLObject(base64Response);
     BasicCredential basicCredential = new BasicCredential();
-    basicCredential.setPublicKey(getRSAPublicKey());
+    basicCredential.setPublicKey(CertificateHelper.getRSAPublicKey());
     SignatureValidator signatureValidator = new SignatureValidator(basicCredential);
     Signature signature = signableXMLObject.getSignature();
     try {
@@ -457,7 +419,7 @@ public class SamlServiceImpl implements SamlService {
   @Override
   public boolean validate(SignableXMLObject signableXMLObject) {
     BasicCredential basicCredential = new BasicCredential();
-    basicCredential.setPublicKey(getRSAPublicKey());
+    basicCredential.setPublicKey(CertificateHelper.getRSAPublicKey());
     SignatureValidator signatureValidator = new SignatureValidator(basicCredential);
     Signature signature = signableXMLObject.getSignature();
     try {

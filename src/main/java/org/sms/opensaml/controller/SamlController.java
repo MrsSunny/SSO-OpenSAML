@@ -5,10 +5,12 @@ import java.net.URLDecoder;
 import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.opensaml.common.SAMLObject;
 import org.opensaml.common.SAMLVersion;
 import org.opensaml.saml2.core.Artifact;
@@ -35,6 +37,7 @@ import org.sms.project.app.entity.App;
 import org.sms.project.app.service.AppService;
 import org.sms.project.encrypt.rsa.RSACoder;
 import org.sms.project.helper.AuthenRequestHelper;
+import org.sms.project.helper.CertificateHelper;
 import org.sms.project.helper.SSOHelper;
 import org.sms.project.helper.SessionHelper;
 import org.sms.project.security.SampleAuthenticationManager;
@@ -163,7 +166,7 @@ public class SamlController {
     /**
      * 解密ticket
      */
-    PrivateKey privateKey = samlService.getRSAPrivateKey();
+    PrivateKey privateKey = CertificateHelper.getRSAPrivateKey();
     String[] afterDecode = null;
     try {
       byte[] ticketArray = Base64.decode(ticket);

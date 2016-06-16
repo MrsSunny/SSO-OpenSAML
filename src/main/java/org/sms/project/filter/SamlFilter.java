@@ -39,7 +39,7 @@ public class SamlFilter implements Filter {
     } else if (session.getAttribute(SysConstants.LOGIN_USER) == null) {
       
       /**
-       * 查看是否有票据
+       * 查看Cookie中是否有票据
        */
       String ticket = getTicket(request);
       /**
@@ -50,8 +50,9 @@ public class SamlFilter implements Filter {
         return;
       }
       /**
-       * 验证票据
+       * 如果有票据，则验证票据
        */
+      
       session.setAttribute(SysConstants.REDIRECT_URL_KEY, uri.toString());
       session.setAttribute(SysConstants.SSO_TOKEN_KEY, ticket);
       response.sendRedirect(SysConstants.SEND_ARTIFACT_URI + SysConstants.METHOD_SPILT_CHAR + URLEncoder.encode(request.getRequestURL().toString(), SysConstants.CHARSET));

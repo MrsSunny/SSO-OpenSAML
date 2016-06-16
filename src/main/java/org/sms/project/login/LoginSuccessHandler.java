@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.PublicKey;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.opensaml.saml2.core.Artifact;
 import org.opensaml.saml2.core.Response;
 import org.opensaml.xml.util.Base64;
@@ -16,10 +18,11 @@ import org.sms.SysConstants;
 import org.sms.core.id.UUIDFactory;
 import org.sms.opensaml.service.SamlService;
 import org.sms.project.encrypt.rsa.RSACoder;
+import org.sms.project.helper.CertificateHelper;
 import org.sms.project.helper.SSOHelper;
 import org.sms.project.helper.SessionHelper;
+import org.sms.project.helper.TicketHelper;
 import org.sms.project.user.entity.User;
-import org.sms.project.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -50,7 +53,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     /**
      * 制作Ticket
      */
-    String ticket = this.buildTicket(user);
+    String ticket = TicketHelper.getTicket(user);
     /**
      * 验证成功以后需要向客户端记录Cookie
      */
@@ -60,23 +63,13 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
   }
   
   private String encryptTicket(String ticket) {
-    PublicKey publicKey = samlService.getRSAPublicKey();
+    PublicKey publicKey = CertificateHelper.getRSAPublicKey();
     try {
       byte[] encryptArray = RSACoder.INSTANCE.encryptByPublicKey(publicKey, ticket.getBytes());
       return Base64.encodeBytes(encryptArray);
     } catch (Exception e) {
       throw new RuntimeException("加密数据错误");
     }
-  }
-  
-  private String buildTicket(User user) {
-    StringBuilder ticketBuilder = new StringBuilder();
-    ticketBuilder.append(user.getId());
-    ticketBuilder.append(SysConstants.TICKET_SPILT);
-    ticketBuilder.append(user.getEmail());
-    ticketBuilder.append(SysConstants.TICKET_SPILT);
-    ticketBuilder.append(DateUtil.getSpecifiedDayAfter(SysConstants.DEFAULT_EXPIRE));
-    return ticketBuilder.toString();
   }
   
   private void addSSOCookie(HttpServletResponse response, String string) throws UnsupportedEncodingException {

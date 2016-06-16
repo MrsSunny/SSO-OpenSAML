@@ -1,8 +1,5 @@
 package org.sms.opensaml.service;
 
-import java.security.PublicKey;
-import java.security.interfaces.RSAPrivateKey;
-
 import org.opensaml.saml2.core.Artifact;
 import org.opensaml.saml2.core.ArtifactResolve;
 import org.opensaml.saml2.core.ArtifactResponse;
@@ -87,18 +84,6 @@ public interface SamlService {
    */
   SSODescriptor buildSSODescriptor(String xmlFilePath, Class<?> descriptorType);
 
-  /**
-   * 获取RSA的公钥
-   * @return
-   */
-  PublicKey getRSAPublicKey();
-
-  /**
-   * 获取RSA的私钥
-   * @return
-   */
-  RSAPrivateKey getRSAPrivateKey();
-  
   /**
    * 给可签名的XML Object做签名
    * @param signableXMLObject

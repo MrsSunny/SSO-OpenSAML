@@ -4,14 +4,17 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.PublicKey;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.opensaml.xml.util.Base64;
 import org.sms.SysConstants;
 import org.sms.opensaml.service.SamlService;
 import org.sms.project.encrypt.rsa.RSACoder;
+import org.sms.project.helper.CertificateHelper;
 import org.sms.project.helper.SessionHelper;
 import org.sms.project.user.entity.User;
 import org.sms.project.util.DateUtil;
@@ -46,7 +49,7 @@ public class AdminLoginSuccessHandler implements AuthenticationSuccessHandler {
   }
   
   private String encryptTicket(String ticket) {
-    PublicKey publicKey = samlService.getRSAPublicKey();
+    PublicKey publicKey = CertificateHelper.getRSAPublicKey();
     try {
       byte[] encryptArray = RSACoder.INSTANCE.encryptByPublicKey(publicKey, ticket.getBytes());
       return Base64.encodeBytes(encryptArray);
