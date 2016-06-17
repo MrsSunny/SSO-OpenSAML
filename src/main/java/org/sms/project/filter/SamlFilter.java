@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.sms.SysConstants;
+import org.sms.project.helper.TicketHelper;
 import org.sms.project.init.SysConfig;
 
 /**
@@ -52,10 +53,21 @@ public class SamlFilter implements Filter {
       /**
        * 如果有票据，则验证票据
        */
+      boolean isCheck = TicketHelper.check(ticket, request);
       
-      session.setAttribute(SysConstants.REDIRECT_URL_KEY, uri.toString());
-      session.setAttribute(SysConstants.SSO_TOKEN_KEY, ticket);
-      response.sendRedirect(SysConstants.SEND_ARTIFACT_URI + SysConstants.METHOD_SPILT_CHAR + URLEncoder.encode(request.getRequestURL().toString(), SysConstants.CHARSET));
+      /**
+       * 如果票据不合法则直接跳转到登录页面
+       */
+      if (!isCheck) {
+        response.sendRedirect(SysConstants.IPDLOGIN_PAGE);
+        return;
+      }
+      
+      //票据合法处理流程
+      
+//      session.setAttribute(SysConstants.REDIRECT_URL_KEY, uri.toString());
+//      session.setAttribute(SysConstants.SSO_TOKEN_KEY, ticket);
+//      response.sendRedirect(SysConstants.SEND_ARTIFACT_URI + SysConstants.METHOD_SPILT_CHAR + URLEncoder.encode(request.getRequestURL().toString(), SysConstants.CHARSET));
     }
   }
   

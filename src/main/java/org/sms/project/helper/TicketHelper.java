@@ -1,5 +1,7 @@
 package org.sms.project.helper;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.sms.SysConstants;
 import org.sms.project.user.entity.User;
 import org.sms.project.util.DateUtil;
@@ -9,7 +11,7 @@ import org.sms.project.util.DateUtil;
  */
 public class TicketHelper {
 
-  public static boolean check(String ticket) {
+  public static boolean check(String ticket, HttpServletRequest request) {
     
     return Boolean.FALSE;
   }
