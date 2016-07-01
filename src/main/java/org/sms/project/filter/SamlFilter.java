@@ -35,6 +35,10 @@ public class SamlFilter implements Filter {
     HttpServletResponse response = (HttpServletResponse) servletResponse;
     HttpSession session = request.getSession(false);
     final String uri = request.getRequestURI();
+    
+    /**
+     * 检查是否是忽略的URL或者检查Session是否为空
+     */
     if (isIgnoreUrl(uri) ||session.getAttribute(SysConstants.LOGIN_USER) != null) {
       chain.doFilter(request, response);
     } else if (session.getAttribute(SysConstants.LOGIN_USER) == null) {
@@ -64,10 +68,9 @@ public class SamlFilter implements Filter {
       }
       
       //票据合法处理流程
-      
-//      session.setAttribute(SysConstants.REDIRECT_URL_KEY, uri.toString());
-//      session.setAttribute(SysConstants.SSO_TOKEN_KEY, ticket);
-//      response.sendRedirect(SysConstants.SEND_ARTIFACT_URI + SysConstants.METHOD_SPILT_CHAR + URLEncoder.encode(request.getRequestURL().toString(), SysConstants.CHARSET));
+      session.setAttribute(SysConstants.REDIRECT_URL_KEY, uri.toString());
+      session.setAttribute(SysConstants.SSO_TOKEN_KEY, ticket);
+      response.sendRedirect(SysConstants.SEND_ARTIFACT_URI + SysConstants.METHOD_SPILT_CHAR + URLEncoder.encode(request.getRequestURL().toString(), SysConstants.CHARSET));
     }
   }
   

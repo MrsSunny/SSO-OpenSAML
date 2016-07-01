@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
-
 import org.sms.SysConstants;
 import org.sms.project.helper.ben.BeanHelper;
 import org.sms.project.helper.jdbc.SysJdbcTemplate;
@@ -46,8 +45,6 @@ public class RoleResourceDao {
   }
 
   /**
-   * update_descriptions:
-   * 
    * @param roleResource
    * @return
    */

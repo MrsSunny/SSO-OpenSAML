@@ -5,12 +5,11 @@ import java.net.URLDecoder;
 import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Objects;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.opensaml.common.SAMLObject;
 import org.opensaml.common.SAMLVersion;
 import org.opensaml.saml2.core.Artifact;
@@ -75,7 +74,6 @@ public class SamlController {
 
   /**
    * IDP 接受SP端的Artifact
-   * 
    * @param request
    * @param response
    * @return
@@ -85,9 +83,7 @@ public class SamlController {
 
     // 获取Artifact
     String artifactBase64 = request.getParameter(SysConstants.ARTIFACT_KEY);
-    if (null == artifactBase64) {
-      throw new RuntimeException("SP端传递的Artifact参数错误，该参数不可为空");
-    }
+    Objects.requireNonNull(artifactBase64, "应用参数错误，artifact数据不能为空");
     final ArtifactResolve artifactResolve = samlService.buildArtifactResolve();
     final Artifact artifact = (Artifact) samlService.buildStringToXMLObject(artifactBase64);
     artifactResolve.setArtifact(artifact);
@@ -318,7 +314,6 @@ public class SamlController {
 
   /**
    * SP 接受IDP端的Artifact 并返回给IDP ArtifactResponse 接受SP端的Artifact
-   * 
    * @param request
    * @param response
    * @return
@@ -361,7 +356,6 @@ public class SamlController {
 
   /**
    * SP 发送Artifact到IDP 生成SP端的Artifact
-   * 
    * @param request
    * @param response
    * @return
