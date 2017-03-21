@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<saml2p:AuthnRequest AssertionConsumerServiceURL="http://soaer.com"
+	AttributeConsumingServiceIndex="0"
+	Consent="urn:oasis:names:tc:SAML:2.0:consent:obtained" Destination="http://soaer.com"
+	ForceAuthn="false" ID="_a2870c78854348bd8ff70ee3fb2233fd" IssueInstant="2005-01-31T12:00:00.000Z"
+	ProviderName="IDP Provider" Version="2.0"
+	xmlns:saml2p="urn:oasis:names:tc:SAML:2.0:protocol">
+	<saml2:Subject xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">
+		<saml2:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified">sunny@soaer.com</saml2:NameID>
+	</saml2:Subject>
+	<saml2p:RequestedAuthnContext>
+		<saml2:AuthnContextClassRef xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport
+		</saml2:AuthnContextClassRef>
+	</saml2p:RequestedAuthnContext>
+</saml2p:AuthnRequest>

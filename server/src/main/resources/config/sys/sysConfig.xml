@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<ignoreUrls>
+		<url>^.+\.(jpg|html|ttf|gif|woff|png|js|htc|jpeg|bmp|ico|swf|css|zip|tgz|gz|rar|bz2|doc|xls|exe|pdf|ppt|txt|tar|mid|midi|wav|rtf)$</url>
+		<url>^/(css|images|js|media)/.*$</url>
+		<url>^/(|(index)\.jsp)$</url>
+		<url>^/(|(index)\.html)$</url>
+		<url>^/(login)/.*$</url>
+		<url>^/(image)/.*$</url>
+		<url>^/(css)/.*$</url>
+		<url>^/(js)/.*$</url>
+		<url>^/(html)/.*$</url>
+		<url>^/(jsp)/.*$</url>
+		<url>^/(SAML2)/.*$</url>
+		<url>^/loginFilter</url>
+		<url>^/login.*$</url>
+		<url>^/adminLogin.*$</url>
+		<url>^/adminLogin/.*$</url>
+		<url>^/index.*$</url>
+		<url>^/loginPage</url>
+		<url>^/logoutFilter</url>
+		<url>^/loginPage/error</url>
+		<url>^/favicon.ico</url>
+		<url>^/j_spring_security_logout</url>
+		<url>^/error/.*$</url>
+	</ignoreUrls>
+</root>

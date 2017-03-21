@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE log4j:configuration SYSTEM "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	<!--定义通用的控制台输出 -->
+	<appender name="stdout" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} %p [%c] - %m%n" />
+		</layout>
+	</appender>
+
+	<!--全局日志 -->
+	<appender name="logfile" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${org.sms.root}/logs/system.log" />
+		<param name="MaxFileSize" value="102400KB" />
+		<param name="MaxBackupIndex" value="100" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} %p [%c] - %m%n" />
+		</layout>
+	</appender>
+
+	<!--URL访问信息 -->
+	<appender name="urlstdout" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%m%n" />
+		</layout>
+	</appender>
+
+	<!--Request监控 -->
+	<appender name="requestf" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${org.sms.root}/logs/request.log" />
+		<param name="MaxFileSize" value="102400KB" />
+		<param name="MaxBackupIndex" value="100" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} %p [%c] - %m%n" />
+		</layout>
+	</appender>
+	<appender name="requeststdout" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} %p [%c] - %m%n" />
+		</layout>
+	</appender>
+
+	<!--SQL日志 -->
+	<appender name="sqlstdout" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} %p [%c] - %m%n" />
+		</layout>
+	</appender>
+	<appender name="sqlfile" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${org.sms.root}/logs/sql.log" />
+		<param name="MaxFileSize" value="102400KB" />
+		<param name="MaxBackupIndex" value="100" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} %p [%c] - %m%n" />
+		</layout>
+	</appender>
+
+	<!--Service方法监控 -->
+	<appender name="methodf" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${org.sms.root}/logs/method.log" />
+		<param name="MaxFileSize" value="102400KB" />
+		<param name="MaxBackupIndex" value="100" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} %p [%c] - %m%n" />
+		</layout>
+	</appender>
+
+	<!--登录日志 -->
+	<appender name="loginf" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${org.sms.root}/logs/login.log" />
+		<param name="MaxFileSize" value="102400KB" />
+		<param name="MaxBackupIndex" value="100" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} %p [%c] - %m%n" />
+		</layout>
+	</appender>
+
+	<!--分布式缓存 -->
+	<appender name="cachef" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${org.sms.root}/logs/cache.log" />
+		<param name="MaxFileSize" value="102400KB" />
+		<param name="MaxBackupIndex" value="100" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} %p [%c] - %m%n" />
+		</layout>
+	</appender>
+
+	<!--错误监控 -->
+	<appender name="errorf" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${org.sms.root}/logs/error.log" />
+		<param name="MaxFileSize" value="102400KB" />
+		<param name="MaxBackupIndex" value="100" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} %p [%c] - %m%n" />
+		</layout>
+	</appender>
+
+	<!--Spring bean creation报错 -->
+	<appender name="beanstdout" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} %p [%c] - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.StringMatchFilter">
+			<param name="StringToMatch" value="bean creation exception" />
+			<param name="AcceptOnMatch" value="true" />
+		</filter>
+		<filter class="org.apache.log4j.varia.StringMatchFilter">
+			<param name="StringToMatch" value="bean" />
+			<param name="AcceptOnMatch" value="false" />
+		</filter>
+	</appender>
+
+	<!--调整数据库事务的打印级别 .HibernateTransactionManager .DataSourceTransactionManager -->
+	<logger name="org.springframework.transaction">
+		<level value="INFO" />
+	</logger>
+	<logger name="org.springframework.jdbc.datasource">
+		<level value="INFO" />
+	</logger>
+	<logger
+		name="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver">
+		<level value="DEBUG" />
+	</logger>
+	<!--hibernate的INFO较多,忽略之 -->
+	<logger name="org.hibernate">
+		<level value="WARN" />
+	</logger>
+	<!--忽略低价值信息 -->
+	<logger name="org.apache.cxf.service.factory.ReflectionServiceFactoryBean">
+		<level value="WARN" />
+	</logger>
+	<logger
+		name="org.springframework.web.context.support.XmlWebApplicationContext">
+		<level value="WARN" />
+	</logger>
+
+	<!--Request监控 -->
+	<logger name="rmrequest" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="requestf" />
+	</logger>
+
+	<!--错误信息监控 -->
+	<logger name="errorexption" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="errorf" />
+	</logger>
+	<logger name="sysout" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="requeststdout" />
+	</logger>
+
+	<!--SQL日志 -->
+	<logger name="rmsql" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="sqlfile" />
+		<appender-ref ref="sqlstdout" />
+	</logger>
+
+	<!--Service方法监控 -->
+	<logger name="rmmethod" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="methodf" />
+	</logger>
+
+	<!--登录日志 -->
+	<logger name="rmlogin" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="loginf" />
+	</logger>
+
+	<!--全局日志 -->
+	<root>
+		<level value="INFO" />
+		<appender-ref ref="stdout" />
+		<appender-ref ref="logfile" />
+	</root>
+</log4j:configuration>

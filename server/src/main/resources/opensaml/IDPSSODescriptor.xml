@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+	entityID="www.soaer.com">
+	<md:SPSSODescriptor AuthnRequestsSigned="true"
+		WantAssertionsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+		<md:KeyDescriptor use="signing">
+			<ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+				<ds:X509Data>
+					<ds:X509Certificate>
+					    MIIEpAIBAAKCAQEAvkb8h31AQAXI7VVXK8RxyuLU0QeQfds48lZVDfK0880sRTnN
+						wrYC+QyPGJN4lGIwaUTd0B4cDZwa120jd0lADlR4K254TDZVO9yPOvJPfrBMjHhb
+						Z4LQsDvwBbAtahdUj3Opus0p+QQoqneNeRXB6wvt3STtuQ3WcjgjjjsawuG1EUlz
+						Sp4Cmr7Aq2yVaFKYctVIkPgMkYYR/1Itw8/h81cfe/4Lx7TRDjLQfGUPHZu/rxqn
+						4oE8txH2Ed3G0fwm1s4PpBeHDMvyFwz+6rT+z4fK+gE40vCUP0G11TUFWDsVI+/V
+						P15cqxMQJPXPWGBnY0JVBxzQXYXZQuEPDeEcwQIDAQABAoIBAF6m/04C72gpuIbf
+						UgqyoQyVA9qrkaQZ3l0mtw7GMl+pK6GQHJwEYLw1FCXcjjn6Eiz7lf/GSpw2kF+j
+						qeXX6WZ3fIPWYz8+M+4gTJu9F/BkkN+7q3R1bYyNdFvQBPdmfakSl1cWYg++kuAh
+						sp2ORjW/bGb6zMqmaIvPA1joa+qO8mYbc5wCoD6cL5cee74XgGj6Q3phmugPTl9i
+						P2abdXvs1TJhM0cZ71JD52qdonL8eGICrX2J0TXHC43VxRwpMFeQuxHkhlfIb60J
+						QPhZEd3XCafTo5zNtkNVmB8SQCImZfBrQfpu1I5TTSDcKt7cx1zD/M6OFPTrDWp7
+						ktTMLcECgYEA787VP4z6tw8CyiTTtIQaqghDx4+ZZwutOkfiTPE70vrsS7+O8pZV
+						/lqR/uPW+bdM7ER7Uv0q7m9RBKS6qJTiIFe/iqVwO9gwmt1fYdvMWE66qvLds8WG
+						cHHfN4hJ5p0MEws5l6HGStAvCSaJazXZgxcTDw6/pibpZTqPxFt9i7kCgYEAyx//
+						jBwB8ocfFXJUSa3Ia+1czVWqddxVQSukP5R/V8KeAEIYsSUER7noj9W3x6undlIz
+						WQJFcMeTMxUJhvXefdE5k+bbDkR8gBIGBGKDpky3XKR+OoVJ45eEf8F8dfIrr5Vs
+						jq/8ctcdYuwJ0A9Gec4oJYbzazluHOeSl0OK7UkCgYEAun+IqNvjP+qUqNDrNEBo
+						3EOBMvoiu1kBZ4nwHRafB/3NNzvK2C7CwgV99VUMIzjCwhygLHJnqPc5cvsJj4H6
+						Ol0DwbfYCTKg2k+/lkNyMFtKIRiwAtdjLp/gkTeVAZyxfz4DlEFkDVrKubsWtCI0
+						/xY65EL8GSO579gTZwogIUECgYBLiECMpzWKK/jBDtyM8VRf3cnuiPZ0EVSagVH4
+						Wo3n4nTCf9GSvcMTsOvr4HsQgqIo+3QgmxmbUHtKOX5rcy4i9xREDUpTyd/J9+nI
+						46E0y747cueFd178hLE+mIJhkYXxKs1NWd+0DI3e5QrZFXUNgj2nhsEplBeAJBR8
+						rx8QEQKBgQDAcDDmD6dQUL96/ESGolWRubS+mNAiQ+C+i3o71+fuDy9w8ZTBc+3H
+						zXGmcIxGw3xRmAU1NT2Ovyy1auiDo/FaX9g963KCH6ydh8ZuydUS6CGhqVJi8rju
+						crkGU7z3+P7uDpAN86j7BsheMiq7FKgCeS7lkvQ9RXf9zWm55G+/eQ==
+					</ds:X509Certificate>
+				</ds:X509Data>
+			</ds:KeyInfo>
+		</md:KeyDescriptor>
+		<NameIDFormat xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata">urn:name:format</NameIDFormat>
+		<md:AttributeConsumingService isDefault="true" index="1">
+			<md:ServiceName xml:lang="en">Service Provider</md:ServiceName>
+			<md:RequestedAttribute
+				NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic" Name="firstName"
+				FriendlyName="firstName">
+			</md:RequestedAttribute>
+			<md:RequestedAttribute
+				NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic" Name="lastName"
+				FriendlyName="lastName">
+			</md:RequestedAttribute>
+		</md:AttributeConsumingService>
+		<md:AssertionConsumerService
+			Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="login.soaer.com"
+			index="0" isDefault="true" />
+	</md:SPSSODescriptor>
+</md:EntityDescriptor>
