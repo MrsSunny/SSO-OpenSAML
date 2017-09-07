@@ -33,8 +33,8 @@ public class SamlFilter implements Filter {
 
     HttpServletRequest request = (HttpServletRequest) servletRequest;
     HttpServletResponse response = (HttpServletResponse) servletResponse;
-    HttpSession session = request.getSession(false);
-    final String uri = request.getRequestURI();
+    HttpSession session = request.getSession(true);
+    String uri = request.getRequestURI();
     
     /**
      * 检查是否是忽略的URL或者检查Session是否为空
@@ -50,8 +50,9 @@ public class SamlFilter implements Filter {
       /**
        * 如果没有票据则直接跳转至登录页面
        */
+      
       if (ticket == null) {
-        response.sendRedirect(SysConstants.IPDLOGIN_PAGE);
+    	response.sendRedirect(SysConstants.IPDLOGIN_PAGE + SysConstants.METHOD_SPILT_CHAR + SysConstants.REDIRECT_URL_KEY + SysConstants.PARAM_VALUE + URLEncoder.encode(request.getRequestURL().toString(), SysConstants.CHARSET));
         return;
       }
       /**
@@ -63,11 +64,10 @@ public class SamlFilter implements Filter {
        * 如果票据不合法则直接跳转到登录页面
        */
       if (!isCheck) {
-        response.sendRedirect(SysConstants.IPDLOGIN_PAGE);
+      	response.sendRedirect(SysConstants.IPDLOGIN_PAGE + SysConstants.METHOD_SPILT_CHAR + SysConstants.REDIRECT_URL_KEY + SysConstants.PARAM_VALUE + URLEncoder.encode(request.getRequestURL().toString(), SysConstants.CHARSET));
         return;
       }
       
-      //票据合法处理流程
       session.setAttribute(SysConstants.REDIRECT_URL_KEY, uri.toString());
       session.setAttribute(SysConstants.SSO_TOKEN_KEY, ticket);
       response.sendRedirect(SysConstants.SEND_ARTIFACT_URI + SysConstants.METHOD_SPILT_CHAR + URLEncoder.encode(request.getRequestURL().toString(), SysConstants.CHARSET));

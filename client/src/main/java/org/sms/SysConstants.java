@@ -23,8 +23,7 @@ public interface SysConstants {
   String TOKEN_KEY = "token";
   String SEND_ARTIFACT_URI = "/SAML2/sendArtifactToIDP";
   String REDIRECT_URL_KEY = "redirectUrl";
-  String IDPRECEIVESPARTIFACT_URL = "http://passport.soaer.com:8888/SAML2/receiveSPArtifact";
-  String SPRECEIVESPARTIFACT_URL = "http://passport.soaer.com:8888/SAML2/receiveIDPArtifact";
+  String SPRECEIVESPARTIFACT_URL = "http://soaer.com:8888/SAML2/receiveArtifact";
   String LOCALDOMAIN_SAML2_SERVICE = "http://passport.soaer.com:8888/SAML2";
   String SP_ARTIFACT_RESOLUTION_SERVICE = "http://passport.soaer.com:8888/SAML2/SPArtifactResolution";
   String IDP_ARTIFACT_RESOLUTION_SERVICE = "http://passport.soaer.com:8888/SAML2/IDPArtifactResolution";
@@ -32,7 +31,7 @@ public interface SysConstants {
   String ACTION_KEY = "doAction";
   String SAML_ID_PREFIX_CHAR = "_";
   String METHOD_SPILT_CHAR = "?";
-  String IPDLOGIN_PAGE = "http://passport.soaer.com:8888";
+  String IPDLOGIN_PAGE = "http://passport.soaer.com:8888/login.html";
   String PARAM_VALUE = "=";
   String ERROR_LOGIN = "errorLogin";
   String LOGIN_PAGE = "http://passport.soaer.com:8888/login.html";

@@ -379,4 +379,10 @@ public class SamlController {
     AuthenRequestHelper.INSTANCE.put(artifact.getArtifact(), authnRequest);
     return "/saml/sp/send_artifact_to_idp";
   }
+  
+  @RequestMapping("/sendResponse")
+  public String sendResponse(HttpServletRequest request, HttpServletResponse response) {
+	  
+	  return "/saml/sp/send_artifact_to_idp";
+  }
 }

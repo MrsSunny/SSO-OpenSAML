@@ -10,8 +10,8 @@
 <title>SPBUILDARTIFACT</title>
 </head>
 <body>
-	<form action="<%=SysConstants.IDPRECEIVESPARTIFACT_URL%>" method="post" name="autoForm">
-		<input type="hidden" name=artifactResolve value="<%=request.getAttribute(SysConstants.ARTIFACT_RESOLVE_KEY)%>" />
+	<form action="<%=SysConstants.SPRECEIVESPARTIFACT_URL%>" method="post" name="autoForm">
+		<input type="hidden" name=artifact value="<%=request.getAttribute(SysConstants.ARTIFACT_KEY)%>" />
 	</form>
 </body>
 <script type="text/javascript">
