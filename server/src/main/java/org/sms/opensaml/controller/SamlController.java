@@ -6,10 +6,12 @@ import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.opensaml.common.SAMLObject;
 import org.opensaml.common.SAMLVersion;
 import org.opensaml.saml2.core.Artifact;
@@ -51,6 +53,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -380,9 +383,13 @@ public class SamlController {
     return "/saml/sp/send_artifact_to_idp";
   }
   
-  @RequestMapping("/sendResponse")
+  @RequestMapping(value = "/sendResponse", method = RequestMethod.GET)
   public String sendResponse(HttpServletRequest request, HttpServletResponse response) {
-	  
-	  return "/saml/sp/send_artifact_to_idp";
+	  String samlResponse = request.getParameter(SysConstants.ARTIFACT_KEY);
+	  if (null == samlResponse) {
+		  return null;
+	  }
+	  request.setAttribute(SysConstants.ARTIFACT_KEY, samlResponse);
+	  return "/saml/sp/send_artifact_to_sp";
   }
 }
