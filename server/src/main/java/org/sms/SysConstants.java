@@ -39,7 +39,7 @@ public interface SysConstants {
   String SP_INDEX_PAGE = "http://passport.soaer.com:8888/index.html";
   String DEFAULT_CUSTOMER_INDEX = "/indexPage";
   String IDP_TICKET = "idp_ticket";
-  String DEFAULT_SP_RECEIVESPARTIFACT_URL = "http://passport.soaer.com:8888/SAML2/receiveIDPArtifact";
+  String DEFAULT_SP_RECEIVESPARTIFACT_URL = "http://soaer.com:8888/SAML2/receiveArtifact";
   int DEFAULT_EXPIRE = 7;
   String TICKET_SPILT = ",";
   String IGNORE_KEY = "ignoreUrl";

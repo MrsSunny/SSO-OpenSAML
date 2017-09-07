@@ -81,7 +81,7 @@ public class SamlController {
    * @param response
    * @return
    */
-  @RequestMapping("/receiveSPArtifact")
+  @RequestMapping("/receiveArtifact")
   public String receiveSPArtifact(Model model, HttpServletRequest request, HttpServletResponse response) {
 
     // 获取Artifact
@@ -390,6 +390,6 @@ public class SamlController {
 		  return null;
 	  }
 	  request.setAttribute(SysConstants.ARTIFACT_KEY, samlResponse);
-	  return "/saml/sp/send_artifact_to_sp";
+	  return "/saml/idp/send_artifact_to_sp";
   }
 }

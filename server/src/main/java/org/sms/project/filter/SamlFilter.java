@@ -33,7 +33,7 @@ public class SamlFilter implements Filter {
 
     HttpServletRequest request = (HttpServletRequest) servletRequest;
     HttpServletResponse response = (HttpServletResponse) servletResponse;
-    HttpSession session = request.getSession(false);
+    HttpSession session = request.getSession(true);
     final String uri = request.getRequestURI();
     
     /**
