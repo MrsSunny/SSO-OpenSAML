@@ -157,4 +157,6 @@ public interface SamlService {
    * 进行属性请求查询
    */
   AttributeQuery buildAttributeQuery();
+  
+  User getUserByAssertion(String spArtifact);
 }

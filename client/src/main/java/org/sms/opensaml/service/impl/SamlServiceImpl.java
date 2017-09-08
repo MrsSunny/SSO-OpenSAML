@@ -6,12 +6,15 @@ import java.security.KeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.Security;
 import java.util.List;
+
 import javax.crypto.SecretKey;
 import javax.xml.namespace.QName;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
 import org.opensaml.DefaultBootstrap;
+import org.opensaml.common.SAMLObject;
 import org.opensaml.common.SAMLVersion;
 import org.opensaml.saml2.core.Artifact;
 import org.opensaml.saml2.core.ArtifactResolve;
@@ -91,13 +94,14 @@ import org.sms.opensaml.service.SamlService;
 import org.sms.project.helper.CertificateHelper;
 import org.sms.project.user.entity.User;
 import org.sms.project.util.GZipUtil;
+import org.sms.project.util.HttpUtil;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 @Service("samlService")
 public class SamlServiceImpl implements SamlService {
-  
+
   private Logger logger = LoggerFactory.getLogger(SamlServiceImpl.class.getName());
 
   protected static final XMLObjectBuilderFactory builderFactory;
@@ -126,7 +130,7 @@ public class SamlServiceImpl implements SamlService {
       throw new RuntimeException(e);
     }
   }
-  
+
   public XMLObject buildStringToXMLObject(String xmlObjectString) {
     try {
       BasicParserPool parser = new BasicParserPool();
@@ -143,14 +147,14 @@ public class SamlServiceImpl implements SamlService {
       throw new RuntimeException(e);
     }
   }
-  
+
   public AuthnRequest buildAuthnRequest(String ticket, String setAssertionConsumerServiceURL) {
     NameID nameid = (NameID) buildXMLObject(NameID.DEFAULT_ELEMENT_NAME);
     nameid.setFormat(NameID.UNSPECIFIED);
     nameid.setValue(ticket);
     Subject subject = (Subject) buildXMLObject(Subject.DEFAULT_ELEMENT_NAME);
     subject.setNameID(nameid);
-    Audience audience= (Audience) buildXMLObject(Audience.DEFAULT_ELEMENT_NAME);
+    Audience audience = (Audience) buildXMLObject(Audience.DEFAULT_ELEMENT_NAME);
     audience.setAudienceURI(SysConstants.LOCALDOMAIN);
     AudienceRestriction ar = (AudienceRestriction) buildXMLObject(AudienceRestriction.DEFAULT_ELEMENT_NAME);
     ar.getAudiences().add(audience);
@@ -199,7 +203,7 @@ public class SamlServiceImpl implements SamlService {
     status.setStatusCode(statusCode);
     return response;
   }
-  
+
   public void addAttribute(Response response, User user) {
     Assertion assertion = (Assertion) buildXMLObject(Assertion.DEFAULT_ELEMENT_NAME);
     AuthnStatement authnStatement = (AuthnStatement) buildXMLObject(AuthnStatement.DEFAULT_ELEMENT_NAME);
@@ -234,7 +238,7 @@ public class SamlServiceImpl implements SamlService {
     this.signXMLObject(assertion);
     response.getAssertions().add(assertion);
   }
-  
+
   @Override
   public void signXMLObject(SignableXMLObject signableXMLObject) {
     SignatureBuilder signatureBuilder = (SignatureBuilder) builderFactory.getBuilder(Signature.DEFAULT_ELEMENT_NAME);
@@ -256,17 +260,18 @@ public class SamlServiceImpl implements SamlService {
       e.printStackTrace();
     }
   }
-  
+
   public Attribute buildStringAttribute(String name, String value) {
     Attribute attribute = (Attribute) buildXMLObject(Attribute.DEFAULT_ELEMENT_NAME);
     attribute.setName(name);
     XMLObjectBuilder<?> stringBuilder = builderFactory.getBuilder(XSString.TYPE_NAME);
-    XSString ldapAttribValue = (XSString) stringBuilder.buildObject(AttributeValue.DEFAULT_ELEMENT_NAME, XSString.TYPE_NAME);
+    XSString ldapAttribValue = (XSString) stringBuilder.buildObject(AttributeValue.DEFAULT_ELEMENT_NAME,
+        XSString.TYPE_NAME);
     ldapAttribValue.setValue(value);
     attribute.getAttributeValues().add(ldapAttribValue);
     return attribute;
   }
-  
+
   public String buildArtifactResolve(Artifact artifact) {
     ArtifactResolve artifactResolve = (ArtifactResolve) buildXMLObject(ArtifactResolve.DEFAULT_ELEMENT_NAME);
     artifactResolve.setArtifact(artifact);
@@ -321,6 +326,7 @@ public class SamlServiceImpl implements SamlService {
 
   /**
    * 加密断言
+   * 
    * @param assertion
    * @param receiverCredential
    * @return
@@ -330,7 +336,8 @@ public class SamlServiceImpl implements SamlService {
     Credential symmetricCredential;
     EncryptedAssertion encrypted = null;
     try {
-      symmetricCredential = SecurityHelper.getSimpleCredential(SecurityHelper.generateSymmetricKey(EncryptionConstants.ALGO_ID_BLOCKCIPHER_AES128));
+      symmetricCredential = SecurityHelper.getSimpleCredential(SecurityHelper
+          .generateSymmetricKey(EncryptionConstants.ALGO_ID_BLOCKCIPHER_AES128));
       EncryptionParameters encParams = new EncryptionParameters();
       encParams.setAlgorithm(EncryptionConstants.ALGO_ID_BLOCKCIPHER_AES128);
       encParams.setEncryptionCredential(symmetricCredential);
@@ -350,6 +357,7 @@ public class SamlServiceImpl implements SamlService {
 
   /**
    * 解密断言
+   * 
    * @param enc
    * @param credential
    * @param federationMetadata
@@ -377,6 +385,7 @@ public class SamlServiceImpl implements SamlService {
 
   /**
    * 签名断言
+   * 
    * @param enc
    * @param credential
    * @param federationMetadata
@@ -395,6 +404,7 @@ public class SamlServiceImpl implements SamlService {
 
   /**
    * 验签断言
+   * 
    * @param enc
    * @param credential
    * @param federationMetadata
@@ -415,7 +425,7 @@ public class SamlServiceImpl implements SamlService {
       return false;
     }
   }
-  
+
   @Override
   public boolean validate(SignableXMLObject signableXMLObject) {
     BasicCredential basicCredential = new BasicCredential();
@@ -463,13 +473,13 @@ public class SamlServiceImpl implements SamlService {
     artifactResponse.setIssueInstant(new DateTime(2005, 1, 31, 12, 0, 0, 0, ISOChronology.getInstanceUTC()));
     return artifactResponse;
   }
-  
+
   @Override
   public AttributeQuery buildAttributeQuery() {
     AttributeQuery attributeQuery = (AttributeQuery) buildXMLObject(AttributeQuery.DEFAULT_ELEMENT_NAME);
     return attributeQuery;
   }
-  
+
   @Override
   public Status getStatusCode(boolean success) {
     Status status = (Status) buildXMLObject(Status.DEFAULT_ELEMENT_NAME);
@@ -477,5 +487,80 @@ public class SamlServiceImpl implements SamlService {
     statusCode.setValue(success ? StatusCode.SUCCESS_URI : StatusCode.AUTHN_FAILED_URI);
     status.setStatusCode(statusCode);
     return status;
+  }
+
+  @Override
+  public User getUserByAssertion(String spArtifact) {
+    if (null == spArtifact) {
+      logger.debug("无法获取IDP端传过来的Artifact");
+      return null;
+    }
+    ArtifactResolve artifactResolve = buildArtifactResolve();
+    Artifact artifact = (Artifact) buildStringToXMLObject(spArtifact);
+    artifactResolve.setArtifact(artifact);
+    signXMLObject(artifactResolve);
+
+    String requestStr = buildXMLObjectToString(artifactResolve);
+    String postResult = null;
+    try {
+      postResult = HttpUtil.doPost(SysConstants.IDP_ARTIFACT_RESOLUTION_SERVICE, requestStr);
+    } catch (Exception e) {
+      e.printStackTrace();
+      logger.error("访问IDP的" + SysConstants.IDP_ARTIFACT_RESOLUTION_SERVICE + "服务错误");
+      return null;
+    }
+    if (null == postResult) {
+      logger.debug("从" + SysConstants.IDP_ARTIFACT_RESOLUTION_SERVICE + "服务获取的数据为空，请检查IDP端数据格式");
+      return null;
+    }
+    ArtifactResponse artifactResponse = (ArtifactResponse) buildStringToXMLObject(postResult);
+    SAMLObject samlObject = artifactResponse.getMessage();
+    if (null == samlObject) {
+      logger.debug("无法获取Response信息");
+      return null;
+    }
+    Response samlResponse = (Response) samlObject;
+    List<Assertion> assertions = samlResponse.getAssertions();
+    if (null == assertions || assertions.size() == 0) {
+      logger.debug("无法获取断言，请重新发起请求！！！");
+      return null;
+    }
+    Assertion assertion = samlResponse.getAssertions().get(0);
+    if (assertion == null) {
+      return null;
+    }
+    /**
+     * 验证签名
+     */
+    boolean signSuccess = validate(assertion);
+    if (!signSuccess) {
+      logger.debug("验证签名错误");
+      return null;
+    }
+    List<AttributeStatement> arrtibuteStatements = assertion.getAttributeStatements();
+    if (null == arrtibuteStatements || arrtibuteStatements.size() == 0) {
+      logger.debug("无法获取属性列表，请重新发起请求");
+      return null;
+    }
+    AttributeStatement attributeStatement = assertion.getAttributeStatements().get(0);
+    List<Attribute> list = attributeStatement.getAttributes();
+    if (null == list) {
+      logger.debug("无法获取属性列表IDP端错误");
+      return null;
+    }
+    User user = new User();
+    list.forEach(pereAttribute -> {
+      String name = pereAttribute.getName();
+      XSString value = (XSString) pereAttribute.getAttributeValues().get(0);
+      String valueString = value.getValue();
+      if (name.endsWith("Name")) {
+        user.setName(valueString);
+      } else if (name.equals("Id")) {
+        user.setId(Long.parseLong(valueString));
+      } else if (name.equals("Email")) {
+        user.setEmail(valueString);
+      }
+    });
+    return user;
   }
 }
