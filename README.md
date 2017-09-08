@@ -20,67 +20,67 @@ SSO-OpenSAML项目既可以作为应用服务器，也可以作为SSO服务器�
 
 2.*SP检查是否有用户的Session，如果用则直接访问*
 
-3.*如果没有Session上下文SP随机生成Artifact，并生成AuthnRequest 如果在Cookie中发现票据信息，把票据信息放到AuthnRequest当中*
+3.*如果没有Session上下文，则跳转到IDP的登陆页面*
 
-4.*SP建立Artifact与AuthnRequest的关联信息*
+4.*输入用户名密码进行登录验证*
 
-5.*SP重定向到IDP的接受Artifact接口，用Get方式发送Artifact，和SP在IDP中的注册ID*
+5.*如果验证成功，IPD会通过POST的方式发送Artifact到SP*
 
-6.*IDP接受Artifact，然后用HTTP POST方式来请求SP的getAuthnRequest接口(参数为Artifact)*
+6.*SP接受Artifact，然后用HTTP POST方式来请求IDP的Artifact-response接口(参数为Artifact)*
 
-7.*SP 接受到IDP传过来的Artifact ，根据Artifact 把关联的AuthnRequest返回给IDP*
+7.*IDP接受到SP传过来的Artifact ，根据Artifact 把关联的AuthnRespoons返回给SP*
 
-8.*IDP接受到getAuthnRequest然后来验证AuthnRequest的有效性，检查 Status Version 等信息，如果Cookie中的票据不为空，则检查票据是否正确，是否在有效期内，如果票据为空，则重定向用户到登录页面来提交信息。*
+8.*SP进行验证，包括验签操作，以及根据response中的Subject组装上下文对象。*
 
-9.*如果票据正确或者用户通过输入用户名密码等信息通过验证，则IDP生成Artifact对象，IDP生成Response对象，并根据用户信息生成断言，同时对Response 中的 断言做签名处理，对票据对象做加密和签名处理，并把票据信息写入Cookie，并建立Artifact与Response的关联关系，并重定向浏览器到SP的*
-
-*getArtifact接口.*
-
-10 *SP 接受到Artifact，并通过HTTP POST的方式把Artifact发送到IDP*
-
-11 *IDP通过Artifact找到关联的Response对象返回给SP*
-
-12.*SP接受到IDP传输过来的Response对象，首先对Response中的断言做验签操作，如果通过，则同意用户访问资源。*
-
-流程图如下：
+9.*验证SAML协议和验签操作成功后会跳转至相应的页面.
 
 
->
-![](WebContent/image/sso_process.png)
 
+## 部署项目
 
+```
+项目有两部分组成：
+    client：client为SP服务器
+    server：server为IDP服务器
+需要在mysql中执行sql目录下面的sql文件。
+
+然后分别启动两个项目，域名以soaer.com为例子（所以需要改动host配置）
+
+client： IDP-IP passport.soaer.com
+server:  SP-IP  soaer.com
+
+然后可以访问client的受限制的链接地址，这样就可以跳转到IDP的登陆页面（domain@163.com/111111）
+```
 
 ###OpenSAML2 接口
 
 全部接口定义：
 
-```
-	SSO-OpenSAML/src/main/java/org/sms/SysConstants.java
+可以在这个文件中配置相应的接口
 
+```
+SSO-OpenSAML/src/main/java/org/sms/SysConstants.java
 ```
 
 验证及生成接口：
 
 ```
-	SSO-OpenSAML/src/main/java/org/sms/opensaml/service/impl/SamlServiceImpl.java
-
+SSO-OpenSAML/src/main/java/org/sms/opensaml/service/impl/SamlServiceImpl.java
 ```
 
 公钥证书配置位置：
 
 ```
-	SSO-OpenSAML/src/main/resources/opensaml/SPSSODescriptor.xml
-
+SSO-OpenSAML/src/main/resources/opensaml/SPSSODescriptor.xml
 ```
 
 私钥证书配置位置
 
 ```
-	SSO-OpenSAML/src/main/resources/opensaml/IDPSSODescriptor.xml
-	
+SSO-OpenSAML/src/main/resources/opensaml/IDPSSODescriptor.xml	
 ```
 
-⚠️如果要使用的话一定要生成自己的证书，我的证书是通过openssl生成的。切记
+⚠️需要生成自己的证书（使用openssl即可）。
 
 ##做为应用服务器简介
 
@@ -89,8 +89,6 @@ SSO-OpenSAML项目既可以作为应用服务器，也可以作为SSO服务器�
 
 
 ID生成流程图如下：
-
-![](WebContent/image/hash.jpg)  
 
 1.*服务器启动加载DataSource*
 
