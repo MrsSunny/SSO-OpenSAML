@@ -5,11 +5,8 @@ import java.util.List;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.sms.SysConstants;
 import org.sms.opensaml.service.SamlService;
-import org.sms.project.app.service.AppService;
 import org.sms.project.security.SampleAuthenticationManager;
 import org.sms.project.user.entity.User;
 import org.sms.project.user.service.UserService;
@@ -32,9 +29,6 @@ public class SamlController {
 
   @Autowired
   private SamlService samlService;
-
-  @Autowired
-  private AppService appService;
 
   @Autowired
   private UserService userService;

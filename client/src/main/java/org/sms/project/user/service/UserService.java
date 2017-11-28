@@ -17,6 +17,10 @@ public interface UserService {
   User findById(long id);
 
   List<User> queryByCondition(String query, String order, int startIndex, int size);
+  
+  List<User> queryByCondition(int startIndex, int size);
 
   User findUserByEmail(String loign_id);
+  
+  int getCount();
 }

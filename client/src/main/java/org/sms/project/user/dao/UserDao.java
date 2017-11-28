@@ -47,7 +47,7 @@ public class UserDao {
   }
 
   public List<User> queryByCondition(String query, String order, int startIndex, int size) {
-    String sql = "SELECT * FROM USER";
+    String sql = "SELECT * from user";
     List<User> list = sysJdbcTemplate.queryPage(sql, startIndex, size);
     return list;
   }
@@ -95,5 +95,9 @@ public class UserDao {
 
   public boolean isExit(String email) {
     return this.findUserByEmail(email) == null;
+  }
+
+  public int getCount() {
+    return 63;
   }
 }

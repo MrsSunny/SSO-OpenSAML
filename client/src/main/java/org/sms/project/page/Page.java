@@ -5,7 +5,7 @@ package org.sms.project.page;
  */
 public class Page {
 
-  private static final int defaultSize = 15;
+  private static final int defaultSize = 10;
 
   public Page() {
   }
