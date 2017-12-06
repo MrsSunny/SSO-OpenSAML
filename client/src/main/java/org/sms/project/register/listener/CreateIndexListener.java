@@ -19,7 +19,6 @@ public class CreateIndexListener implements ApplicationListener<RegisterEvent> {
   public void onApplicationEvent(final RegisterEvent event) {
     User user = (User) event.getSource();
     user.setPassword("++++++++++++++++++++");
-    System.out.println(user.getAdress());
     System.out.println(user.getPassword());
     System.out.println("创建索引信息" + ((User) event.getSource()));
   }

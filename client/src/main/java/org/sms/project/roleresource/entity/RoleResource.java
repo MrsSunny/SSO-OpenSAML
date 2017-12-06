@@ -1,40 +1,45 @@
 package org.sms.project.roleresource.entity;
 
-import org.sms.project.base.SysBase;
+import java.util.Date;
 
-/**
- * 
- * @author Sunny
- */
-public class RoleResource extends SysBase {
-  
-  private long id;
-  
-  private long role_id;
-  
-  private long resource_id;
+public class RoleResource {
+  private Long id;
 
-  public final long getId() {
+  private Long roleId;
+
+  private Long resourceId;
+
+  private Date createDate;
+
+  public Long getId() {
     return id;
   }
 
-  public final void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
-  public final long getRole_id() {
-    return role_id;
+  public Long getRoleId() {
+    return roleId;
   }
 
-  public final void setRole_id(long role_id) {
-    this.role_id = role_id;
+  public void setRoleId(Long roleId) {
+    this.roleId = roleId;
   }
 
-  public final long getResource_id() {
-    return resource_id;
+  public Long getResourceId() {
+    return resourceId;
   }
 
-  public final void setResource_id(long resource_id) {
-    this.resource_id = resource_id;
+  public void setResourceId(Long resourceId) {
+    this.resourceId = resourceId;
+  }
+
+  public Date getCreateDate() {
+    return createDate;
+  }
+
+  public void setCreateDate(Date createDate) {
+    this.createDate = createDate;
   }
 }

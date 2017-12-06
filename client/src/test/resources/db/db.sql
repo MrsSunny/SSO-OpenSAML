@@ -1,189 +1,229 @@
--- MySQL dump 10.13  Distrib 5.6.27, for osx10.8 (x86_64)
---
--- Host: localhost    Database: sms
--- ------------------------------------------------------
--- Server version	5.6.27
+/*==============================================================*/
+/* DBMS name:      MySQL 5.0                                    */
+/* Created on:     2017/12/5 10:18:04                           */
+/*==============================================================*/
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
---
--- Table structure for table `resource`
---
+drop table if exists APP;
+drop table if exists ROLE_USER;
+drop table if exists BLOG_TAG;
+drop table if exists COMMENTS;
+drop table if exists LOGIN_LOG;
+drop table if exists ROLE_RESOURCE;
+drop table if exists RESOURCE;
+drop table if exists TAG;
+drop table if exists ROLE;
+drop table if exists BLOG;
+drop table if exists USER;
 
-DROP TABLE IF EXISTS `resource`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `resource` (
-  `id` bigint(20) NOT NULL,
-  `url` varchar(45) NOT NULL,
-  `type` varchar(45) DEFAULT NULL,
-  `name` varchar(45) DEFAULT NULL,
-  `parentId` bigint(20) DEFAULT NULL,
-  `description` varchar(300) DEFAULT NULL,
-  `usable_status` varchar(45) NOT NULL,
-  `create_user_id` bigint(20) NOT NULL,
-  `modify_date` timestamp NULL DEFAULT NULL,
-  `modify_user_id` bigint(20) DEFAULT NULL,
-  `create_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+/*==============================================================*/
+/* Table: APP                                                   */
+/*==============================================================*/
+create table APP
+(
+   ID                   bigint(32) not null auto_increment,
+   APP_DOMAIN           varchar(45) not null,
+   CREATE_DATE          datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+   USABLE_STATUS        int default 0,
+   APP_INDEX            varchar(45) default 'N/A',
+   primary key (ID),
+   unique key app_domain_UNIQUE (APP_DOMAIN)
+)
+charset = UTF8;
 
---
--- Dumping data for table `resource`
---
+/*==============================================================*/
+/* Table: BLOG                                                  */
+/*==============================================================*/
+create table BLOG
+(
+   ID                   bigint(32) not null auto_increment,
+   TITLE                varchar(200) not null,
+   HTML_FILE_PATH       varchar(200) default "",
+   MD_FILE_PATH         varchar(200) not null,
+   CONTENT              text not null,
+   READ_NUM             bigint(32) not null,
+   USABLE_STATUS        int not null default 0,
+   CREATE_USER_ID       bigint(32) not null default 0,
+   CREATE_DATE          datetime default NULL,
+   primary key (ID)
+)
+charset = UTF8;
 
-LOCK TABLES `resource` WRITE;
-/*!40000 ALTER TABLE `resource` DISABLE KEYS */;
-INSERT INTO `resource` VALUES (1,'/sysuser/list',NULL,NULL,NULL,NULL,'1',1,'2015-04-05 16:00:00',1,'2015-04-05 16:00:00'),(2,'/sysuser/list',NULL,NULL,NULL,NULL,'',0,NULL,NULL,'0000-00-00 00:00:00');
-/*!40000 ALTER TABLE `resource` ENABLE KEYS */;
-UNLOCK TABLES;
+/*==============================================================*/
+/* Table: BLOG_TAG                                              */
+/*==============================================================*/
+create table BLOG_TAG
+(
+   ID                   bigint(32) not null auto_increment,
+   BLOG_ID              bigint not null,
+   TAG_ID               int not null default 0,
+   CREATE_DATE          datetime default NULL,
+   primary key (ID)
+)
+charset = UTF8;
 
---
--- Table structure for table `role`
---
+/*==============================================================*/
+/* Table: COMMENTS                                              */
+/*==============================================================*/
+create table COMMENTS
+(
+   ID                   bigint(32) not null auto_increment,
+   CREATE_USER_ID       bigint(32) not null default 0,
+   BLOG_ID              bigint(32) not null,
+   PARENT_COMMENT_ID    bigint(32),
+   CONTENT              varchar(2000) not null,
+   USABLE_STATUS        int not null default 0,
+   CREATE_DATE          datetime default NULL,
+   primary key (ID)
+)
+charset = UTF8;
 
-DROP TABLE IF EXISTS `role`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `role` (
-  `id` bigint(20) NOT NULL,
-  `name` varchar(45) NOT NULL,
-  `description` varchar(200) DEFAULT NULL,
-  `usable_status` varchar(45) NOT NULL,
-  `create_user_id` bigint(20) NOT NULL,
-  `modify_date` timestamp NULL DEFAULT NULL,
-  `modify_user_id` bigint(20) NOT NULL,
-  `create_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+alter table COMMENTS comment '评论';
 
---
--- Dumping data for table `role`
---
+/*==============================================================*/
+/* Table: LOGIN_LOG                                             */
+/*==============================================================*/
+create table LOGIN_LOG
+(
+   ID                   bigint(32) not null auto_increment,
+   IP                   varchar(45) not null,
+   LOGIN_TIME           datetime default NULL,
+   LOGIN_DT             varchar(45) default "",
+   USER_ID				bigint not null,
+   primary key (ID)
+)
+charset = UTF8;
 
-LOCK TABLES `role` WRITE;
-/*!40000 ALTER TABLE `role` DISABLE KEYS */;
-INSERT INTO `role` VALUES (1,'ADMIN',NULL,'1',1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00'),(2,'USER',NULL,'1',1,NULL,0,'0000-00-00 00:00:00'),(3,'ADMIN',NULL,'1',0,NULL,0,'0000-00-00 00:00:00');
-/*!40000 ALTER TABLE `role` ENABLE KEYS */;
-UNLOCK TABLES;
+alter table LOGIN_LOG comment '登录日志';
 
---
--- Table structure for table `role_resource`
---
+/*==============================================================*/
+/* Table: RESOURCE                                              */
+/*==============================================================*/
+create table RESOURCE
+(
+   ID                   bigint(32) not null auto_increment,
+   URL                  varchar(200) not null,
+   TYPE                 varchar(45) not null default 'N/A',
+   NAME                 varchar(45) not null default 'N/A',
+   PARENT_ID            bigint(32) default 0,
+   DESCRIPTION          varchar(300) default "",
+   USABLE_STATUS        int not null default 1,
+   CREATE_USER_ID       bigint(32),
+   CREATE_DATE          datetime default NULL,
+   primary key (ID),
+   unique key url_UNIQUE (URL)
+)
+charset = UTF8;
 
-DROP TABLE IF EXISTS `role_resource`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `role_resource` (
-  `id` bigint(20) NOT NULL,
-  `role_id` bigint(20) DEFAULT NULL,
-  `resource_id` bigint(20) DEFAULT NULL,
-  `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `usable_status` varchar(45) NOT NULL,
-  `create_user_id` bigint(20) NOT NULL,
-  `modify_date` timestamp NULL DEFAULT NULL,
-  `modify_user_id` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+/*==============================================================*/
+/* Table: ROLE                                                  */
+/*==============================================================*/
+create table ROLE
+(
+   ID                   bigint(32) not null auto_increment,
+   NAME                 varchar(45) not null,
+   DESCRIPTION          varchar(1000) default "",
+   USABLE_STATUS        int not null default 0,
+   CREATE_USER_ID       bigint(32) not null default 0,
+   CREATE_DATE          datetime default NULL,
+   primary key (ID),
+   unique key name_UNIQUE (NAME),
+   key role_name (NAME),
+   key role_create_user_id (CREATE_USER_ID)
+)
+charset = UTF8;
 
---
--- Dumping data for table `role_resource`
---
+/*==============================================================*/
+/* Table: ROLE_RESOURCE                                         */
+/*==============================================================*/
+create table ROLE_RESOURCE
+(
+   ID                   bigint(32) not null auto_increment,
+   ROLE_ID              bigint(32) not null default 0,
+   RESOURCE_ID          bigint(32) not null default 0,
+   primary key (ID)
+)
+charset = UTF8;
 
-LOCK TABLES `role_resource` WRITE;
-/*!40000 ALTER TABLE `role_resource` DISABLE KEYS */;
-INSERT INTO `role_resource` VALUES (1,1,1,'0000-00-00 00:00:00','1',1,'0000-00-00 00:00:00',NULL),(2,2,2,'2015-12-07 13:14:06','',0,NULL,NULL),(3,2,3,'2015-12-24 07:45:32','1',1,'2015-12-07 13:14:06',NULL);
-/*!40000 ALTER TABLE `role_resource` ENABLE KEYS */;
-UNLOCK TABLES;
+/*==============================================================*/
+/* Table: ROLE_USER                                             */
+/*==============================================================*/
+create table ROLE_USER
+(
+   ID                   bigint(32) not null auto_increment,
+   USER_ID              bigint(32) not null default 0,
+   ROLE_ID              bigint(32) not null default 0,
+   primary key (ID)
+)
+charset = UTF8;
 
---
--- Table structure for table `role_user`
---
+/*==============================================================*/
+/* Table: TAG                                                   */
+/*==============================================================*/
+create table TAG
+(
+   ID                   int not null auto_increment,
+   NAME                 varchar(45) not null,
+   USABLE_STATUS        int not null default 0,
+   CREATE_USER_ID       bigint(32) not null default 0,
+   CREATE_DATE          datetime default NULL,
+   primary key (ID)
+)
+charset = UTF8;
 
-DROP TABLE IF EXISTS `role_user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `role_user` (
-  `id` bigint(20) NOT NULL,
-  `user_id` bigint(20) NOT NULL,
-  `role_id` bigint(20) DEFAULT NULL,
-  `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `usable_status` varchar(45) NOT NULL,
-  `create_user_id` bigint(20) NOT NULL,
-  `modify_date` timestamp NULL DEFAULT NULL,
-  `modify_user_id` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+/*==============================================================*/
+/* Table: USER                                                  */
+/*==============================================================*/
+create table USER
+(
+   ID                   bigint(32) not null auto_increment,
+   NAME                 varchar(200) not null,
+   IMG_PATH             varchar(100) default "",
+   PASSWORD             varchar(100) not null,
+   EMAIL                varchar(45) not null,
+   PHONE                varchar(45) default "",
+   ADDRESS              varchar(200) default "",
+   LOGIN_SUM            int(11) not null default 0,
+   LAST_LOGIN_IP        varchar(100) not null default 'N/A',
+   CREATE_DATE          datetime default NULL,
+   USABLE_STATUS        int not null default 1 comment '0：可用
+            1：不可用',
+   MODIFY_DATE          datetime default NULL,
+   TOKEN                varchar(50) default "",
+   LOGIN_TYPE           int not null default 0 comment '1：用户名密码登陆
+            2：QQ登录
+            3：微信登录',
+   LAST_LOGIN_DATE      datetime default NULL,
+   primary key (ID),
+   unique key email_UNIQUE (EMAIL),
+   unique key name_UNIQUE (NAME)
+)
+charset = UTF8;
 
---
--- Dumping data for table `role_user`
---
+alter table BLOG add constraint FK_BLOG_USER foreign key (CREATE_USER_ID)
+      references USER (ID) on delete restrict on update restrict;
 
-LOCK TABLES `role_user` WRITE;
-/*!40000 ALTER TABLE `role_user` DISABLE KEYS */;
-INSERT INTO `role_user` VALUES (1,1,1,'0000-00-00 00:00:00','1',1,'0000-00-00 00:00:00',1);
-/*!40000 ALTER TABLE `role_user` ENABLE KEYS */;
-UNLOCK TABLES;
+alter table BLOG_TAG add constraint FK_Reference_8 foreign key (TAG_ID)
+      references TAG (ID) on delete restrict on update restrict;
 
---
--- Table structure for table `user`
---
+alter table BLOG_TAG add constraint FK_Reference_9 foreign key (BLOG_ID)
+      references BLOG (ID) on delete restrict on update restrict;
 
-DROP TABLE IF EXISTS `user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user` (
-  `id` bigint(20) NOT NULL,
-  `name` varchar(200) NOT NULL,
-  `image_path` varchar(100) DEFAULT NULL,
-  `login_id` varchar(100) NOT NULL,
-  `password` varchar(100) NOT NULL,
-  `email` varchar(45) DEFAULT NULL,
-  `phone` varchar(45) DEFAULT NULL,
-  `adress` varchar(45) DEFAULT NULL,
-  `confirmnum` varchar(45) DEFAULT NULL,
-  `login_sum` int(11) DEFAULT NULL,
-  `last_login_ip` varchar(100) DEFAULT NULL,
-  `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `usable_status` varchar(45) NOT NULL,
-  `modify_date` timestamp(6) NULL DEFAULT NULL,
-  `token` varchar(200) DEFAULT NULL,
-  `login_type` varchar(45) DEFAULT NULL,
-  `last_login_date` timestamp(6) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+alter table COMMENTS add constraint FK_BLOG_COMMENT foreign key (BLOG_ID)
+      references BLOG (ID) on delete restrict on update restrict;
 
---
--- Dumping data for table `user`
---
+alter table COMMENTS add constraint FK_Reference_3 foreign key (CREATE_USER_ID)
+      references USER (ID) on delete restrict on update restrict;
 
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'admin','http://soaer.com/1/jpeg','admin','EFD9D1B8BFB00E8E3647990F7D74D1D8','lzx@163.com',NULL,NULL,NULL,NULL,NULL,'2016-02-23 06:06:49','0','2014-12-31 16:00:00.000000',NULL,NULL,'2014-12-31 16:00:00.000000');
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+alter table ROLE_RESOURCE add constraint FK_ROLE_RESOURCE_R foreign key (RESOURCE_ID)
+      references RESOURCE (ID) on delete restrict on update restrict;
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+alter table ROLE_RESOURCE add constraint FK_R_R_R foreign key (ROLE_ID)
+      references ROLE (ID) on delete restrict on update restrict;
 
--- Dump completed on 2016-03-07 14:25:13
+alter table ROLE_USER add constraint FK_ROLE_USER foreign key (USER_ID)
+      references USER (ID) on delete restrict on update restrict;
+
+alter table ROLE_USER add constraint FK_ROLE_USER_R foreign key (ROLE_ID)
+      references ROLE (ID) on delete restrict on update restrict;
+

@@ -22,7 +22,7 @@ public class RoleUserServiceImpl implements RoleUserService {
 
   @Override
   public List<RoleUser> getRoleUser(String query, String order, int startIndex, int size) {
-    return roleUserDao.getRoleUser(query, order, startIndex, size);
+    return null;
   }
 
   @Override

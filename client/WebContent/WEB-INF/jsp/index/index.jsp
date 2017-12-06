@@ -195,15 +195,15 @@ License: You must have a valid license purchased only from themeforest(the above
 					<li class="heading">
 						<h3 class="uppercase">模块管理</h3>
 					</li>
-					<li class="nav-item"><a href="#" onClick="resp1();"
+					<li class="nav-item"><a href="javascript:create_user_table();"
 						class="nav-link nav-toggle"> <i class="icon-user"></i> <span
 							class="title">用户管理</span>
 					</a></li>
-					<li class="nav-item"><a href="javascript:;"
+					<li class="nav-item"><a href="javascript:create_role_table();"
 						class="nav-link nav-toggle"> <i class="fa fa-users"></i> <span
 							class="title">权限管理</span>
 					</a></li>
-					<li class="nav-item"><a href="javascript:;"
+					<li class="nav-item"><a href="javascript:create_blog_table();"
 						class="nav-link nav-toggle"> <i class="fa fa-file-o"></i> <span
 							class="title">博客管理</span>
 					</a></li>

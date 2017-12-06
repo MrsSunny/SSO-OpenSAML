@@ -27,8 +27,8 @@ public class RoleUserServiceImplTest extends BaseTest {
   @Test
   public void testInsert() {
     RoleUser roleUser = new RoleUser();
-    roleUser.setUser_id(123L);
-    roleUser.setRole_id(234L);
+//    roleUser.setUser_id(123L);
+//    roleUser.setRole_id(234L);
     int u = roleUserService.insert(roleUser);
     Assert.assertNotSame(0, u);
   }
@@ -39,9 +39,6 @@ public class RoleUserServiceImplTest extends BaseTest {
   @Test
   public void testUpdate() {
     RoleUser roleUser = new RoleUser();
-    roleUser.setUser_id(123L);
-    roleUser.setRole_id(234L);
-    roleUser.setId(1);
     int u = roleUserService.update(roleUser);
     Assert.assertNotSame(0, u);
   }

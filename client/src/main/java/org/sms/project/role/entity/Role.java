@@ -1,63 +1,65 @@
 package org.sms.project.role.entity;
 
-import java.io.Serializable;
+import java.util.Date;
 
-import org.sms.project.base.SysBase;
-
-/**
- * @author Sunny
- */
-public class Role extends SysBase implements Serializable {
-
-  private static final long serialVersionUID = -1788927575820591286L;
-
-  private long id;
+public class Role {
+  private Long id;
 
   private String name;
 
   private String description;
 
-  /**
-   * @return the id
-   */
-  public long getId() {
+  private Integer usableStatus;
+
+  private Long createUserId;
+
+  private Date createDate;
+
+  public Long getId() {
     return id;
   }
 
-  /**
-   * @param id the id to set
-   */
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
-  /**
-   * @return the name
-   */
   public String getName() {
     return name;
   }
 
-  /**
-   * @param name
-   *          the name to set
-   */
   public void setName(String name) {
     this.name = name;
   }
 
-  /**
-   * @return the description
-   */
   public String getDescription() {
     return description;
   }
 
-  /**
-   * @param description
-   *          the description to set
-   */
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public Integer getUsableStatus() {
+    return usableStatus;
+  }
+
+  public void setUsableStatus(Integer usableStatus) {
+    this.usableStatus = usableStatus;
+  }
+
+  public Long getCreateUserId() {
+    return createUserId;
+  }
+
+  public void setCreateUserId(Long createUserId) {
+    this.createUserId = createUserId;
+  }
+
+  public Date getCreateDate() {
+    return createDate;
+  }
+
+  public void setCreateDate(Date createDate) {
+    this.createDate = createDate;
   }
 }

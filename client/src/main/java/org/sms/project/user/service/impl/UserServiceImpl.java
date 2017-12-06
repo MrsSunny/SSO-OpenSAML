@@ -1,8 +1,6 @@
 package org.sms.project.user.service.impl;
 
 import java.util.List;
-
-import org.sms.core.id.IDFactory;
 import org.sms.project.user.dao.UserDao;
 import org.sms.project.user.entity.User;
 import org.sms.project.user.service.UserService;
@@ -26,8 +24,6 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public long insert(User user) {
-    long id = IDFactory.INSTANCE.getId(TABLE_NAME);
-    user.setId(id);
     return sysUserDao.insert(user);
   }
 

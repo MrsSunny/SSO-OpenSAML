@@ -1,8 +1,8 @@
 package org.sms.project.resource.service.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.sms.core.id.UUIDFactory;
@@ -21,7 +21,7 @@ public class ResourceServiceImplTest extends BaseTest {
   /**
    * Test method for {@link org.sms.project.resource.service.impl.ResourceServiceImpl#getResources()}.
    */
-  @Test
+//  @Test
   public void testGetResources() {
     List<Resource> list = resourceService.getResources(null, null, 1, 1);
     System.out.println(list.size());
@@ -34,11 +34,12 @@ public class ResourceServiceImplTest extends BaseTest {
   public void testInsert() {
     Resource resource = new Resource();
     resource.setUrl("/baidu/create/" + UUIDFactory.INSTANCE.getUUID());
-    resource.setCreate_user_id(67L);
     resource.setType("page");
+    resource.setCreateDate(new Date());
+    resource.setCreateUserId(2L);
+    resource.setUsableStatus(0);
     resource.setDescription("dfghjkl");
     resource.setName("Opnine");
-    resource.setUsable_status("1");
     int i = resourceService.insert(resource);
     Assert.assertNotSame(0, i);
   }
@@ -50,16 +51,10 @@ public class ResourceServiceImplTest extends BaseTest {
   public void testUpdate() {
     Resource resource = new Resource();
     resource.setUrl("/baidu/create/" + UUIDFactory.INSTANCE.getUUID());
-    resource.setModify_user_id(67L);
     resource.setType("page");
     resource.setDescription("dfghjkl");
     resource.setName("Opnine");
-    resource.setUsable_status("1");
-    resource.setId(8L);
-    SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
-    Date date = new Date();
-    String str = sdf.format(date);
-    resource.setModify_date(str);
+    resource.setId(1L);
     int i = resourceService.update(resource);
     Assert.assertNotSame(0, i);
   }
@@ -67,9 +62,9 @@ public class ResourceServiceImplTest extends BaseTest {
   /**
    * Test method for {@link org.sms.project.resource.service.impl.ResourceServiceImpl#delete(org.sms.project.resource.entity.Resource)}.
    */
-//  @Test
+  @Test
   public void testDelete() {
-    int i = resourceService.delete(47L);
+    int i = resourceService.delete(3L);
     Assert.assertNotSame(0, i);
   }
 
@@ -78,7 +73,8 @@ public class ResourceServiceImplTest extends BaseTest {
    */
   @Test
   public void testFindById() {
-    Resource resource = resourceService.findById(13L);
+    Resource resource = resourceService.findById(1L);
+    System.out.println(resource.getName());
     Assert.assertNotNull(resource);
   }
 }

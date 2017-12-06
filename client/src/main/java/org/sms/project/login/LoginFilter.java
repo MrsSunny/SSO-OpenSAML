@@ -43,7 +43,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
       throw new AuthenticationServiceException("用户不存在！");
     if (!user.isEnabled())
       throw new AuthenticationServiceException("用户已经被锁定！");
-    String salt = username + password.trim();
+    String salt = password.trim();
     salt = MD5.encrypt(salt);
     if (!salt.equals(user.getPassword()))
       throw new AuthenticationServiceException("用户名或者密码错误！");

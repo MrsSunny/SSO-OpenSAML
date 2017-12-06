@@ -15,7 +15,7 @@ public enum IDFactory {
    * @return
    */
   public Long getId(String tableName) {
-    return getId(PrimaryKeyType.CLUSTERDB, tableName);
+    return getId(PrimaryKeyType.AUTO, tableName);
   }
 
   public Long getId(PrimaryKeyType typeName, String tableName) {
@@ -24,12 +24,12 @@ public enum IDFactory {
     switch (typeName) {
     case CLUSTERDB:
       factory = ClusterDbFactory.INSTANCE;
-      break;
+      return factory.getPrimaryKey(tableName);
     case AUTO:
       break;
     default:
       throw new RuntimeException("不能解析的主键获取类型");
     }
-    return factory.getPrimaryKey(tableName);
+    return null;
   }
 }

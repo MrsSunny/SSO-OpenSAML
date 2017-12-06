@@ -1,39 +1,33 @@
 package org.sms.project.roleuser.entity;
 
-import org.sms.project.base.SysBase;
+public class RoleUser {
+    private Long id;
 
-/**
- * @author Sunny
- */
-public class RoleUser extends SysBase {
+    private Long userId;
 
-  private long id;
-  
-  private long user_id;
-  
-  private long role_id;
+    private Long roleId;
 
-  public final long getId() {
-    return id;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public final void setId(long id) {
-    this.id = id;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public final long getUser_id() {
-    return user_id;
-  }
+    public Long getUserId() {
+        return userId;
+    }
 
-  public final void setUser_id(long user_id) {
-    this.user_id = user_id;
-  }
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
-  public final long getRole_id() {
-    return role_id;
-  }
+    public Long getRoleId() {
+        return roleId;
+    }
 
-  public final void setRole_id(long role_id) {
-    this.role_id = role_id;
-  }
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
+    }
 }

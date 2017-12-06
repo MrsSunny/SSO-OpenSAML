@@ -18,7 +18,6 @@ public class SendEmailListener implements ApplicationListener<RegisterEvent> {
   @Override
   public void onApplicationEvent(final RegisterEvent event) {
     User user = (User) event.getSource();
-    System.out.println(user.getAdress());
     System.out.println(user.getPassword());
     System.out.println("发送邮件信息是：" + ((User) event.getSource()));
   }

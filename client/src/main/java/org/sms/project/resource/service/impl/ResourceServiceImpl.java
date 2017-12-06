@@ -2,7 +2,6 @@ package org.sms.project.resource.service.impl;
 
 import java.util.List;
 
-import org.sms.core.id.IDFactory;
 import org.sms.project.resource.dao.ResourceDao;
 import org.sms.project.resource.entity.Resource;
 import org.sms.project.resource.entity.ResourceMapping;
@@ -19,21 +18,19 @@ public class ResourceServiceImpl implements ResourceService {
   private ResourceDao resourceDao;
 
   public List<Resource> getResources(String query, String order, int startIndex, int size) {
-    return resourceDao.getResources(query, order, startIndex, size);
+    return null;
   }
   
   public List<ResourceMapping> getResourceMappings() {
-    return resourceDao.getResourceMapping();
+    return null;
   }
 
-  public int insert(Resource resources) {
-    long id = IDFactory.INSTANCE.getId(TABLE_NAME);
-    resources.setId(id);
-    return resourceDao.insert(resources);
+  public int insert(Resource resource) {
+    return resourceDao.insert(resource);
   }
 
-  public int update(Resource resources) {
-    return resourceDao.update(resources);
+  public int update(Resource resource) {
+    return resourceDao.update(resource);
   }
 
   public int delete(long id) {

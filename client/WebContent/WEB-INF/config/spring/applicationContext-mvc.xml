@@ -25,8 +25,7 @@
 	<mvc:annotation-driven />
 	<!-- 加载配置文件 -->
 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
-	<bean id="dataSource"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url" value="jdbc:mysql://localhost/sms" />
 		<property name="username" value="sunny" />
@@ -41,20 +40,20 @@
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 
-	<bean id="sysDataSource" class="org.sms.project.datasource.SysDataSource" init-method="init">
+<!-- 	<bean id="sysDataSource" class="org.sms.project.datasource.SysDataSource" init-method="init">
 		<property name="dataSourceList">
 			<list>
 				<ref bean="dataSource" />
-				<!-- <bean id="dataSource"
+				<bean id="dataSource"
 					class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 					<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 					<property name="url" value="jdbc:mysql://localhost/sms" />
 					<property name="username" value="sunny" />
 					<property name="password" value="123456" />
-				</bean> -->
+				</bean>
 			</list>
 		</property>
-	</bean>
+	</bean> -->
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="mapperLocations" value="classpath*:**/*Dao.xml" />

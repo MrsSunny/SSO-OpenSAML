@@ -2,6 +2,8 @@ package org.sms.project.user.entity;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
+
 import org.sms.SysConstants;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,8 +18,8 @@ public class User implements Serializable, UserDetails {
   private Long id;
 
   private String name;
-  
-  private String image_path;
+
+  private String imgPath;
 
   private String password;
 
@@ -25,219 +27,144 @@ public class User implements Serializable, UserDetails {
 
   private String phone;
 
-  private String adress;
+  private String address;
 
-  private Integer confirmnum;
+  private Integer loginSum;
 
-  private Long login_sum;
+  private String lastLoginIp;
 
-  private String last_login_ip;
+  private Date createDate;
 
-  private String create_date;
+  private Integer usableStatus;
 
-  private String usable_status;
+  private Date modifyDate;
 
-  private String modify_date;
-
-  private String last_login_date;
-  
-  /**
-   * 登录凭证，如果是系统内部用户则为密码,如果为其他第三方用户则存凭证
-   */
   private String token;
-  
-  /**
-   * 登录类型 QQ 登录  微信登录  百度账号登录等等
-   */
-  private String login_type;
 
+  private int loginType;
+
+  private Date lastLoginDate;
+  
   private Collection<? extends GrantedAuthority> authorities;
 
-  /**
-   * @return the id
-   */
   public Long getId() {
     return id;
   }
 
-  /**
-   * @param id
-   */
   public void setId(Long id) {
     this.id = id;
   }
 
-  /**
-   * @return the user_name
-   */
   public String getName() {
     return name;
   }
 
-  /**
-   * @param user_name
-   *          the user_name to set
-   */
   public void setName(String name) {
     this.name = name;
   }
 
-  /**
-   * @param password
-   *          the password to set
-   */
+  public String getImgPath() {
+    return imgPath;
+  }
+
+  public void setImgPath(String imgPath) {
+    this.imgPath = imgPath;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
   public void setPassword(String password) {
     this.password = password;
   }
 
-  /**
-   * @return the email
-   */
   public String getEmail() {
     return email;
   }
 
-  /**
-   * @param email
-   *          the email to set
-   */
   public void setEmail(String email) {
     this.email = email;
   }
 
-  /**
-   * @return the phone
-   */
   public String getPhone() {
     return phone;
   }
 
-  /**
-   * @param phone
-   *          the phone to set
-   */
   public void setPhone(String phone) {
     this.phone = phone;
   }
 
-  /**
-   * @return the adress
-   */
-  public String getAdress() {
-    return adress;
+  public String getAddress() {
+    return address;
   }
 
-  /**
-   * @param adress
-   *          the adress to set
-   */
-  public void setAdress(String adress) {
-    this.adress = adress;
+  public void setAddress(String address) {
+    this.address = address;
   }
 
-  /**
-   * @return the confirmnum
-   */
-  public int getConfirmnum() {
-    return confirmnum;
+  public Integer getLoginSum() {
+    return loginSum;
   }
 
-  /**
-   * @param confirmnum
-   *          the confirmnum to set
-   */
-  public void setConfirmnum(int confirmnum) {
-    this.confirmnum = confirmnum;
+  public void setLoginSum(Integer loginSum) {
+    this.loginSum = loginSum;
   }
 
-  /**
-   * @return the login_sum
-   */
-  public Long getLogin_sum() {
-    return login_sum;
+  public String getLastLoginIp() {
+    return lastLoginIp;
   }
 
-  /**
-   * @param login_sum
-   *          the login_sum to set
-   */
-  public void setLogin_sum(Long login_sum) {
-    this.login_sum = login_sum;
+  public void setLastLoginIp(String lastLoginIp) {
+    this.lastLoginIp = lastLoginIp;
   }
 
-  /**
-   * @return the last_login_ip
-   */
-  public String getLast_login_ip() {
-    return last_login_ip;
+  public Date getCreateDate() {
+    return createDate;
   }
 
-  /**
-   * @param last_login_ip
-   *          the last_login_ip to set
-   */
-  public void setLast_login_ip(String last_login_ip) {
-    this.last_login_ip = last_login_ip;
+  public void setCreateDate(Date createDate) {
+    this.createDate = createDate;
   }
 
-  /**
-   * @return the last_login_date
-   */
-  public String getLast_login_date() {
-    return last_login_date;
+  public Integer getUsableStatus() {
+    return usableStatus;
   }
 
-  /**
-   * @param last_login_date
-   *          the last_login_date to set
-   */
-  public void setLast_login_date(String last_login_date) {
-    this.last_login_date = last_login_date;
+  public void setUsableStatus(Integer usableStatus) {
+    this.usableStatus = usableStatus;
   }
 
-  /**
-   * @return the create_date
-   */
-  public String getCreate_date() {
-    return create_date;
+  public Date getModifyDate() {
+    return modifyDate;
   }
 
-  /**
-   * @param create_date
-   *          the create_date to set
-   */
-  public void setCreate_date(String create_date) {
-    this.create_date = create_date;
+  public void setModifyDate(Date modifyDate) {
+    this.modifyDate = modifyDate;
   }
 
-  /**
-   * @return the usable_status
-   */
-  public String getUsable_status() {
-    return usable_status;
+  public String getToken() {
+    return token;
   }
 
-  /**
-   * @param usable_status
-   *          the usable_status to set
-   */
-  public void setUsable_status(String usable_status) {
-    this.usable_status = usable_status;
+  public void setToken(String token) {
+    this.token = token;
   }
 
-  /**
-   * @return the modify_date
-   */
-  public String getModify_date() {
-    return modify_date;
+  public int getLoginType() {
+    return loginType;
   }
 
-  /**
-   * @param modify_date
-   *          the modify_date to set
-   */
-  public void setModify_date(String modify_date) {
-    this.modify_date = modify_date;
+  public void setLoginType(int loginType) {
+    this.loginType = loginType;
+  }
+
+  public Date getLastLoginDate() {
+    return lastLoginDate;
+  }
+
+  public void setLastLoginDate(Date lastLoginDate) {
+    this.lastLoginDate = lastLoginDate;
   }
 
   public final void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
@@ -275,39 +202,15 @@ public class User implements Serializable, UserDetails {
       return false;
     return true;
   }
-  
-  public final String getToken() {
-    return token;
-  }
 
-  public final void setToken(String token) {
-    this.token = token;
-  }
-
-  public final String getLogin_type() {
-    return login_type;
-  }
-
-  public final void setLogin_type(String login_type) {
-    this.login_type = login_type;
-  }
-  
-  public final String getImage_path() {
-    return image_path;
-  }
-
-  public final void setImage_path(String image_path) {
-    this.image_path = image_path;
-  }
-
-  public User(String password, String usable_status, Collection<? extends GrantedAuthority> authorities) {
+  public User(String password, int usable_status, Collection<? extends GrantedAuthority> authorities) {
     this(password, usable_status);
     this.authorities = authorities;
   }
 
-  public User(String password, String usable_status) {
+  public User(String password, int usableStatus) {
     this.password = password;
-    this.usable_status = usable_status;
+    this.usableStatus = usableStatus;
   }
   
   public User() {
@@ -316,16 +219,6 @@ public class User implements Serializable, UserDetails {
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return authorities;
-  }
-
-  @Override
-  public String getPassword() {
-    return this.password;
-  }
-
-  @Override
-  public String getUsername() {
-    return this.email;
   }
 
   @Override
@@ -345,6 +238,11 @@ public class User implements Serializable, UserDetails {
 
   @Override
   public boolean isEnabled() {
-    return SysConstants.ENABLE.equals(this.usable_status);
+    return SysConstants.ENABLE == this.usableStatus;
+  }
+
+  @Override
+  public String getUsername() {
+    return this.name;
   }
 }

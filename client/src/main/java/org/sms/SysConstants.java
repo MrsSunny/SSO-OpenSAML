@@ -6,7 +6,7 @@ package org.sms;
 public interface SysConstants {
   
   String LOGIN_USER = "user";
-  String ENABLE = "0";
+  int ENABLE = 0;
   String DISABLE = "1";
   String CHARSET = "UTF-8";
   String TICKETID = "ticket";
