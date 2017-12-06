@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.sms.project.blog.dao.BlogDao" >
+  <resultMap id="BaseResultMap" type="org.sms.project.blog.entity.Blog" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="TITLE" property="title" jdbcType="VARCHAR" />
+    <result column="HTML_FILE_PATH" property="htmlFilePath" jdbcType="VARCHAR" />
+    <result column="MD_FILE_PATH" property="mdFilePath" jdbcType="VARCHAR" />
+    <result column="READ_NUM" property="readNum" jdbcType="BIGINT" />
+    <result column="USABLE_STATUS" property="usableStatus" jdbcType="INTEGER" />
+    <result column="CREATE_USER_ID" property="createUserId" jdbcType="BIGINT" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="org.sms.project.blog.entity.Blog" extends="BaseResultMap" >
+    <result column="CONTENT" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, TITLE, HTML_FILE_PATH, MD_FILE_PATH, READ_NUM, USABLE_STATUS, CREATE_USER_ID, 
+    CREATE_DATE
+  </sql>
+  <sql id="Blob_Column_List" >
+    CONTENT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from BLOG
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from BLOG
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="org.sms.project.blog.entity.Blog" >
+    insert into BLOG (ID, TITLE, HTML_FILE_PATH, 
+      MD_FILE_PATH, READ_NUM, USABLE_STATUS, 
+      CREATE_USER_ID, CREATE_DATE, CONTENT
+      )
+    values (#{id,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{htmlFilePath,jdbcType=VARCHAR}, 
+      #{mdFilePath,jdbcType=VARCHAR}, #{readNum,jdbcType=BIGINT}, #{usableStatus,jdbcType=INTEGER}, 
+      #{createUserId,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{content,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.sms.project.blog.entity.Blog" >
+    insert into BLOG
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="title != null" >
+        TITLE,
+      </if>
+      <if test="htmlFilePath != null" >
+        HTML_FILE_PATH,
+      </if>
+      <if test="mdFilePath != null" >
+        MD_FILE_PATH,
+      </if>
+      <if test="readNum != null" >
+        READ_NUM,
+      </if>
+      <if test="usableStatus != null" >
+        USABLE_STATUS,
+      </if>
+      <if test="createUserId != null" >
+        CREATE_USER_ID,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="content != null" >
+        CONTENT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="htmlFilePath != null" >
+        #{htmlFilePath,jdbcType=VARCHAR},
+      </if>
+      <if test="mdFilePath != null" >
+        #{mdFilePath,jdbcType=VARCHAR},
+      </if>
+      <if test="readNum != null" >
+        #{readNum,jdbcType=BIGINT},
+      </if>
+      <if test="usableStatus != null" >
+        #{usableStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.sms.project.blog.entity.Blog" >
+    update BLOG
+    <set >
+      <if test="title != null" >
+        TITLE = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="htmlFilePath != null" >
+        HTML_FILE_PATH = #{htmlFilePath,jdbcType=VARCHAR},
+      </if>
+      <if test="mdFilePath != null" >
+        MD_FILE_PATH = #{mdFilePath,jdbcType=VARCHAR},
+      </if>
+      <if test="readNum != null" >
+        READ_NUM = #{readNum,jdbcType=BIGINT},
+      </if>
+      <if test="usableStatus != null" >
+        USABLE_STATUS = #{usableStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        CREATE_USER_ID = #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        CONTENT = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="org.sms.project.blog.entity.Blog" >
+    update BLOG
+    set TITLE = #{title,jdbcType=VARCHAR},
+      HTML_FILE_PATH = #{htmlFilePath,jdbcType=VARCHAR},
+      MD_FILE_PATH = #{mdFilePath,jdbcType=VARCHAR},
+      READ_NUM = #{readNum,jdbcType=BIGINT},
+      USABLE_STATUS = #{usableStatus,jdbcType=INTEGER},
+      CREATE_USER_ID = #{createUserId,jdbcType=BIGINT},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      CONTENT = #{content,jdbcType=LONGVARCHAR}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.sms.project.blog.entity.Blog" >
+    update BLOG
+    set TITLE = #{title,jdbcType=VARCHAR},
+      HTML_FILE_PATH = #{htmlFilePath,jdbcType=VARCHAR},
+      MD_FILE_PATH = #{mdFilePath,jdbcType=VARCHAR},
+      READ_NUM = #{readNum,jdbcType=BIGINT},
+      USABLE_STATUS = #{usableStatus,jdbcType=INTEGER},
+      CREATE_USER_ID = #{createUserId,jdbcType=BIGINT},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

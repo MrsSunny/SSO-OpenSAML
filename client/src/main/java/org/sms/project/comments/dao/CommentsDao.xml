@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.sms.project.comments.dao.CommentsDao" >
+  <resultMap id="BaseResultMap" type="org.sms.project.comments.entity.Comments" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="CREATE_USER_ID" property="createUserId" jdbcType="BIGINT" />
+    <result column="BLOG_ID" property="blogId" jdbcType="BIGINT" />
+    <result column="PARENT_COMMENT_ID" property="parentCommentId" jdbcType="BIGINT" />
+    <result column="CONTENT" property="content" jdbcType="VARCHAR" />
+    <result column="USABLE_STATUS" property="usableStatus" jdbcType="INTEGER" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, CREATE_USER_ID, BLOG_ID, PARENT_COMMENT_ID, CONTENT, USABLE_STATUS, CREATE_DATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from COMMENTS
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from COMMENTS
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="org.sms.project.comments.entity.Comments" >
+    insert into COMMENTS (ID, CREATE_USER_ID, BLOG_ID, 
+      PARENT_COMMENT_ID, CONTENT, USABLE_STATUS, 
+      CREATE_DATE)
+    values (#{id,jdbcType=BIGINT}, #{createUserId,jdbcType=BIGINT}, #{blogId,jdbcType=BIGINT}, 
+      #{parentCommentId,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}, #{usableStatus,jdbcType=INTEGER}, 
+      #{createDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="org.sms.project.comments.entity.Comments" >
+    insert into COMMENTS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="createUserId != null" >
+        CREATE_USER_ID,
+      </if>
+      <if test="blogId != null" >
+        BLOG_ID,
+      </if>
+      <if test="parentCommentId != null" >
+        PARENT_COMMENT_ID,
+      </if>
+      <if test="content != null" >
+        CONTENT,
+      </if>
+      <if test="usableStatus != null" >
+        USABLE_STATUS,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="blogId != null" >
+        #{blogId,jdbcType=BIGINT},
+      </if>
+      <if test="parentCommentId != null" >
+        #{parentCommentId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="usableStatus != null" >
+        #{usableStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.sms.project.comments.entity.Comments" >
+    update COMMENTS
+    <set >
+      <if test="createUserId != null" >
+        CREATE_USER_ID = #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="blogId != null" >
+        BLOG_ID = #{blogId,jdbcType=BIGINT},
+      </if>
+      <if test="parentCommentId != null" >
+        PARENT_COMMENT_ID = #{parentCommentId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        CONTENT = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="usableStatus != null" >
+        USABLE_STATUS = #{usableStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.sms.project.comments.entity.Comments" >
+    update COMMENTS
+    set CREATE_USER_ID = #{createUserId,jdbcType=BIGINT},
+      BLOG_ID = #{blogId,jdbcType=BIGINT},
+      PARENT_COMMENT_ID = #{parentCommentId,jdbcType=BIGINT},
+      CONTENT = #{content,jdbcType=VARCHAR},
+      USABLE_STATUS = #{usableStatus,jdbcType=INTEGER},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

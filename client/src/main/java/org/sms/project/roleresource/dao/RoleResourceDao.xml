@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.sms.project.roleresource.dao.RoleResourceDao" >
+  <resultMap id="BaseResultMap" type="org.sms.project.roleresource.entity.RoleResource" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="ROLE_ID" property="roleId" jdbcType="BIGINT" />
+    <result column="RESOURCE_ID" property="resourceId" jdbcType="BIGINT" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ROLE_ID, RESOURCE_ID, CREATE_DATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ROLE_RESOURCE
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ROLE_RESOURCE
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="org.sms.project.roleresource.entity.RoleResource" >
+    insert into ROLE_RESOURCE (ID, ROLE_ID, RESOURCE_ID, 
+      CREATE_DATE)
+    values (#{id,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT}, #{resourceId,jdbcType=BIGINT}, 
+      #{createDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="org.sms.project.roleresource.entity.RoleResource" >
+    insert into ROLE_RESOURCE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="roleId != null" >
+        ROLE_ID,
+      </if>
+      <if test="resourceId != null" >
+        RESOURCE_ID,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=BIGINT},
+      </if>
+      <if test="resourceId != null" >
+        #{resourceId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.sms.project.roleresource.entity.RoleResource" >
+    update ROLE_RESOURCE
+    <set >
+      <if test="roleId != null" >
+        ROLE_ID = #{roleId,jdbcType=BIGINT},
+      </if>
+      <if test="resourceId != null" >
+        RESOURCE_ID = #{resourceId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.sms.project.roleresource.entity.RoleResource" >
+    update ROLE_RESOURCE
+    set ROLE_ID = #{roleId,jdbcType=BIGINT},
+      RESOURCE_ID = #{resourceId,jdbcType=BIGINT},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

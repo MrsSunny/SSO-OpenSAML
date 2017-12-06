@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.sms.project.tag.dao.TagDao" >
+  <resultMap id="BaseResultMap" type="org.sms.project.tag.entity.Tag" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="USABLE_STATUS" property="usableStatus" jdbcType="INTEGER" />
+    <result column="CREATE_USER_ID" property="createUserId" jdbcType="BIGINT" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, NAME, USABLE_STATUS, CREATE_USER_ID, CREATE_DATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from TAG
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from TAG
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.sms.project.tag.entity.Tag" >
+    insert into TAG (ID, NAME, USABLE_STATUS, 
+      CREATE_USER_ID, CREATE_DATE)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{usableStatus,jdbcType=INTEGER}, 
+      #{createUserId,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="org.sms.project.tag.entity.Tag" >
+    insert into TAG
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="usableStatus != null" >
+        USABLE_STATUS,
+      </if>
+      <if test="createUserId != null" >
+        CREATE_USER_ID,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="usableStatus != null" >
+        #{usableStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.sms.project.tag.entity.Tag" >
+    update TAG
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="usableStatus != null" >
+        USABLE_STATUS = #{usableStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createUserId != null" >
+        CREATE_USER_ID = #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.sms.project.tag.entity.Tag" >
+    update TAG
+    set NAME = #{name,jdbcType=VARCHAR},
+      USABLE_STATUS = #{usableStatus,jdbcType=INTEGER},
+      CREATE_USER_ID = #{createUserId,jdbcType=BIGINT},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
