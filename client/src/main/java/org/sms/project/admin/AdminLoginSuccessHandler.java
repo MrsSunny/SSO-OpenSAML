@@ -13,13 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.opensaml.xml.util.Base64;
 import org.sms.SysConstants;
-import org.sms.opensaml.service.SamlService;
 import org.sms.project.encrypt.rsa.RSACoder;
 import org.sms.project.helper.CertificateHelper;
 import org.sms.project.helper.SessionHelper;
 import org.sms.project.user.entity.User;
 import org.sms.project.util.DateUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -30,8 +28,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class AdminLoginSuccessHandler implements AuthenticationSuccessHandler {
   
-  @Autowired
-  private SamlService samlService;
+//  @Autowired
+//  private SamlService samlService;
 
   @Override
   public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {

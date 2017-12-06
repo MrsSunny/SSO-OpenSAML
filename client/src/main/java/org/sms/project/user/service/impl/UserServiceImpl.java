@@ -57,8 +57,8 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User findUserByEmail(String loign_id) {
-    return sysUserDao.findUserByEmail(loign_id);
+  public User findUserByEmail(String email) {
+    return sysUserDao.findUserByEmail(email);
   }
 
   @Override

@@ -36,7 +36,7 @@ public class UserDao {
   }
 
   public User findUserByEmail(String email) {
-    return null;
+    return sqlSession.selectOne(this.getClass().getName() + ".selectByEmail", email);
   }
 
   public int lockUser(long id) {

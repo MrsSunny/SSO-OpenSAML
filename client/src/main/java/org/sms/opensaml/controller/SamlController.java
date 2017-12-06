@@ -9,7 +9,6 @@ import org.sms.SysConstants;
 import org.sms.opensaml.service.SamlService;
 import org.sms.project.security.SampleAuthenticationManager;
 import org.sms.project.user.entity.User;
-import org.sms.project.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,9 +28,6 @@ public class SamlController {
 
   @Autowired
   private SamlService samlService;
-
-  @Autowired
-  private UserService userService;
 
   /**
    * SP 接受IDP端的Artifact
