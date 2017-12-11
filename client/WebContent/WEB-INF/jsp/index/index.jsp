@@ -85,6 +85,22 @@ License: You must have a valid license purchased only from themeforest(the above
 <link
 	href="../theme/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css"
 	rel="stylesheet" type="text/css" />
+
+
+<link href="../theme/assets/global/plugins/dropzone/dropzone.min.css"
+	rel="stylesheet" type="text/css" />
+
+
+<link
+	href="../theme/assets/global/plugins/jquery-file-upload/blueimp-gallery/blueimp-gallery.min.css"
+	rel="stylesheet" type="text/css" />
+<link
+	href="../theme/assets/global/plugins/jquery-file-upload/css/jquery.fileupload.css"
+	rel="stylesheet" type="text/css" />
+<link
+	href="../theme/assets/global/plugins/jquery-file-upload/css/jquery.fileupload-ui.css"
+	rel="stylesheet" type="text/css" />
+
 <!-- END THEME LAYOUT STYLES -->
 <link rel="shortcut icon" href="favicon.ico" />
 </head>
@@ -174,6 +190,12 @@ License: You must have a valid license purchased only from themeforest(the above
 	<div class="clearfix"></div>
 	<!-- END HEADER & CONTENT DIVIDER -->
 	<!-- BEGIN CONTAINER -->
+
+
+
+
+
+
 	<div class="page-container">
 		<!-- BEGIN SIDEBAR -->
 		<div class="page-sidebar-wrapper">
@@ -240,6 +262,26 @@ License: You must have a valid license purchased only from themeforest(the above
 		<div class="page-content-wrapper">
 			<div class="page-content">
 				<!-- <table id="content-table"></table> -->
+
+
+
+
+
+
+
+				<!-- <div class="row">
+					<div class="col-md-12">
+					</div>
+				</div> -->
+
+
+
+
+
+
+
+
+
 				<div class="row">
 					<div class="col-md-12">
 						<!-- BEGIN EXAMPLE TABLE PORTLET-->
@@ -256,31 +298,11 @@ License: You must have a valid license purchased only from themeforest(the above
 											onclick="create();"> <input type="radio"
 											name="options" class="toggle" id="option1">新增
 										</label>
-										<!--  <label
-											class="btn btn-transparent dark btn-outline btn-circle btn-sm">
-											<input type="radio" name="options" class="toggle"
-											id="option2">Settings
-										</label> -->
 									</div>
 								</div>
 							</div>
 							<input type="hidden" class="txtshort" id="currentObj" value="1" />
 							<div class="portlet-body">
-								<!-- <div class="table-toolbar">
-									<div class="row">
-										<div class="col-md-6" >
-											<div class="btn-group">
-												<button id="sample_editable_1_new" class="btn sbold green"
-													onclick="create();">
-													新增 <i class="fa fa-plus"></i>
-												</button>
-											</div>
-										</div>
-									</div>
-								</div> -->
-								<!-- <table class="table table-striped table-bordered table-hover table-checkable order-column" id="sample_1">
-								</table> -->
-
 								<div class="row">
 									<div class="col-md-6" style="display: none;" id="createUser">
 										<!-- BEGIN VALIDATION STATES-->
@@ -320,8 +342,8 @@ License: You must have a valid license purchased only from themeforest(the above
 																for="form_control_1">密码 <span class="required">*</span>
 															</label>
 															<div class="col-md-9">
-																<input type="password" class="form-control" placeholder=""
-																	name="password">
+																<input type="password" class="form-control"
+																	placeholder="" name="password">
 																<div class="form-control-focus"></div>
 															</div>
 														</div>
@@ -366,7 +388,8 @@ License: You must have a valid license purchased only from themeforest(the above
 														<div class="row">
 															<div class="col-md-offset-3 col-md-9">
 																<!-- <button type="submit" class="btn green" onclick="test()"></button> -->
-																<input type = "button" class="btn green" onclick="createPost()" value = "提交"></input>
+																<input type="button" class="btn green"
+																	onclick="createPost()" value="提交"></input>
 																<button type="reset" class="btn default">重置</button>
 															</div>
 														</div>
@@ -377,7 +400,6 @@ License: You must have a valid license purchased only from themeforest(the above
 										</div>
 										<!-- END VALIDATION STATES-->
 									</div>
-
 
 									<!-- 创建标签-->
 									<div class="col-md-6" style="display: none;" id="createTag">
@@ -423,7 +445,8 @@ License: You must have a valid license purchased only from themeforest(the above
 													<div class="form-actions">
 														<div class="row">
 															<div class="col-md-offset-3 col-md-9">
-																<input type = "button" class="btn green" onclick="createPost()" value = "提交"></input>
+																<input type="button" class="btn green"
+																	onclick="createPost()" value="提交"></input>
 																<button type="reset" class="btn default">重置</button>
 															</div>
 														</div>
@@ -436,9 +459,8 @@ License: You must have a valid license purchased only from themeforest(the above
 									</div>
 									<!-- 创建标签结束-->
 
-
 									<!-- 创建博客-->
-									<div class="col-md-6" style="display: none;" id="createBlog">
+									<div class="col-md-6" id="createBlog">
 										<!-- BEGIN VALIDATION STATES-->
 										<div class="portlet light portlet-fit portlet-form bordered">
 											<div class="portlet-title">
@@ -447,8 +469,115 @@ License: You must have a valid license purchased only from themeforest(the above
 														class="caption-subject font-green sbold uppercase">新增博客</span>
 												</div>
 											</div>
+
+
 											<div class="portlet-body">
 												<!-- BEGIN FORM-->
+												<form id="fileupload" action="/blog/upload"
+													class="form-horizontal" method="POST"
+													enctype="multipart/form-data">
+													<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+													<div class="form-body">
+														<div class="col-md-7">
+															<!-- The fileinput-button span is used to style the file input field as button -->
+															<span class="btn green fileinput-button"> <i
+																class="fa fa-plus"></i> <span> 添加... </span> <input
+																type="file" name="file" multiple>
+															</span>
+															<!-- <button type="submit" class="btn blue start">
+																<i class="fa fa-upload"></i> <span>开始上传 </span>
+															</button> -->
+															<!-- The global file processing state -->
+															<span class="fileupload-process"> </span>
+														</div>
+														<!-- The global progress information -->
+														<div class="col-lg-5 fileupload-progress fade">
+															<!-- The global progress bar -->
+															<div class="progress progress-striped active"
+																role="progressbar" aria-valuemin="0" aria-valuemax="100">
+																<div class="progress-bar progress-bar-success"
+																	style="width: 0%;"></div>
+															</div>
+															<!-- The extended global progress information -->
+															<div class="progress-extended">&nbsp;</div>
+														</div>
+													</div>
+													<!-- The table listing the files available for upload/download -->
+													<table role="presentation"
+														class="table table-striped clearfix">
+														<tbody class="files">
+														</tbody>
+													</table>
+												</form>
+
+												<div id="blueimp-gallery"
+													class="blueimp-gallery blueimp-gallery-controls"
+													data-filter=":even">
+													<div class="slides"></div>
+													<h3 class="title"></h3>
+													<a class="prev"> ‹ </a> <a class="next"> › </a> <a
+														class="close white"> </a> <a class="play-pause"> </a>
+													<ol class="indicator">
+													</ol>
+												</div>
+												<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+												<script id="template-upload" type="text/x-tmpl"> {% for (var i=0, file; file=o.files[i]; i++) { %}
+                        <tr class="template-upload fade">
+                            <td>
+                                <span class="preview"></span>
+                            </td>
+                            <td>
+                                <p class="name">{%=file.name%}</p>
+                                <strong class="error text-danger label label-danger"></strong>
+                            </td>
+                            <td>
+                                <p class="size">Processing...</p>
+                                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                    <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                                </div>
+                            </td>
+                            <td> {% if (!i && !o.options.autoUpload) { %}
+                                <button class="btn blue start" disabled>
+                                    <i class="fa fa-upload"></i>
+                                    <span>Start</span>
+                                </button> {% } %} {% if (!i) { %}
+                                <button class="btn red cancel">
+                                    <i class="fa fa-ban"></i>
+                                    <span>Cancel</span>
+                                </button> {% } %} </td>
+                        </tr> {% } %} </script>
+												<!-- The template to display files available for download -->
+												<script id="template-download" type="text/x-tmpl"> {% for (var i=0, file; file=o.files[i]; i++) { %}
+                        <tr class="template-download fade">
+                            <td>
+                                <span class="preview"> {% if (file.thumbnailUrl) { %}
+                                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery>
+                                        <img src="{%=file.thumbnailUrl%}">
+                                    </a> {% } %} </span>
+                            </td>
+                            <td>
+                                <p class="name"> {% if (file.url) { %}
+                                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl? 'data-gallery': ''%}>{%=file.name%}</a> {% } else { %}
+                                    <span>{%=file.name%}</span> {% } %} </p> {% if (file.error) { %}
+                                <div>
+                                    <span class="label label-danger">Error</span> {%=file.error%}</div> {% } %} </td>
+                            <td>
+                                <span class="size">{%=o.formatFileSize(file.size)%}</span>
+                            </td>
+                            <td> {% if (file.deleteUrl) { %}
+                                <button class="btn red delete btn-sm" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}" {% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}' {% } %}>
+                                    <i class="fa fa-trash-o"></i>
+                                    <span>Delete</span>
+                                </button>
+                                <input type="checkbox" name="delete" value="1" class="toggle"> {% } else { %}
+                                <button class="btn yellow cancel btn-sm">
+                                    <i class="fa fa-ban"></i>
+                                    <span>Cancel</span>
+                                </button> {% } %} </td>
+                        </tr> {% } %} </script>
+
+
+
 												<form action="#" class="form-horizontal" id="createBlogForm">
 													<div class="form-body">
 														<div class="form-group form-md-line-input">
@@ -457,67 +586,16 @@ License: You must have a valid license purchased only from themeforest(the above
 															</label>
 															<div class="col-md-9">
 																<input type="text" class="form-control" placeholder=""
-																	name="name">
+																	name="title">
 																<div class="form-control-focus"></div>
 															</div>
 														</div>
-														<div class="form-group">
-															<label class="control-label col-md-3">Html文件</label>
-															<div class="col-md-3">
-																<div class="fileinput fileinput-new"
-																	data-provides="fileinput">
-																	<div class="input-group input-large">
-																		<div
-																			class="form-control uneditable-input input-fixed input-medium"
-																			data-trigger="fileinput">
-																			<i class="fa fa-file fileinput-exists"></i>&nbsp; <span
-																				class="fileinput-filename"> </span>
-																		</div>
-																		<span class="input-group-addon btn default btn-file">
-																			<span class="fileinput-new">选择 </span> <span
-																			class="fileinput-exists"> 更改 </span> <input
-																			type="file" name="...">
-																		</span> <a href="javascript:;"
-																			class="input-group-addon btn red fileinput-exists"
-																			data-dismiss="fileinput"> 删除 </a>
-																	</div>
-																</div>
-															</div>
-														</div>
-														<div class="form-group">
-															<label class="control-label col-md-3">MarkDown文件</label>
-															<div class="col-md-3">
-																<div class="fileinput fileinput-new"
-																	data-provides="fileinput">
-																	<div class="input-group input-large">
-																		<div
-																			class="form-control uneditable-input input-fixed input-medium"
-																			data-trigger="fileinput">
-																			<i class="fa fa-file fileinput-exists"></i>&nbsp; <span
-																				class="fileinput-filename"> </span>
-																		</div>
-																		<span class="input-group-addon btn default btn-file">
-																			<span class="fileinput-new">选择 </span> <span
-																			class="fileinput-exists"> 更改 </span> <input
-																			type="file" name="...">
-																		</span> <a href="javascript:;"
-																			class="input-group-addon btn red fileinput-exists"
-																			data-dismiss="fileinput"> 删除 </a>
-																	</div>
-																</div>
-															</div>
-														</div>
-														<!-- <div class="form-group form-md-line-input">
-															<label class="col-md-3 control-label"
-																for="form_control_1">MarkDown文件 <span
-																class="required">*</span>
-															</label>
-															<div class="col-md-9">
-																<input type="text" class="form-control" placeholder=""
-																	name="url">
-																<div class="form-control-focus"></div>
-															</div>
-														</div> -->
+
+														<input type="hidden" class="form-control"
+															name="htmlFilePath" readonly> <input
+															type="hidden" class="form-control" name="mdFilePath"
+															readonly>
+
 														<div class="form-group form-md-line-input">
 															<label class="col-md-3 control-label"
 																for="form_control_1">博客标签 <span class="required">&nbsp;</span>
@@ -548,7 +626,8 @@ License: You must have a valid license purchased only from themeforest(the above
 													<div class="form-actions">
 														<div class="row">
 															<div class="col-md-offset-3 col-md-9">
-																<input type = "button" class="btn green" onclick="createPost()" value = "提交"></input>
+																<input type="button" class="btn green"
+																	onclick="createPost()" value="提交"></input>
 																<button type="reset" class="btn default">重置</button>
 															</div>
 														</div>
@@ -615,7 +694,8 @@ License: You must have a valid license purchased only from themeforest(the above
 													<div class="form-actions">
 														<div class="row">
 															<div class="col-md-offset-3 col-md-9">
-																<input type = "button" class="btn green" onclick="createPost()" value = "提交"></input>
+																<input type="button" class="btn green"
+																	onclick="createPost()" value="提交"></input>
 																<button type="reset" class="btn default">重置</button>
 															</div>
 														</div>
@@ -629,7 +709,8 @@ License: You must have a valid license purchased only from themeforest(the above
 									<!-- 创建角色结束-->
 
 									<!-- 创建资源-->
-									<div class="col-md-6" style="display: none;" id="createResource">
+									<div class="col-md-6" style="display: none;"
+										id="createResource">
 										<!-- BEGIN VALIDATION STATES-->
 										<div class="portlet light portlet-fit portlet-form bordered">
 											<div class="portlet-title">
@@ -640,7 +721,8 @@ License: You must have a valid license purchased only from themeforest(the above
 											</div>
 											<div class="portlet-body">
 												<!-- BEGIN FORM-->
-												<form action="#" class="form-horizontal" id="createResourceForm">
+												<form action="#" class="form-horizontal"
+													id="createResourceForm">
 													<div class="form-body">
 														<div class="form-group form-md-line-input">
 															<label class="col-md-3 control-label"
@@ -674,7 +756,8 @@ License: You must have a valid license purchased only from themeforest(the above
 														</div>
 														<div class="form-group form-md-line-input">
 															<label class="col-md-3 control-label"
-																for="form_control_1">父资源ID <span class="required">&nbsp;</span>
+																for="form_control_1">父资源ID <span
+																class="required">&nbsp;</span>
 															</label>
 															<div class="col-md-9">
 																<input type="text" class="form-control" placeholder=""
@@ -682,7 +765,7 @@ License: You must have a valid license purchased only from themeforest(the above
 																<div class="form-control-focus"></div>
 															</div>
 														</div>
-														
+
 														<div class="form-group form-md-line-input">
 															<label class="col-md-3 control-label"
 																for="form_control_1">是否可用 <span class="required">&nbsp;</span>
@@ -703,7 +786,8 @@ License: You must have a valid license purchased only from themeforest(the above
 													<div class="form-actions">
 														<div class="row">
 															<div class="col-md-offset-3 col-md-9">
-																<input type = "button" class="btn green" onclick="createPost()" value = "提交"></input>
+																<input type="button" class="btn green"
+																	onclick="createPost()" value="提交"></input>
 																<button type="reset" class="btn default">重置</button>
 															</div>
 														</div>
@@ -881,6 +965,107 @@ License: You must have a valid license purchased only from themeforest(the above
 	<script
 		src="../theme/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js"
 		type="text/javascript"></script>
+
+
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/js/vendor/jquery.ui.widget.js"
+		type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/js/vendor/tmpl.min.js"
+		type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/js/vendor/load-image.min.js"
+		type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/js/vendor/canvas-to-blob.min.js"
+		type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/blueimp-gallery/jquery.blueimp-gallery.min.js"
+		type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/js/jquery.iframe-transport.js"
+		type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/js/jquery.fileupload.js"
+		type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/js/jquery.fileupload-process.js"
+		type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/js/jquery.fileupload-image.js"
+		type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/js/jquery.fileupload-audio.js"
+		type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/js/jquery.fileupload-video.js"
+		type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/js/jquery.fileupload-validate.js"
+		type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/js/jquery.fileupload-ui.js"
+		type="text/javascript"></script>
+
+	<script
+		src="../theme/assets/global/plugins/bootstrap/js/bootstrap.min.js"
+		type="text/javascript"></script>
+	<!-- END CORE PLUGINS -->
+	<!-- BEGIN PAGE LEVEL PLUGINS -->
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/js/vendor/tmpl.min.js"
+		type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/js/vendor/load-image.min.js"
+		type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/js/vendor/canvas-to-blob.min.js"
+		type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/blueimp-gallery/jquery.blueimp-gallery.min.js"
+		type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/js/jquery.iframe-transport.js"
+		type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/js/jquery.fileupload.js"
+		type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/js/jquery.fileupload-process.js"
+		type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/js/jquery.fileupload-image.js"
+		type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/js/jquery.fileupload-audio.js"
+		type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/js/jquery.fileupload-video.js"
+		type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/js/jquery.fileupload-validate.js"
+		type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/jquery-file-upload/js/jquery.fileupload-ui.js"
+		type="text/javascript"></script>
+	<script src="../theme/assets/pages/scripts/form-fileupload.min.js"
+		type="text/javascript"></script>
+	<!-- END PAGE LEVEL PLUGINS -->
+	<!-- END THEME GLOBAL SCRIPTS -->
+	<!-- BEGIN PAGE LEVEL SCRIPTS -->
+
+
+
+
+
+
+
+
+
+
+
+
+
 	<script src="../theme/assets/operate/list.js" type="text/javascript"></script>
 	<script src="../theme/assets/operate/update.js" type="text/javascript"></script>
 	<script src="../theme/assets/operate/create.js" type="text/javascript"></script>

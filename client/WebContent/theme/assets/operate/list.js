@@ -1,6 +1,7 @@
 create_user_table();
 hideCreate();
-function hideCreate(){
+
+function hideCreate() {
 	$("#createRole").hide();
 	$("#createBlog").hide();
 	$("#createTag").hide();
@@ -25,8 +26,8 @@ function create_user_table() {
 						url : url,
 						// height : $(window).height() - 110,
 						// width : $(window).width(),
-//						 showColumns : true,
-//						 sortable: true, //是否启用排序
+						// showColumns : true,
+						// sortable: true, //是否启用排序
 						// sortOrder: "asc", //排序方式
 						pagination : true,
 						queryParams : queryParams,
@@ -35,8 +36,8 @@ function create_user_table() {
 						pageSize : 5, // 每页的记录行数（*）
 						pageList : [ 5, 10, 20, 50 ], // 可供选择的每页的行数（*）
 						uniqueId : "id", // 每一行的唯一标识，一般为主键列
-//						 showExport : true,
-//						 exportDataType : 'all',
+						// showExport : true,
+						// exportDataType : 'all',
 						responseHandler : responseHandler,
 						columns : [
 								{

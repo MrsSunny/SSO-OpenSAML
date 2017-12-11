@@ -100,24 +100,25 @@ function createPostTag() {
 }
 
 function createPostBlog() {
-	var obj = $('#createUserForm').serialize();
-	$.ajax({
-		type : "POST",
-		url : "/user/add",
-		data : obj,
-		success : function(msg) {
-			var code = msg.code
-			if (code == 1) {
-				$(':input','#createUserForm') 
-				.not(':button, :submit, :reset, :hidden') 
-				.val('') 
-				.removeAttr('checked')
-				.removeAttr('selected');
-				create_blog_table();
-			} else {
-//				alert("添加失败")
-			}
-		}
+	$("#htmlFilePath").fileinput({
+		language : 'zh', // 设置语言
+		uploadUrl : "/blog/add", // 上传的地址
+		allowedFileExtensions : [ 'html', 'gif', 'png' ],// 接收的文件后缀
+		// uploadExtraData:{"id": 1, "fileName":'123.mp3'},
+		uploadAsync : true, // 默认异步上传
+		showUpload : true, // 是否显示上传按钮
+		showRemove : true, // 显示移除按钮
+		showPreview : true, // 是否显示预览
+		showCaption : false,// 是否显示标题
+		browseClass : "btn btn-primary", // 按钮样式
+		dropZoneEnabled : true,// 是否显示拖拽区域
+		maxFileCount : 10, // 表示允许同时上传的最大文件个数
+		enctype : 'multipart/form-data',
+		validateInitialCount : true,
+		previewFileIcon : "<iclass='glyphicon glyphicon-king'></i>",
+		msgFilesTooMany : "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
+	}).on("fileuploaded", function(event, data, previewId, index) {
+		alert("ddddddd")
 	});
 }
 
@@ -150,14 +151,12 @@ function createPostResource() {
 		success : function(msg) {
 			var code = msg.code
 			if (code == 1) {
-				$(':input','#createUserForm') 
-				.not(':button, :submit, :reset, :hidden') 
-				.val('') 
-				.removeAttr('checked')
-				.removeAttr('selected');
+				$(':input', '#createUserForm').not(
+						':button, :submit, :reset, :hidden').val('')
+						.removeAttr('checked').removeAttr('selected');
 				create_resource_table();
 			} else {
-//				alert("添加失败")
+				// alert("添加失败")
 			}
 		}
 	});

@@ -1,6 +1,8 @@
 package org.sms.project.blog.service.impl;
 
+import java.util.Date;
 import java.util.List;
+
 import org.sms.project.blog.dao.BlogDao;
 import org.sms.project.blog.entity.Blog;
 import org.sms.project.blog.service.BlogService;
@@ -15,6 +17,11 @@ public class BlogServiceImpl implements BlogService {
     private BlogDao blogDao;
 
     public long insert(Blog blog) {
+        blog.setCreateDate(new Date());
+        blog.setReadNum(0L);
+        blog.setHtmlFilePath("/ad");
+        blog.setMdFilePath("/vv/a.md");
+        blog.setContent("sdfsd");
         return blogDao.insert(blog);
     }
 
