@@ -1,6 +1,9 @@
 package org.sms.project.resource.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
+import org.sms.project.page.Page;
 import org.sms.project.resource.entity.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -28,5 +31,13 @@ public class ResourceDao {
 
   public Resource findById(Long id) {
     return sqlSession.selectOne(this.getClass().getName() + ".selectByPrimaryKey", id);
+  }
+  
+  public int getCount() {
+      return sqlSession.selectOne(this.getClass().getName() + ".selectCount");
+  }
+
+  public List<Resource> queryByCondition(String query, String order, Page page) {
+      return sqlSession.selectList(this.getClass().getName() + ".selectByPage", page);
   }
 }

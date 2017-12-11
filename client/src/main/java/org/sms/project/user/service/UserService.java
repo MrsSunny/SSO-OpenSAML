@@ -1,6 +1,7 @@
 package org.sms.project.user.service;
 
 import java.util.List;
+import org.sms.project.page.Page;
 import org.sms.project.user.entity.User;
 
 /**
@@ -16,11 +17,11 @@ public interface UserService {
 
   User findById(long id);
 
-  List<User> queryByCondition(String query, String order, int startIndex, int size);
-  
-  List<User> queryByCondition(int startIndex, int size);
-
   User findUserByEmail(String loign_id);
+  
+  List<User> queryByCondition(String query, String order, Page page);
+  
+  List<User> queryByCondition(Page page);
   
   int getCount();
 }

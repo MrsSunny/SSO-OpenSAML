@@ -1,4 +1,4 @@
-package org.sms.project.user.controller;
+package org.sms.project.tag.controller;
 
 import java.util.List;
 import java.util.Objects;
@@ -6,12 +6,14 @@ import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.sms.SysConstants;
 import org.sms.project.base.Result;
 import org.sms.project.common.ResultAdd;
+import org.sms.project.helper.SessionHelper;
 import org.sms.project.page.Page;
+import org.sms.project.tag.entity.Tag;
+import org.sms.project.tag.service.TagService;
 import org.sms.project.user.entity.User;
-import org.sms.project.user.service.UserService;
-import org.sms.project.util.HttpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,20 +26,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author Sunny
  */
 @Controller
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/tag")
+public class TagController {
 
     @Autowired
-    private UserService sysUserService;
+    private TagService tagService;
 
     @ResponseBody
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResultAdd add(Model model, @Valid User user, HttpServletRequest request) {
-        String ip = HttpUtil.getIp(request);
-        user.setLastLoginIp(ip);
-        long id = sysUserService.insert(user);
+    public ResultAdd add(Model model, @Valid Tag tag, HttpServletRequest request) {
+        User user = (User) SessionHelper.get(request, SysConstants.LOGIN_USER);
+        tag.setCreateUserId(user.getId());
+        long count = tagService.insert(tag);
         ResultAdd resAdd = new ResultAdd();
-        if (id == 0) {
+        if (count == 0) {
             resAdd.setCode(0);
             resAdd.setMessage("数据格式错误");
             return resAdd;
@@ -48,7 +50,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public String update(@Valid User user, HttpServletRequest request) {
+    public String update(@Valid Tag tag, HttpServletRequest request) {
         return "login/login_success";
     }
 
@@ -59,7 +61,7 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public Result<User> list(Model model, HttpServletRequest request) {
+    public Result<Tag> list(Model model, HttpServletRequest request) {
         String pageNumberStr = request.getParameter("pageNumber");
         String pageSizeStr = request.getParameter("pageSize");
         if (Objects.isNull(pageNumberStr) || Objects.isNull(pageSizeStr)) {
@@ -68,12 +70,12 @@ public class UserController {
         Integer pageNumber = Integer.parseInt(pageNumberStr);
         Integer pageSize = Integer.parseInt(pageSizeStr);
         Page page = new Page(pageNumber, pageSize);
-        List<User> users = sysUserService.queryByCondition(page);
-        int pageCount = sysUserService.getCount();
+        List<Tag> tags = tagService.queryByCondition(page);
+        int pageCount = tagService.getCount();
         page.setRecordCount(pageCount);
-        Result<User> res = new Result<User>();
+        Result<Tag> res = new Result<Tag>();
         res.setPage(page);
-        res.setList(users);
+        res.setList(tags);
         return res;
     }
 

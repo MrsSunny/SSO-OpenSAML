@@ -17,6 +17,19 @@
     from TAG
     where ID = #{id,jdbcType=INTEGER}
   </select>
+  
+   <select id="selectByPage" resultMap="BaseResultMap" parameterType="org.sms.project.page.Page" >
+    select 
+    <include refid="Base_Column_List" />
+    from TAG limit #{startIndex,jdbcType=BIGINT},#{pageSize,jdbcType=BIGINT}
+  </select>
+  
+  <select id="selectCount" resultType="java.lang.Integer" >
+    select count(1)
+    from TAG
+  </select>
+  
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from TAG
     where ID = #{id,jdbcType=INTEGER}

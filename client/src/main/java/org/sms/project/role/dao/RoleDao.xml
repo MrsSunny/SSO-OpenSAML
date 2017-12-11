@@ -1,106 +1,124 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="org.sms.project.role.dao.RoleDao" >
-  <resultMap id="BaseResultMap" type="org.sms.project.role.entity.Role" >
-    <id column="ID" property="id" jdbcType="BIGINT" />
-    <result column="NAME" property="name" jdbcType="VARCHAR" />
-    <result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
-    <result column="USABLE_STATUS" property="usableStatus" jdbcType="INTEGER" />
-    <result column="CREATE_USER_ID" property="createUserId" jdbcType="BIGINT" />
-    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    ID, NAME, DESCRIPTION, USABLE_STATUS, CREATE_USER_ID, CREATE_DATE
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-    <include refid="Base_Column_List" />
-    from ROLE
-    where ID = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from ROLE
-    where ID = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="org.sms.project.role.entity.Role" >
-    insert into ROLE (ID, NAME, DESCRIPTION, 
-      USABLE_STATUS, CREATE_USER_ID, CREATE_DATE
-      )
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
-      #{usableStatus,jdbcType=INTEGER}, #{createUserId,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="org.sms.project.role.entity.Role" >
-    insert into ROLE
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        ID,
-      </if>
-      <if test="name != null" >
-        NAME,
-      </if>
-      <if test="description != null" >
-        DESCRIPTION,
-      </if>
-      <if test="usableStatus != null" >
-        USABLE_STATUS,
-      </if>
-      <if test="createUserId != null" >
-        CREATE_USER_ID,
-      </if>
-      <if test="createDate != null" >
-        CREATE_DATE,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="description != null" >
-        #{description,jdbcType=VARCHAR},
-      </if>
-      <if test="usableStatus != null" >
-        #{usableStatus,jdbcType=INTEGER},
-      </if>
-      <if test="createUserId != null" >
-        #{createUserId,jdbcType=BIGINT},
-      </if>
-      <if test="createDate != null" >
-        #{createDate,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="org.sms.project.role.entity.Role" >
-    update ROLE
-    <set >
-      <if test="name != null" >
-        NAME = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="description != null" >
-        DESCRIPTION = #{description,jdbcType=VARCHAR},
-      </if>
-      <if test="usableStatus != null" >
-        USABLE_STATUS = #{usableStatus,jdbcType=INTEGER},
-      </if>
-      <if test="createUserId != null" >
-        CREATE_USER_ID = #{createUserId,jdbcType=BIGINT},
-      </if>
-      <if test="createDate != null" >
-        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where ID = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="org.sms.project.role.entity.Role" >
-    update ROLE
-    set NAME = #{name,jdbcType=VARCHAR},
-      DESCRIPTION = #{description,jdbcType=VARCHAR},
-      USABLE_STATUS = #{usableStatus,jdbcType=INTEGER},
-      CREATE_USER_ID = #{createUserId,jdbcType=BIGINT},
-      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
-    where ID = #{id,jdbcType=BIGINT}
-  </update>
+<mapper namespace="org.sms.project.role.dao.RoleDao">
+	<resultMap id="BaseResultMap" type="org.sms.project.role.entity.Role">
+		<id column="ID" property="id" jdbcType="BIGINT" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+		<result column="USABLE_STATUS" property="usableStatus"
+			jdbcType="INTEGER" />
+		<result column="CREATE_USER_ID" property="createUserId"
+			jdbcType="BIGINT" />
+		<result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, NAME, DESCRIPTION, USABLE_STATUS, CREATE_USER_ID, CREATE_DATE
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from ROLE
+		where ID = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="selectByPage" resultMap="BaseResultMap"
+		parameterType="org.sms.project.page.Page">
+		select
+		<include refid="Base_Column_List" />
+		from ROLE limit
+		#{startIndex,jdbcType=BIGINT},#{pageSize,jdbcType=BIGINT}
+	</select>
+
+	<select id="selectCount" resultType="java.lang.Integer">
+		select count(1)
+		from ROLE
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from ROLE
+		where ID = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="org.sms.project.role.entity.Role">
+		insert into ROLE (ID, NAME, DESCRIPTION,
+		USABLE_STATUS, CREATE_USER_ID, CREATE_DATE
+		)
+		values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR},
+		#{description,jdbcType=VARCHAR},
+		#{usableStatus,jdbcType=INTEGER}, #{createUserId,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="org.sms.project.role.entity.Role">
+		insert into ROLE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="name != null">
+				NAME,
+			</if>
+			<if test="description != null">
+				DESCRIPTION,
+			</if>
+			<if test="usableStatus != null">
+				USABLE_STATUS,
+			</if>
+			<if test="createUserId != null">
+				CREATE_USER_ID,
+			</if>
+			<if test="createDate != null">
+				CREATE_DATE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=VARCHAR},
+			</if>
+			<if test="usableStatus != null">
+				#{usableStatus,jdbcType=INTEGER},
+			</if>
+			<if test="createUserId != null">
+				#{createUserId,jdbcType=BIGINT},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="org.sms.project.role.entity.Role">
+		update ROLE
+		<set>
+			<if test="name != null">
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				DESCRIPTION = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="usableStatus != null">
+				USABLE_STATUS = #{usableStatus,jdbcType=INTEGER},
+			</if>
+			<if test="createUserId != null">
+				CREATE_USER_ID = #{createUserId,jdbcType=BIGINT},
+			</if>
+			<if test="createDate != null">
+				CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="org.sms.project.role.entity.Role">
+		update ROLE
+		set NAME = #{name,jdbcType=VARCHAR},
+		DESCRIPTION = #{description,jdbcType=VARCHAR},
+		USABLE_STATUS = #{usableStatus,jdbcType=INTEGER},
+		CREATE_USER_ID = #{createUserId,jdbcType=BIGINT},
+		CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+		where ID = #{id,jdbcType=BIGINT}
+	</update>
 </mapper>

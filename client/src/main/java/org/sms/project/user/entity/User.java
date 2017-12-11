@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 
-import org.sms.SysConstants;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,236 +12,236 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 public class User implements Serializable, UserDetails {
 
-  private static final long serialVersionUID = 4803461735816229793L;
+    private static final long serialVersionUID = 4803461735816229793L;
 
-  private Long id;
+    private Long id;
 
-  private String name;
+    private String name;
 
-  private String imgPath;
+    private String imgPath;
 
-  private String password;
+    private String password;
 
-  private String email;
+    private String email;
 
-  private String phone;
+    private String phone;
 
-  private String address;
+    private String address;
 
-  private Integer loginSum;
+    private Integer loginSum;
 
-  private String lastLoginIp;
+    private String lastLoginIp;
 
-  private Date createDate;
+    private Date createDate;
 
-  private Integer usableStatus;
+    private Integer usableStatus;
 
-  private Date modifyDate;
+    private Date modifyDate;
 
-  private String token;
+    private String token;
 
-  private int loginType;
+    private int loginType;
 
-  private Date lastLoginDate;
-  
-  private Collection<? extends GrantedAuthority> authorities;
+    private Date lastLoginDate;
 
-  public Long getId() {
-    return id;
-  }
+    private Collection<? extends GrantedAuthority> authorities;
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public String getImgPath() {
-    return imgPath;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public void setImgPath(String imgPath) {
-    this.imgPath = imgPath;
-  }
+    public String getImgPath() {
+        return imgPath;
+    }
 
-  public String getPassword() {
-    return password;
-  }
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
+    }
 
-  public void setPassword(String password) {
-    this.password = password;
-  }
+    public String getPassword() {
+        return password;
+    }
 
-  public String getEmail() {
-    return email;
-  }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
+    public String getEmail() {
+        return email;
+    }
 
-  public String getPhone() {
-    return phone;
-  }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-  public void setPhone(String phone) {
-    this.phone = phone;
-  }
+    public String getPhone() {
+        return phone;
+    }
 
-  public String getAddress() {
-    return address;
-  }
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-  public void setAddress(String address) {
-    this.address = address;
-  }
+    public String getAddress() {
+        return address;
+    }
 
-  public Integer getLoginSum() {
-    return loginSum;
-  }
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-  public void setLoginSum(Integer loginSum) {
-    this.loginSum = loginSum;
-  }
+    public Integer getLoginSum() {
+        return loginSum;
+    }
 
-  public String getLastLoginIp() {
-    return lastLoginIp;
-  }
+    public void setLoginSum(Integer loginSum) {
+        this.loginSum = loginSum;
+    }
 
-  public void setLastLoginIp(String lastLoginIp) {
-    this.lastLoginIp = lastLoginIp;
-  }
+    public String getLastLoginIp() {
+        return lastLoginIp;
+    }
 
-  public Date getCreateDate() {
-    return createDate;
-  }
+    public void setLastLoginIp(String lastLoginIp) {
+        this.lastLoginIp = lastLoginIp;
+    }
 
-  public void setCreateDate(Date createDate) {
-    this.createDate = createDate;
-  }
+    public Date getCreateDate() {
+        return createDate;
+    }
 
-  public Integer getUsableStatus() {
-    return usableStatus;
-  }
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 
-  public void setUsableStatus(Integer usableStatus) {
-    this.usableStatus = usableStatus;
-  }
+    public Integer getUsableStatus() {
+        return usableStatus;
+    }
 
-  public Date getModifyDate() {
-    return modifyDate;
-  }
+    public void setUsableStatus(Integer usableStatus) {
+        this.usableStatus = usableStatus;
+    }
 
-  public void setModifyDate(Date modifyDate) {
-    this.modifyDate = modifyDate;
-  }
+    public Date getModifyDate() {
+        return modifyDate;
+    }
 
-  public String getToken() {
-    return token;
-  }
+    public void setModifyDate(Date modifyDate) {
+        this.modifyDate = modifyDate;
+    }
 
-  public void setToken(String token) {
-    this.token = token;
-  }
+    public String getToken() {
+        return token;
+    }
 
-  public int getLoginType() {
-    return loginType;
-  }
+    public void setToken(String token) {
+        this.token = token;
+    }
 
-  public void setLoginType(int loginType) {
-    this.loginType = loginType;
-  }
+    public int getLoginType() {
+        return loginType;
+    }
 
-  public Date getLastLoginDate() {
-    return lastLoginDate;
-  }
+    public void setLoginType(int loginType) {
+        this.loginType = loginType;
+    }
 
-  public void setLastLoginDate(Date lastLoginDate) {
-    this.lastLoginDate = lastLoginDate;
-  }
+    public Date getLastLoginDate() {
+        return lastLoginDate;
+    }
 
-  public final void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
-    this.authorities = authorities;
-  }
+    public void setLastLoginDate(Date lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
+    }
 
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((id == null) ? 0 : id.hashCode());
-    result = prime * result + ((email == null) ? 0 : email.hashCode());
-    result = prime * result + ((name == null) ? 0 : name.hashCode());
-    return result;
-  }
+    public final void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+        this.authorities = authorities;
+    }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    User other = (User) obj;
-    if (id == null) {
-      if (other.id != null)
-        return false;
-    } else if (!id.equals(other.id))
-      return false;
-    if (name == null) {
-      if (other.name != null)
-        return false;
-    } else if (!name.equals(other.name))
-      return false;
-    return true;
-  }
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((email == null) ? 0 : email.hashCode());
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        return result;
+    }
 
-  public User(String password, int usable_status, Collection<? extends GrantedAuthority> authorities) {
-    this(password, usable_status);
-    this.authorities = authorities;
-  }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        User other = (User) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (name == null) {
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
+            return false;
+        return true;
+    }
 
-  public User(String password, int usableStatus) {
-    this.password = password;
-    this.usableStatus = usableStatus;
-  }
-  
-  public User() {
-  }
+    public User(String password, int usable_status, Collection<? extends GrantedAuthority> authorities) {
+        this(password, usable_status);
+        this.authorities = authorities;
+    }
 
-  @Override
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    return authorities;
-  }
+    public User(String password, int usableStatus) {
+        this.password = password;
+        this.usableStatus = usableStatus;
+    }
 
-  @Override
-  public boolean isAccountNonExpired() {
-    return true;
-  }
+    public User() {
+    }
 
-  @Override
-  public boolean isAccountNonLocked() {
-    return true;
-  }
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
+    }
 
-  @Override
-  public boolean isCredentialsNonExpired() {
-    return true;
-  }
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
-  @Override
-  public boolean isEnabled() {
-    return SysConstants.ENABLE == this.usableStatus;
-  }
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
 
-  @Override
-  public String getUsername() {
-    return this.name;
-  }
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.usableStatus == 1;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.name;
+    }
 }

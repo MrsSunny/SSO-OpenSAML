@@ -82,7 +82,9 @@ License: You must have a valid license purchased only from themeforest(the above
 	rel="stylesheet" type="text/css" />
 <link rel="stylesheet"
 	href="../theme/assets/global/plugins/bootstrap-table/bootstrap-table.css">
-
+<link
+	href="../theme/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css"
+	rel="stylesheet" type="text/css" />
 <!-- END THEME LAYOUT STYLES -->
 <link rel="shortcut icon" href="favicon.ico" />
 </head>
@@ -201,11 +203,20 @@ License: You must have a valid license purchased only from themeforest(the above
 					</a></li>
 					<li class="nav-item"><a href="javascript:create_role_table();"
 						class="nav-link nav-toggle"> <i class="fa fa-users"></i> <span
-							class="title">权限管理</span>
+							class="title">角色管理</span>
 					</a></li>
 					<li class="nav-item"><a href="javascript:create_blog_table();"
 						class="nav-link nav-toggle"> <i class="fa fa-file-o"></i> <span
 							class="title">博客管理</span>
+					</a></li>
+					<li class="nav-item"><a href="javascript:create_tag_table();"
+						class="nav-link nav-toggle"> <i class="fa fa-tags"></i> <span
+							class="title">标签管理</span>
+					</a></li>
+					<li class="nav-item"><a
+						href="javascript:create_resource_table();"
+						class="nav-link nav-toggle"> <i class="fa fa-newspaper-o"></i>
+							<span class="title">资源管理</span>
 					</a></li>
 					<li class="heading">
 						<h3 class="uppercase">设置</h3>
@@ -238,53 +249,477 @@ License: You must have a valid license purchased only from themeforest(the above
 									<i class="icon-settings font-dark"></i> <span
 										class="caption-subject bold uppercase">管理</span>
 								</div>
-								<!-- <div class="actions">
+								<div class="actions">
 									<div class="btn-group btn-group-devided" data-toggle="buttons">
 										<label
-											class="btn btn-transparent dark btn-outline btn-circle btn-sm active">
-											<input type="radio" name="options" class="toggle"
-											id="option1">Actions
-										</label> <label
+											class="btn btn-transparent dark btn-outline btn-circle btn-sm active"
+											onclick="create();"> <input type="radio"
+											name="options" class="toggle" id="option1">新增
+										</label>
+										<!--  <label
 											class="btn btn-transparent dark btn-outline btn-circle btn-sm">
 											<input type="radio" name="options" class="toggle"
 											id="option2">Settings
-										</label>
+										</label> -->
 									</div>
-								</div> -->
+								</div>
 							</div>
+							<input type="hidden" class="txtshort" id="currentObj" value="1" />
 							<div class="portlet-body">
-								<div class="table-toolbar">
+								<!-- <div class="table-toolbar">
 									<div class="row">
-										<div class="col-md-6">
+										<div class="col-md-6" >
 											<div class="btn-group">
-												<button id="sample_editable_1_new" class="btn sbold green">
+												<button id="sample_editable_1_new" class="btn sbold green"
+													onclick="create();">
 													新增 <i class="fa fa-plus"></i>
 												</button>
 											</div>
 										</div>
 									</div>
-								</div>
+								</div> -->
 								<!-- <table class="table table-striped table-bordered table-hover table-checkable order-column" id="sample_1">
 								</table> -->
+
+								<div class="row">
+									<div class="col-md-6" style="display: none;" id="createUser">
+										<!-- BEGIN VALIDATION STATES-->
+										<div class="portlet light portlet-fit portlet-form bordered">
+											<div class="portlet-title">
+												<div class="caption">
+													<i class=" icon-layers font-green"></i> <span
+														class="caption-subject font-green sbold uppercase">新增用户</span>
+												</div>
+											</div>
+											<div class="portlet-body">
+												<!-- BEGIN FORM-->
+												<form class="form-horizontal" id="createUserForm">
+													<div class="form-body">
+														<div class="form-group form-md-line-input">
+															<label class="col-md-3 control-label"
+																for="form_control_1">昵称 <span class="required">*</span>
+															</label>
+															<div class="col-md-9">
+																<input type="text" class="form-control" placeholder=""
+																	name="name">
+																<div class="form-control-focus"></div>
+															</div>
+														</div>
+														<div class="form-group form-md-line-input">
+															<label class="col-md-3 control-label"
+																for="form_control_1">邮箱 <span class="required">*</span>
+															</label>
+															<div class="col-md-9">
+																<input type="text" class="form-control" placeholder=""
+																	name="email">
+																<div class="form-control-focus"></div>
+															</div>
+														</div>
+														<div class="form-group form-md-line-input">
+															<label class="col-md-3 control-label"
+																for="form_control_1">密码 <span class="required">*</span>
+															</label>
+															<div class="col-md-9">
+																<input type="password" class="form-control" placeholder=""
+																	name="password">
+																<div class="form-control-focus"></div>
+															</div>
+														</div>
+														<div class="form-group form-md-line-input">
+															<label class="col-md-3 control-label"
+																for="form_control_1">手机 <span class="required">&nbsp;</span>
+															</label>
+															<div class="col-md-9">
+																<input type="text" class="form-control" placeholder=""
+																	name="phone">
+																<div class="form-control-focus"></div>
+															</div>
+														</div>
+														<div class="form-group form-md-line-input">
+															<label class="col-md-3 control-label"
+																for="form_control_1">地址 <span class="required">&nbsp;</span>
+															</label>
+															<div class="col-md-9">
+																<input type="text" class="form-control" placeholder=""
+																	name="address">
+																<div class="form-control-focus"></div>
+															</div>
+														</div>
+														<div class="form-group form-md-line-input">
+															<label class="col-md-3 control-label"
+																for="form_control_1">是否可用 <span class="required">&nbsp;</span>
+															</label>
+															<div class="col-md-4">
+																<div class="mt-radio-list"
+																	data-error-container="#form_2_membership_error">
+																	<label class="mt-radio"> <input type="radio"
+																		name="usableStatus" value="0" checked="true" /> 是 <span></span>
+																	</label> <label class="mt-radio"> <input type="radio"
+																		name="usableStatus" value="1" /> 否 <span></span>
+																	</label>
+																</div>
+																<div id="form_2_membership_error"></div>
+															</div>
+														</div>
+													</div>
+													<div class="form-actions">
+														<div class="row">
+															<div class="col-md-offset-3 col-md-9">
+																<!-- <button type="submit" class="btn green" onclick="test()"></button> -->
+																<input type = "button" class="btn green" onclick="createPost()" value = "提交"></input>
+																<button type="reset" class="btn default">重置</button>
+															</div>
+														</div>
+													</div>
+												</form>
+												<!-- END FORM-->
+											</div>
+										</div>
+										<!-- END VALIDATION STATES-->
+									</div>
+
+
+									<!-- 创建标签-->
+									<div class="col-md-6" style="display: none;" id="createTag">
+										<!-- BEGIN VALIDATION STATES-->
+										<div class="portlet light portlet-fit portlet-form bordered">
+											<div class="portlet-title">
+												<div class="caption">
+													<i class=" icon-layers font-green"></i> <span
+														class="caption-subject font-green sbold uppercase">新增标签</span>
+												</div>
+											</div>
+											<div class="portlet-body">
+												<!-- BEGIN FORM-->
+												<form action="#" class="form-horizontal" id="createTagForm">
+													<div class="form-body">
+														<div class="form-group form-md-line-input">
+															<label class="col-md-3 control-label"
+																for="form_control_1">标签名称 <span class="required">*</span>
+															</label>
+															<div class="col-md-9">
+																<input type="text" class="form-control" placeholder=""
+																	name="name">
+																<div class="form-control-focus"></div>
+															</div>
+														</div>
+														<div class="form-group form-md-line-input">
+															<label class="col-md-3 control-label"
+																for="form_control_1">是否可用 <span class="required">&nbsp;</span>
+															</label>
+															<div class="col-md-4">
+																<div class="mt-radio-list"
+																	data-error-container="#form_2_membership_error">
+																	<label class="mt-radio"> <input type="radio"
+																		name="usableStatus" value="1" checked="true" /> 是 <span></span>
+																	</label> <label class="mt-radio"> <input type="radio"
+																		name="usableStatus" value="2" /> 否 <span></span>
+																	</label>
+																</div>
+																<div id="form_2_membership_error"></div>
+															</div>
+														</div>
+													</div>
+													<div class="form-actions">
+														<div class="row">
+															<div class="col-md-offset-3 col-md-9">
+																<input type = "button" class="btn green" onclick="createPost()" value = "提交"></input>
+																<button type="reset" class="btn default">重置</button>
+															</div>
+														</div>
+													</div>
+												</form>
+												<!-- END FORM-->
+											</div>
+										</div>
+										<!-- END VALIDATION STATES-->
+									</div>
+									<!-- 创建标签结束-->
+
+
+									<!-- 创建博客-->
+									<div class="col-md-6" style="display: none;" id="createBlog">
+										<!-- BEGIN VALIDATION STATES-->
+										<div class="portlet light portlet-fit portlet-form bordered">
+											<div class="portlet-title">
+												<div class="caption">
+													<i class=" icon-layers font-green"></i> <span
+														class="caption-subject font-green sbold uppercase">新增博客</span>
+												</div>
+											</div>
+											<div class="portlet-body">
+												<!-- BEGIN FORM-->
+												<form action="#" class="form-horizontal" id="createBlogForm">
+													<div class="form-body">
+														<div class="form-group form-md-line-input">
+															<label class="col-md-3 control-label"
+																for="form_control_1">标题 <span class="required">*</span>
+															</label>
+															<div class="col-md-9">
+																<input type="text" class="form-control" placeholder=""
+																	name="name">
+																<div class="form-control-focus"></div>
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-3">Html文件</label>
+															<div class="col-md-3">
+																<div class="fileinput fileinput-new"
+																	data-provides="fileinput">
+																	<div class="input-group input-large">
+																		<div
+																			class="form-control uneditable-input input-fixed input-medium"
+																			data-trigger="fileinput">
+																			<i class="fa fa-file fileinput-exists"></i>&nbsp; <span
+																				class="fileinput-filename"> </span>
+																		</div>
+																		<span class="input-group-addon btn default btn-file">
+																			<span class="fileinput-new">选择 </span> <span
+																			class="fileinput-exists"> 更改 </span> <input
+																			type="file" name="...">
+																		</span> <a href="javascript:;"
+																			class="input-group-addon btn red fileinput-exists"
+																			data-dismiss="fileinput"> 删除 </a>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div class="form-group">
+															<label class="control-label col-md-3">MarkDown文件</label>
+															<div class="col-md-3">
+																<div class="fileinput fileinput-new"
+																	data-provides="fileinput">
+																	<div class="input-group input-large">
+																		<div
+																			class="form-control uneditable-input input-fixed input-medium"
+																			data-trigger="fileinput">
+																			<i class="fa fa-file fileinput-exists"></i>&nbsp; <span
+																				class="fileinput-filename"> </span>
+																		</div>
+																		<span class="input-group-addon btn default btn-file">
+																			<span class="fileinput-new">选择 </span> <span
+																			class="fileinput-exists"> 更改 </span> <input
+																			type="file" name="...">
+																		</span> <a href="javascript:;"
+																			class="input-group-addon btn red fileinput-exists"
+																			data-dismiss="fileinput"> 删除 </a>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<!-- <div class="form-group form-md-line-input">
+															<label class="col-md-3 control-label"
+																for="form_control_1">MarkDown文件 <span
+																class="required">*</span>
+															</label>
+															<div class="col-md-9">
+																<input type="text" class="form-control" placeholder=""
+																	name="url">
+																<div class="form-control-focus"></div>
+															</div>
+														</div> -->
+														<div class="form-group form-md-line-input">
+															<label class="col-md-3 control-label"
+																for="form_control_1">博客标签 <span class="required">&nbsp;</span>
+															</label>
+															<div class="col-md-9">
+																<input type="text" class="form-control" placeholder=""
+																	name="number">
+																<div class="form-control-focus"></div>
+															</div>
+														</div>
+														<div class="form-group form-md-line-input">
+															<label class="col-md-3 control-label"
+																for="form_control_1">是否可用 <span class="required">&nbsp;</span>
+															</label>
+															<div class="col-md-4">
+																<div class="mt-radio-list"
+																	data-error-container="#form_2_membership_error">
+																	<label class="mt-radio"> <input type="radio"
+																		name="usableStatus" value="1" checked="true" /> 是 <span></span>
+																	</label> <label class="mt-radio"> <input type="radio"
+																		name="usableStatus" value="2" /> 否 <span></span>
+																	</label>
+																</div>
+																<div id="form_2_membership_error"></div>
+															</div>
+														</div>
+													</div>
+													<div class="form-actions">
+														<div class="row">
+															<div class="col-md-offset-3 col-md-9">
+																<input type = "button" class="btn green" onclick="createPost()" value = "提交"></input>
+																<button type="reset" class="btn default">重置</button>
+															</div>
+														</div>
+													</div>
+												</form>
+												<!-- END FORM-->
+											</div>
+										</div>
+										<!-- END VALIDATION STATES-->
+									</div>
+									<!-- 创建博客结束-->
+
+									<!-- 创建角色-->
+									<div class="col-md-6" style="display: none;" id="createRole">
+										<!-- BEGIN VALIDATION STATES-->
+										<div class="portlet light portlet-fit portlet-form bordered">
+											<div class="portlet-title">
+												<div class="caption">
+													<i class=" icon-layers font-green"></i> <span
+														class="caption-subject font-green sbold uppercase">新增角色</span>
+												</div>
+											</div>
+											<div class="portlet-body">
+												<!-- BEGIN FORM-->
+												<form action="#" class="form-horizontal" id="createRoleForm">
+													<div class="form-body">
+														<div class="form-group form-md-line-input">
+															<label class="col-md-3 control-label"
+																for="form_control_1">角色名称 <span class="required">*</span>
+															</label>
+															<div class="col-md-9">
+																<input type="text" class="form-control" placeholder=""
+																	name="name">
+																<div class="form-control-focus"></div>
+															</div>
+														</div>
+														<div class="form-group form-md-line-input">
+															<label class="col-md-3 control-label"
+																for="form_control_1">角色描述 <span class="required">*</span>
+															</label>
+															<div class="col-md-9">
+																<input type="text" class="form-control" placeholder=""
+																	name="description">
+																<div class="form-control-focus"></div>
+															</div>
+														</div>
+														<div class="form-group form-md-line-input">
+															<label class="col-md-3 control-label"
+																for="form_control_1">是否可用 <span class="required">&nbsp;</span>
+															</label>
+															<div class="col-md-4">
+																<div class="mt-radio-list"
+																	data-error-container="#form_2_membership_error">
+																	<label class="mt-radio"> <input type="radio"
+																		name="usableStatus" value="1" checked="true" /> 是 <span></span>
+																	</label> <label class="mt-radio"> <input type="radio"
+																		name="usableStatus" value="2" /> 否 <span></span>
+																	</label>
+																</div>
+																<div id="form_2_membership_error"></div>
+															</div>
+														</div>
+													</div>
+													<div class="form-actions">
+														<div class="row">
+															<div class="col-md-offset-3 col-md-9">
+																<input type = "button" class="btn green" onclick="createPost()" value = "提交"></input>
+																<button type="reset" class="btn default">重置</button>
+															</div>
+														</div>
+													</div>
+												</form>
+												<!-- END FORM-->
+											</div>
+										</div>
+										<!-- END VALIDATION STATES-->
+									</div>
+									<!-- 创建角色结束-->
+
+									<!-- 创建资源-->
+									<div class="col-md-6" style="display: none;" id="createResource">
+										<!-- BEGIN VALIDATION STATES-->
+										<div class="portlet light portlet-fit portlet-form bordered">
+											<div class="portlet-title">
+												<div class="caption">
+													<i class=" icon-layers font-green"></i> <span
+														class="caption-subject font-green sbold uppercase">新增资源</span>
+												</div>
+											</div>
+											<div class="portlet-body">
+												<!-- BEGIN FORM-->
+												<form action="#" class="form-horizontal" id="createResourceForm">
+													<div class="form-body">
+														<div class="form-group form-md-line-input">
+															<label class="col-md-3 control-label"
+																for="form_control_1">资源名称 <span class="required">*</span>
+															</label>
+															<div class="col-md-9">
+																<input type="text" class="form-control" placeholder=""
+																	name="name">
+																<div class="form-control-focus"></div>
+															</div>
+														</div>
+														<div class="form-group form-md-line-input">
+															<label class="col-md-3 control-label"
+																for="form_control_1">资源描述 <span class="required">&nbsp;</span>
+															</label>
+															<div class="col-md-9">
+																<input type="text" class="form-control" placeholder=""
+																	name="description">
+																<div class="form-control-focus"></div>
+															</div>
+														</div>
+														<div class="form-group form-md-line-input">
+															<label class="col-md-3 control-label"
+																for="form_control_1">资源地址 <span class="required">*</span>
+															</label>
+															<div class="col-md-9">
+																<input type="text" class="form-control" placeholder=""
+																	name="url">
+																<div class="form-control-focus"></div>
+															</div>
+														</div>
+														<div class="form-group form-md-line-input">
+															<label class="col-md-3 control-label"
+																for="form_control_1">父资源ID <span class="required">&nbsp;</span>
+															</label>
+															<div class="col-md-9">
+																<input type="text" class="form-control" placeholder=""
+																	name="parentId">
+																<div class="form-control-focus"></div>
+															</div>
+														</div>
+														
+														<div class="form-group form-md-line-input">
+															<label class="col-md-3 control-label"
+																for="form_control_1">是否可用 <span class="required">&nbsp;</span>
+															</label>
+															<div class="col-md-4">
+																<div class="mt-radio-list"
+																	data-error-container="#form_2_membership_error">
+																	<label class="mt-radio"> <input type="radio"
+																		name="usableStatus" value="1" checked="true" /> 是 <span></span>
+																	</label> <label class="mt-radio"> <input type="radio"
+																		name="usableStatus" value="2" /> 否 <span></span>
+																	</label>
+																</div>
+																<div id="form_2_membership_error"></div>
+															</div>
+														</div>
+													</div>
+													<div class="form-actions">
+														<div class="row">
+															<div class="col-md-offset-3 col-md-9">
+																<input type = "button" class="btn green" onclick="createPost()" value = "提交"></input>
+																<button type="reset" class="btn default">重置</button>
+															</div>
+														</div>
+													</div>
+												</form>
+												<!-- END FORM-->
+											</div>
+										</div>
+										<!-- END VALIDATION STATES-->
+									</div>
+									<!-- 创建资源结束-->
+
+								</div>
 								<table class="table table-hover" id="cusTable"
 									data-pagination="true" data-show-refresh="false"
 									data-show-toggle="false" data-showColumns="true">
-									<!-- <thead>
-										<tr>
-											<th data-field="id"></th>
-											<th data-field="name"></th>
-											<th data-field="email"></th>
-											<th data-field="phone"></th>
-											<th data-field="adress"></th>
-											<th data-field="usable_status"></th>
-											<th data-field="last_login_date"></th>
-											<th data-align="name" data-field="superviseID"
-												class="col-sm-1">ID</th>
-											<th data-field="superviseName">未完成任务</th>
-											<th data-formatter="operateBtn" data-events="operateEvents"
-												class="col-md-2">评价</th>
-										</tr>
-									</thead> -->
 								</table>
 							</div>
 						</div>
@@ -443,7 +878,13 @@ License: You must have a valid license purchased only from themeforest(the above
 	<script
 		src="../theme/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js"
 		type="text/javascript"></script>
-	<script src="../theme/assets/operate/c.js" type="text/javascript"></script>
+	<script
+		src="../theme/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js"
+		type="text/javascript"></script>
+	<script src="../theme/assets/operate/list.js" type="text/javascript"></script>
+	<script src="../theme/assets/operate/update.js" type="text/javascript"></script>
+	<script src="../theme/assets/operate/create.js" type="text/javascript"></script>
+	<script src="../theme/assets/operate/delete.js" type="text/javascript"></script>
 </body>
 
 </html>

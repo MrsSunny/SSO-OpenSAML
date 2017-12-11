@@ -22,6 +22,11 @@
     ID, NAME, IMG_PATH, PASSWORD, EMAIL, PHONE, ADDRESS, LOGIN_SUM, LAST_LOGIN_IP, CREATE_DATE, 
     USABLE_STATUS, MODIFY_DATE, TOKEN, LOGIN_TYPE, LAST_LOGIN_DATE
   </sql>
+  
+  <sql id="Simple_Column_List" >
+    ID, NAME, IMG_PATH, EMAIL, PHONE, ADDRESS, LOGIN_SUM, LAST_LOGIN_IP, CREATE_DATE, USABLE_STATUS, MODIFY_DATE, LOGIN_TYPE, LAST_LOGIN_DATE
+  </sql>
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
@@ -34,24 +39,42 @@
     from USER
     where EMAIL = #{email,jdbcType=VARCHAR}
   </select>
+  <select id="selectByEmailAndName" resultType="java.lang.Integer" parameterType="org.sms.project.user.entity.User" >
+    select 
+    count(1)
+    from USER
+    where EMAIL = #{email,jdbcType=VARCHAR} or NAME = #{name,jdbcType=VARCHAR}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from USER
     where ID = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="org.sms.project.user.entity.User" >
-    insert into USER (ID, NAME, IMG_PATH, 
+  <insert id="insert" parameterType="org.sms.project.user.entity.User" useGeneratedKeys="true" keyProperty="id">
+    insert into USER (NAME, IMG_PATH, 
       PASSWORD, EMAIL, PHONE, 
       ADDRESS, LOGIN_SUM, LAST_LOGIN_IP, 
       CREATE_DATE, USABLE_STATUS, MODIFY_DATE, 
       TOKEN, LOGIN_TYPE, LAST_LOGIN_DATE
       )
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{imgPath,jdbcType=VARCHAR}, 
+    values (#{name,jdbcType=VARCHAR}, #{imgPath,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
       #{address,jdbcType=VARCHAR}, #{loginSum,jdbcType=INTEGER}, #{lastLoginIp,jdbcType=VARCHAR}, 
       #{createDate,jdbcType=TIMESTAMP}, #{usableStatus,jdbcType=INTEGER}, #{modifyDate,jdbcType=TIMESTAMP}, 
       #{token,jdbcType=VARCHAR}, #{loginType,jdbcType=INTEGER}, #{lastLoginDate,jdbcType=TIMESTAMP}
       )
   </insert>
+  
+  <select id="selectByPage" resultMap="BaseResultMap" parameterType="org.sms.project.page.Page" >
+    select 
+    <include refid="Simple_Column_List" />
+    from USER order by CREATE_DATE DESC limit #{startIndex,jdbcType=BIGINT},#{pageSize,jdbcType=BIGINT} 
+  </select>
+  
+  <select id="selectCount" resultType="java.lang.Integer" >
+    select count(1)
+    from USER
+  </select>
+  
   <insert id="insertSelective" parameterType="org.sms.project.user.entity.User" >
     insert into USER
     <trim prefix="(" suffix=")" suffixOverrides="," >
