@@ -2,8 +2,8 @@ package org.sms.project.common;
 
 public class ResultAdd {
     private int code;
-    private String message;
-    
+    private String error;
+
     public int getCode() {
         return code;
     }
@@ -12,11 +12,11 @@ public class ResultAdd {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
+    public String getError() {
+        return error;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setError(String error) {
+        this.error = error;
     }
 }

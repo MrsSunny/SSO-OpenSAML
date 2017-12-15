@@ -223,31 +223,49 @@
             // Other callbacks:
 
             // Callback for the submit event of each file upload:
-            // submit: function (e, data) {}, // .bind('fileuploadsubmit', func);
+             submit: function (e, data) {
+//            	 alert("submit");
+             }, // .bind('fileuploadsubmit', func);
 
             // Callback for the start of each file upload request:
-            // send: function (e, data) {}, // .bind('fileuploadsend', func);
+             send: function (e, data) {
+//            	 alert("send");
+             }, // .bind('fileuploadsend', func);
 
             // Callback for successful uploads:
-            // done: function (e, data) {}, // .bind('fileuploaddone', func);
+             done: function (e, data) {
+//            	 	alert("done");
+             }, // .bind('fileuploaddone', func);
 
             // Callback for failed (abort or error) uploads:
-            // fail: function (e, data) {}, // .bind('fileuploadfail', func);
+             fail: function (e, data) {
+//            	 	alert("fail");
+             }, // .bind('fileuploadfail', func);
 
             // Callback for completed (success, abort or error) requests:
-            // always: function (e, data) {}, // .bind('fileuploadalways', func);
+             always: function (e, data) {
+//            	 alert("always");
+             }, // .bind('fileuploadalways', func);
 
             // Callback for upload progress events:
-            // progress: function (e, data) {}, // .bind('fileuploadprogress', func);
+             progress: function (e, data) {
+//            	 	alert("progress");
+             }, // .bind('fileuploadprogress', func);
 
             // Callback for global upload progress events:
-            // progressall: function (e, data) {}, // .bind('fileuploadprogressall', func);
+             progressall: function (e, data) {
+//            	 alert("progressall");
+             }, // .bind('fileuploadprogressall', func);
 
             // Callback for uploads start, equivalent to the global ajaxStart event:
-            // start: function (e) {}, // .bind('fileuploadstart', func);
+             start: function (e) {
+//            	 alert("start");
+             }, // .bind('fileuploadstart', func);
 
             // Callback for uploads stop, equivalent to the global ajaxStop event:
-            // stop: function (e) {}, // .bind('fileuploadstop', func);
+             stop: function (e) {
+//            	 alert("stop");
+             }, // .bind('fileuploadstop', func);
 
             // Callback for change events of the fileInput(s):
             // change: function (e, data) {}, // .bind('fileuploadchange', func);
@@ -265,13 +283,17 @@
             // chunksend: function (e, data) {}, // .bind('fileuploadchunksend', func);
 
             // Callback for successful chunk uploads:
-            // chunkdone: function (e, data) {}, // .bind('fileuploadchunkdone', func);
+             chunkdone: function (e, data) {
+//            	 alert("chunkdone");
+             }, // .bind('fileuploadchunkdone', func);
 
             // Callback for failed (abort or error) chunk uploads:
             // chunkfail: function (e, data) {}, // .bind('fileuploadchunkfail', func);
 
             // Callback for completed (success, abort or error) chunk upload requests:
-            // chunkalways: function (e, data) {}, // .bind('fileuploadchunkalways', func);
+             chunkalways: function (e, data) {
+//            	 alert("chunkalways");
+             }, // .bind('fileuploadchunkalways', func);
 
             // The plugin options are used as settings object for the ajax calls.
             // The following are jQuery ajax settings required for the file uploads:

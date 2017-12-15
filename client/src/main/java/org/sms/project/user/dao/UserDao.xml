@@ -46,8 +46,7 @@
     where EMAIL = #{email,jdbcType=VARCHAR} or NAME = #{name,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from USER
-    where ID = #{id,jdbcType=BIGINT}
+    update USER set USABLE_STATUS = 1 where ID = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="org.sms.project.user.entity.User" useGeneratedKeys="true" keyProperty="id">
     insert into USER (NAME, IMG_PATH, 

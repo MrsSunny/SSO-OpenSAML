@@ -261,27 +261,6 @@ License: You must have a valid license purchased only from themeforest(the above
 		<!-- END QUICK SIDEBAR -->
 		<div class="page-content-wrapper">
 			<div class="page-content">
-				<!-- <table id="content-table"></table> -->
-
-
-
-
-
-
-
-				<!-- <div class="row">
-					<div class="col-md-12">
-					</div>
-				</div> -->
-
-
-
-
-
-
-
-
-
 				<div class="row">
 					<div class="col-md-12">
 						<!-- BEGIN EXAMPLE TABLE PORTLET-->
@@ -469,8 +448,6 @@ License: You must have a valid license purchased only from themeforest(the above
 														class="caption-subject font-green sbold uppercase">新增博客</span>
 												</div>
 											</div>
-
-
 											<div class="portlet-body">
 												<!-- BEGIN FORM-->
 												<form id="fileupload" action="/blog/upload"
@@ -553,17 +530,23 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <span class="preview"> {% if (file.thumbnailUrl) { %}
                                     <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery>
                                         <img src="{%=file.thumbnailUrl%}">
-                                    </a> {% } %} </span>
+                                    </a> {% } %} 
+								</span>
                             </td>
                             <td>
                                 <p class="name"> {% if (file.url) { %}
                                     <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl? 'data-gallery': ''%}>{%=file.name%}</a> {% } else { %}
                                     <span>{%=file.name%}</span> {% } %} </p> {% if (file.error) { %}
                                 <div>
-                                    <span class="label label-danger">Error</span> {%=file.error%}</div> {% } %} </td>
+                                    <span class="label label-danger">上传结果</span> {%=file.error%}</div> {% } %} </td>
+
+							{% if (file.code == 1) { %}
+                                        <input type="hidden" name="htmlFilePath" readonly value="{%=file.url%}">
+                                    {% } %} 
                             <td>
                                 <span class="size">{%=o.formatFileSize(file.size)%}</span>
                             </td>
+						   
                             <td> {% if (file.deleteUrl) { %}
                                 <button class="btn red delete btn-sm" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}" {% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}' {% } %}>
                                     <i class="fa fa-trash-o"></i>
@@ -574,7 +557,8 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <i class="fa fa-ban"></i>
                                     <span>Cancel</span>
                                 </button> {% } %} </td>
-                        </tr> {% } %} </script>
+                        </tr> {% } %} 
+</script>
 
 
 
@@ -590,12 +574,6 @@ License: You must have a valid license purchased only from themeforest(the above
 																<div class="form-control-focus"></div>
 															</div>
 														</div>
-
-														<input type="hidden" class="form-control"
-															name="htmlFilePath" readonly> <input
-															type="hidden" class="form-control" name="mdFilePath"
-															readonly>
-
 														<div class="form-group form-md-line-input">
 															<label class="col-md-3 control-label"
 																for="form_control_1">博客标签 <span class="required">&nbsp;</span>
@@ -1048,23 +1026,11 @@ License: You must have a valid license purchased only from themeforest(the above
 	<script
 		src="../theme/assets/global/plugins/jquery-file-upload/js/jquery.fileupload-ui.js"
 		type="text/javascript"></script>
-	<script src="../theme/assets/pages/scripts/form-fileupload.min.js"
+	<script src="../theme/assets/pages/scripts/form-fileupload.js"
 		type="text/javascript"></script>
 	<!-- END PAGE LEVEL PLUGINS -->
 	<!-- END THEME GLOBAL SCRIPTS -->
 	<!-- BEGIN PAGE LEVEL SCRIPTS -->
-
-
-
-
-
-
-
-
-
-
-
-
 
 	<script src="../theme/assets/operate/list.js" type="text/javascript"></script>
 	<script src="../theme/assets/operate/update.js" type="text/javascript"></script>

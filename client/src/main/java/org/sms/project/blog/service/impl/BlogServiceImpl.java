@@ -19,9 +19,7 @@ public class BlogServiceImpl implements BlogService {
     public long insert(Blog blog) {
         blog.setCreateDate(new Date());
         blog.setReadNum(0L);
-        blog.setHtmlFilePath("/ad");
-        blog.setMdFilePath("/vv/a.md");
-        blog.setContent("sdfsd");
+        blog.setContent("");
         return blogDao.insert(blog);
     }
 

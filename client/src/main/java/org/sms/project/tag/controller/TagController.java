@@ -41,11 +41,11 @@ public class TagController {
         ResultAdd resAdd = new ResultAdd();
         if (count == 0) {
             resAdd.setCode(0);
-            resAdd.setMessage("数据格式错误");
+            resAdd.setError("数据格式错误");
             return resAdd;
         }
         resAdd.setCode(1);
-        resAdd.setMessage("添加成功");
+        resAdd.setError("添加成功");
         return resAdd;
     }
 

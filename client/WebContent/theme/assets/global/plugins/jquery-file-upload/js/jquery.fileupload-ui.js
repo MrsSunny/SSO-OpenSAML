@@ -83,8 +83,12 @@
 
             // Callback to retrieve the list of files from the server response:
             getFilesFromResponse: function (data) {
-                if (data.result && $.isArray(data.result.files)) {
-                    return data.result.files;
+            		var pp = data.result
+//            		alert("Key:" + JSON.stringify(pp));
+//                if (data.result && $.isArray(data.result.files)) {
+                	if (data.result && $.isArray(data.result)) {
+                    return data.result;
+//                    return [];
                 }
                 return [];
             },

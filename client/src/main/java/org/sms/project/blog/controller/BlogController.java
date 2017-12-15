@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,6 +14,7 @@ import javax.validation.Valid;
 
 import org.sms.SysConstants;
 import org.sms.project.base.Result;
+import org.sms.project.blog.ResultUploadFile;
 import org.sms.project.blog.entity.Blog;
 import org.sms.project.blog.service.BlogService;
 import org.sms.project.common.ResultAdd;
@@ -48,19 +50,18 @@ public class BlogController {
         ResultAdd resAdd = new ResultAdd();
         if (count == 0) {
             resAdd.setCode(0);
-            resAdd.setMessage("数据格式错误");
+            resAdd.setError("数据格式错误");
             return resAdd;
         }
         resAdd.setCode(1);
-        resAdd.setMessage("添加成功");
+        resAdd.setError("添加成功");
         return resAdd;
     }
-
+    @ResponseBody
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public String upload(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+    public List<ResultUploadFile> upload(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
         InputStream in = null;
         OutputStream out = null;
-        System.out.println("=================");
         try {
             String rootPath = System.getProperty("catalina.home");
             File dir = new File(rootPath + File.separator + "tmpFiles");
@@ -85,7 +86,6 @@ public class BlogController {
                 try {
                     out.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
                 out = null;
@@ -95,13 +95,30 @@ public class BlogController {
                 try {
                     in.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
                 in = null;
             }
         }
-        return "login/login_success";
+        ResultUploadFile resAdd = new ResultUploadFile();
+        resAdd.setCode(1);
+        resAdd.setUrl("http://soaer.com/s.md");
+        resAdd.setName("yt_protocol.md");
+        resAdd.setError("添加成功");
+        List<ResultUploadFile> res = new ArrayList<ResultUploadFile>();
+        res.add(resAdd);
+        return res;
+    }
+    
+    @ResponseBody
+    @RequestMapping(value = "/upload", method = RequestMethod.GET)
+    public ResultAdd uploadGet(HttpServletRequest request) {
+        ResultAdd resAdd = new ResultAdd();
+        resAdd.setCode(1);
+        resAdd.setError("添加成功");
+        List<ResultAdd> res = new ArrayList<ResultAdd>();
+        res.add(resAdd);
+        return resAdd;
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)

@@ -39,11 +39,11 @@ public class UserController {
         ResultAdd resAdd = new ResultAdd();
         if (id == 0) {
             resAdd.setCode(0);
-            resAdd.setMessage("数据格式错误");
+            resAdd.setError("数据格式错误");
             return resAdd;
         }
         resAdd.setCode(1);
-        resAdd.setMessage("添加成功");
+        resAdd.setError("添加成功");
         return resAdd;
     }
 
@@ -80,5 +80,21 @@ public class UserController {
     @RequestMapping(value = "/isExit/{email}", method = RequestMethod.GET)
     public String isExit(@PathVariable("email") String email, HttpServletRequest request) {
         return "login/login_success";
+    }
+    
+    @ResponseBody
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public ResultAdd delete(HttpServletRequest request) {
+        String id = request.getParameter("id");
+        int count = sysUserService.delete(Long.parseLong(id));
+        ResultAdd resAdd = new ResultAdd();
+        if (count == 0) {
+            resAdd.setCode(0);
+            resAdd.setError("删除失败");
+            return resAdd;
+        }
+        resAdd.setCode(1);
+        resAdd.setError("删除成功");
+        return resAdd;
     }
 }
