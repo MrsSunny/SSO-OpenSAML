@@ -412,9 +412,9 @@ License: You must have a valid license purchased only from themeforest(the above
 																<div class="mt-radio-list"
 																	data-error-container="#form_2_membership_error">
 																	<label class="mt-radio"> <input type="radio"
-																		name="usableStatus" value="1" checked="true" /> 是 <span></span>
+																		name="usableStatus" value="0" checked="true" /> 是 <span></span>
 																	</label> <label class="mt-radio"> <input type="radio"
-																		name="usableStatus" value="2" /> 否 <span></span>
+																		name="usableStatus" value="1" /> 否 <span></span>
 																	</label>
 																</div>
 																<div id="form_2_membership_error"></div>
@@ -596,9 +596,9 @@ License: You must have a valid license purchased only from themeforest(the above
 																<div class="mt-radio-list"
 																	data-error-container="#form_2_membership_error">
 																	<label class="mt-radio"> <input type="radio"
-																		name="usableStatus" value="1" checked="true" /> 是 <span></span>
+																		name="usableStatus" value="0" checked="true" /> 是 <span></span>
 																	</label> <label class="mt-radio"> <input type="radio"
-																		name="usableStatus" value="2" /> 否 <span></span>
+																		name="usableStatus" value="1" /> 否 <span></span>
 																	</label>
 																</div>
 																<div id="form_2_membership_error"></div>
@@ -664,9 +664,9 @@ License: You must have a valid license purchased only from themeforest(the above
 																<div class="mt-radio-list"
 																	data-error-container="#form_2_membership_error">
 																	<label class="mt-radio"> <input type="radio"
-																		name="usableStatus" value="1" checked="true" /> 是 <span></span>
+																		name="usableStatus" value="0" checked="true" /> 是 <span></span>
 																	</label> <label class="mt-radio"> <input type="radio"
-																		name="usableStatus" value="2" /> 否 <span></span>
+																		name="usableStatus" value="1" /> 否 <span></span>
 																	</label>
 																</div>
 																<div id="form_2_membership_error"></div>
@@ -756,9 +756,9 @@ License: You must have a valid license purchased only from themeforest(the above
 																<div class="mt-radio-list"
 																	data-error-container="#form_2_membership_error">
 																	<label class="mt-radio"> <input type="radio"
-																		name="usableStatus" value="1" checked="true" /> 是 <span></span>
+																		name="usableStatus" value="0" checked="true" /> 是 <span></span>
 																	</label> <label class="mt-radio"> <input type="radio"
-																		name="usableStatus" value="2" /> 否 <span></span>
+																		name="usableStatus" value="1" /> 否 <span></span>
 																	</label>
 																</div>
 																<div id="form_2_membership_error"></div>

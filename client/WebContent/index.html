@@ -2,35 +2,49 @@
 <html lang="en">
  <!--<![endif]-->
  <!-- BEGIN HEAD -->
- <head>
-  <meta charset="utf-8">
-  <title>SAML实现单点登录</title>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta content="width=device-width, initial-scale=1" name="viewport">
-  <meta content="#1 selling multi-purpose bootstrap admin theme sold in themeforest marketplace packed with angularjs, material design, rtl support with over thausands of templates and ui elements and plugins to power any type of web applications including saas and admin dashboards. Preview page of Theme #4 for statistics, charts, recent events and reports" name="description">
-  <meta content="" name="author">
-  <script type="text/javascript">	var username = "";	var _blogger = username;	var blog_address = "";	var currentUserName = "";	var fileName = '50921012';	var commentscount = 0;	var islock = false	window.quickReplyflag = true;	var totalFloor = 0;	var isBole = false;	var isDigg = false;	var isExpert = false;	var isAdm = false;</script>
-  <link href="../theme/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-  <link href="../theme/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css">
-  <link href="../theme/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-  <link href="../theme/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css">
-  <link href="../theme/assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css">
-  <link href="../theme/assets/global/css/plugins.min.css" rel="stylesheet" type="text/css">
-  <link href="../theme/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css">
-  <link href="../theme/assets/layouts/layout4/css/themes/default.min.css" rel="stylesheet" type="text/css" id="style_color">
-  <link href="../theme/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css">
-  <link href="../theme/assets/global/plugins/socicon/socicon.css" rel="stylesheet" type="text/css">
-  <link href="../theme/assets/global/plugins/jstree/dist/themes/default/style.min.css" rel="stylesheet" type="text/css">
-  <link href="../theme/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css">
-  <link href="../theme/assets/layouts/layout4/css/md.css" rel="stylesheet" type="text/css">
-  <link href="../theme/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css">
-  <link href="../theme/assets/global/plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css" rel="stylesheet" type="text/css">
-  <link href="../theme/assets/global/plugins/bootstrap-modal/css/bootstrap-modal.css" rel="stylesheet" type="text/css">
-  <link href="../theme/assets/apps/css/todo-2.min.css" rel="stylesheet" type="text/css">
-  <link href="../theme/assets/pages/css/profile.min.css" rel="stylesheet" type="text/css">
-  <link href="../theme/assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css">
- </head>
- <!-- END HEAD -->
+ <head> 
+  <meta charset="utf-8"> 
+  <title>SAML实现单点登录</title> 
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+  <meta content="width=device-width, initial-scale=1" name="viewport"> 
+  <meta content="#1 selling multi-purpose bootstrap admin theme sold in themeforest marketplace packed with angularjs, material design, rtl support with over thausands of templates and ui elements and plugins to power any type of web applications including saas and admin dashboards. Preview page of Theme #4 for statistics, charts, recent events and reports" name="description"> 
+  <meta content="" name="author"> 
+  <script type="text/javascript">
+	var username = "";
+	var _blogger = username;
+	var blog_address = "";
+	var currentUserName = "";
+	var fileName = '50921012';
+	var commentscount = 0;
+	var islock = false
+	window.quickReplyflag = true;
+	var totalFloor = 0;
+	var isBole = false;
+	var isDigg = false;
+	var isExpert = false;
+	var isAdm = false;
+</script> 
+  <link href="../theme/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"> 
+  <link href="../theme/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css"> 
+  <link href="../theme/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"> 
+  <link href="../theme/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css"> 
+  <link href="../theme/assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css"> 
+  <link href="../theme/assets/global/css/plugins.min.css" rel="stylesheet" type="text/css"> 
+  <link href="../theme/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css"> 
+  <link href="../theme/assets/layouts/layout4/css/themes/default.min.css" rel="stylesheet" type="text/css" id="style_color"> 
+  <link href="../theme/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css"> 
+  <link href="../theme/assets/global/plugins/socicon/socicon.css" rel="stylesheet" type="text/css"> 
+  <link href="../theme/assets/global/plugins/jstree/dist/themes/default/style.min.css" rel="stylesheet" type="text/css"> 
+  <link href="../theme/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css"> 
+  <link href="../theme/assets/layouts/layout4/css/md.css" rel="stylesheet" type="text/css"> 
+  <link href="../theme/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css"> 
+  <link href="../theme/assets/global/plugins/bootstrap-modal/css/bootstrap-modal-bs3patch.css" rel="stylesheet" type="text/css"> 
+  <link href="../theme/assets/global/plugins/bootstrap-modal/css/bootstrap-modal.css" rel="stylesheet" type="text/css"> 
+  <link href="../theme/assets/apps/css/todo-2.min.css" rel="stylesheet" type="text/css"> 
+  <link href="../theme/assets/pages/css/profile.min.css" rel="stylesheet" type="text/css"> 
+  <link href="../theme/assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css"> 
+ </head> 
+ <!-- END HEAD --> 
  <body class="page-container-bg-solid page-header-fixed page-sidebar-closed-hide-logo"> 
   <!-- BEGIN HEADER --> 
   <div class="page-header navbar navbar-fixed-top"> 
@@ -54,11 +68,6 @@
         </ul></li> 
        <li class="dropdown dropdown-user dropdown-dark"><a href="http://www.baidu.com" class="dropdown-toggle" data-hover="dropdown" data-close-others="true"> <span class="username username-hide-on-mobile">关于作者</span> 
          <!-- DOC: Do not remove below empty space(&nbsp;) as its purposely used --> <img alt="" class="img-circle"> </a></li> 
-       <!-- <li class="dropdown dropdown-user dropdown-dark">						<a href="http://passport.soaer.com:8888/login.html?redirectUrl=http%3A%2F%2Fsoaer.com%3A8888%2Findex" class="dropdown-toggle"							 data-hover="dropdown"							data-close-others="true"> <span								class="username username-hide-on-mobile">登陆</span>								<img alt="" class="img-circle" />						</a></li>						<li class="dropdown dropdown-user dropdown-dark"><a							href="http://passport.soaer.com:8888/login.html?redirectUrl=http%3A%2F%2Fsoaer.com%3A8888%2Findex" class="dropdown-toggle"							data-hover="dropdown"							data-close-others="true"> <span								class="username username-hide-on-mobile">注册</span>								<img alt="" class="img-circle" />						</a></li> --> 
-       <!-- <li class="dropdown dropdown-user dropdown-dark"><a							href="javascript:;" class="dropdown-toggle"							data-toggle="dropdown" data-hover="dropdown"							data-close-others="true"> <span								class="username username-hide-on-mobile"> Sunny </span> <img								alt="" class="img-circle"								src="../theme/assets/layouts/layout4/img/sunny.png" />						</a>							<ul class="dropdown-menu dropdown-menu-default">								<li><a href="page_user_profile_1.html"> <i										class="icon-user"></i>联系作者								</a></li>								<li><a href="app_calendar.html"> <i										class="icon-calendar"></i>关于作者								</a></li>							</ul></li> --> 
-       <!-- END USER LOGIN DROPDOWN --> 
-       <!-- BEGIN QUICK SIDEBAR TOGGLER --> 
-       <!-- END QUICK SIDEBAR TOGGLER --> 
       </ul> 
      </div> 
      <!-- END TOP NAVIGATION MENU --> 
@@ -80,8 +89,33 @@
     <!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed --> 
     <div class="page-sidebar navbar-collapse collapse"> 
      <ul class="page-sidebar-menu   " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200"> 
-      <!-- <li class="nav-item start active open"><a href="javascript:;"						class="nav-link nav-toggle"> <i class="icon-home"></i> <span							class="title">首页</span>					</a></li> --> 
-      <!-- <li class="heading">						<h3 class="uppercase">模块管理</h3>					</li>					<li class="nav-item  "><a href="javascript:;"						class="nav-link nav-toggle"> <i class="icon-user"></i> <span							class="title">用户管理</span>					</a></li>					<li class="nav-item  "><a href="javascript:;"						class="nav-link nav-toggle"> <i class="fa fa-users"></i> <span							class="title">权限管理</span>					</a></li>					<li class="heading">						<h3 class="uppercase">设置</h3>					</li>					<li class="nav-item  "><a href="javascript:;"						class="nav-link nav-toggle"> <i class="fa fa-file-o"></i> <span							class="title">登录日志</span>					</a></li>					<li class="nav-item  "><a href="javascript:;"						class="nav-link nav-toggle"> <i class="fa fa-wrench"></i> <span							class="title">修改密码</span>					</a></li> --> 
+      <!-- <li class="nav-item start active open"><a href="javascript:;"
+						class="nav-link nav-toggle"> <i class="icon-home"></i> <span
+							class="title">首页</span>
+					</a></li> --> 
+      <!-- <li class="heading">
+						<h3 class="uppercase">模块管理</h3>
+					</li>
+					<li class="nav-item  "><a href="javascript:;"
+						class="nav-link nav-toggle"> <i class="icon-user"></i> <span
+							class="title">用户管理</span>
+					</a></li>
+					<li class="nav-item  "><a href="javascript:;"
+						class="nav-link nav-toggle"> <i class="fa fa-users"></i> <span
+							class="title">权限管理</span>
+					</a></li>
+
+					<li class="heading">
+						<h3 class="uppercase">设置</h3>
+					</li>
+					<li class="nav-item  "><a href="javascript:;"
+						class="nav-link nav-toggle"> <i class="fa fa-file-o"></i> <span
+							class="title">登录日志</span>
+					</a></li>
+					<li class="nav-item  "><a href="javascript:;"
+						class="nav-link nav-toggle"> <i class="fa fa-wrench"></i> <span
+							class="title">修改密码</span>
+					</a></li> --> 
       <div class="profile-sidebar"> 
        <!-- PORTLET MAIN --> 
        <div class="portlet light profile-sidebar-portlet bordered"> 
@@ -99,10 +133,25 @@
         </div> 
         <!-- END SIDEBAR USER TITLE --> 
         <!-- SIDEBAR BUTTONS --> 
-        <!-- <div class="profile-userbuttons">								<button type="button" class="btn btn-circle green btn-sm">Follow</button>								<button type="button" class="btn btn-circle red btn-sm">Message</button>							</div> --> 
+        <!-- <div class="profile-userbuttons">
+								<button type="button" class="btn btn-circle green btn-sm">Follow</button>
+								<button type="button" class="btn btn-circle red btn-sm">Message</button>
+							</div> --> 
         <!-- END SIDEBAR BUTTONS --> 
         <!-- SIDEBAR MENU --> 
-        <!-- <div class="profile-usermenu">								<ul class="nav">									<li class="active"><a href="page_user_profile_1.html">											<i class="icon-home"></i> Overview									</a></li>									<li><a href="page_user_profile_1_account.html"> <i											class="icon-settings"></i> Account Settings									</a></li>									<li><a href="page_user_profile_1_help.html"> <i											class="icon-info"></i> Help									</a></li>								</ul>							</div> --> 
+        <!-- <div class="profile-usermenu">
+								<ul class="nav">
+									<li class="active"><a href="page_user_profile_1.html">
+											<i class="icon-home"></i> Overview
+									</a></li>
+									<li><a href="page_user_profile_1_account.html"> <i
+											class="icon-settings"></i> Account Settings
+									</a></li>
+									<li><a href="page_user_profile_1_help.html"> <i
+											class="icon-info"></i> Help
+									</a></li>
+								</ul>
+							</div> --> 
         <!-- END MENU --> 
        </div> 
        <div class="portlet light bordered"> 
@@ -299,7 +348,8 @@ sudo weave expose 10.0.0.254/24
 </code></pre> 
      <p>4.使用sudo weave expose 10.0.0.254/24 这种方式能够使宿主机和container通信，但是当宿主机重新启动的时候这个值就不存在了，建议开机启动的时候就设置这个值。</p> 
      <h2>weave 数据传输图</h2> 
-     <img src="http://img.blog.csdn.net/20160318101656030" alt="">
+     <img src="http://img.blog.csdn.net/20160318101656030" alt=""> 
+     <p></p> 
      <p>从图中可以看到容器之间是怎么跨主机通信的，性能问题可能就住要集中在weave Router上面了</p> 
      <h2>配置Elasticsearch</h2> 
      <p>elasticsearch.yml 内容如下</p> 
@@ -451,7 +501,10 @@ sudo weave run 10.0.0.1/24 --name "dataNode1" -m 9g -v /opt/conf/data_node_1:/us
   </div> 
   <!-- END CONTAINER --> 
   <div class="page-footer"> 
-   <!-- 	<div class="note note-info">					<img src="http://img1.126.net/channel21/0/028585_1200125_0811.jpg"						border="0" width=100% height=100% />	</div> --> 
+   <!-- 	<div class="note note-info">
+					<img src="http://img1.126.net/channel21/0/028585_1200125_0811.jpg"
+						border="0" width=100% height=100% />
+	</div> --> 
    <div class="page-footer-inner">
      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2016 © Metronic Theme By 
     <a target="_blank" href="http://keenthemes.com">Keenthemes</a> &nbsp;|&nbsp; 
@@ -470,29 +523,17 @@ sudo weave run 10.0.0.1/24 --name "dataNode1" -m 9g -v /opt/conf/data_node_1:/us
    </ul> 
    <span aria-hidden="true" class="quick-nav-bg"></span> 
   </nav> 
-  <!-- <div class="quick-nav-overlay"></div> --> 
-  <!-- END QUICK NAV --> 
-  <!--[if lt IE 9]><script src="../theme/assets/global/plugins/respond.min.js"></script><script src="../theme/assets/global/plugins/excanvas.min.js"></script> <script src="../theme/assets/global/plugins/ie8.fix.min.js"></script> <![endif]--> 
-  <!-- BEGIN CORE PLUGINS --> 
   <script src="../theme/assets/global/plugins/jquery.min.js" type="text/javascript"></script> 
   <script src="../theme/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script> 
   <script src="../theme/assets/global/plugins/js.cookie.min.js" type="text/javascript"></script> 
   <script src="../theme/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script> 
   <script src="../theme/assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script> 
   <script src="../theme/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script> 
-  <!-- END CORE PLUGINS --> 
-  <!-- BEGIN PAGE LEVEL PLUGINS --> 
-  <!-- END PAGE LEVEL PLUGINS --> 
-  <!-- BEGIN THEME GLOBAL SCRIPTS --> 
   <script src="../theme/assets/global/scripts/app.min.js" type="text/javascript"></script> 
-  <!-- END THEME GLOBAL SCRIPTS --> 
-  <!-- BEGIN PAGE LEVEL SCRIPTS --> 
-  <!-- END PAGE LEVEL SCRIPTS --> 
-  <!-- BEGIN THEME LAYOUT SCRIPTS --> 
   <script src="../theme/assets/layouts/layout4/scripts/layout.min.js" type="text/javascript"></script> 
   <script src="../theme/assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script> 
   <script src="../theme/assets/layouts/global/scripts/quick-nav.min.js" type="text/javascript"></script> 
   <script src="../theme/assets/operate/blog.min.js" type="text/javascript"></script> 
-  <!-- END THEME LAYOUT SCRIPTS -->
+  <!-- END THEME LAYOUT SCRIPTS -->   
  </body>
 </html>

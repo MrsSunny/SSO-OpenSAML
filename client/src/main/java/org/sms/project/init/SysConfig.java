@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,7 +18,6 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-
 import org.sms.SysConstants;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -35,6 +33,8 @@ public enum SysConfig {
     private static AtomicBoolean ISINIT = new AtomicBoolean(false);
 
     private static final Map<String, List<String>> IGNOREURLS = new HashMap<String, List<String>>();
+    
+    private static final Map<String, String> cache = new HashMap<String, String>();
 
     public void loadSysConfig() {
 
@@ -89,13 +89,17 @@ public enum SysConfig {
             lines = Files.readAllLines(Paths.get(file), StandardCharsets.UTF_8);
             StringBuilder sb = new StringBuilder();
             for (String line : lines) {
-                sb.append(line);
+                sb.append(line + "\r\n");
             }
             String fromFile = sb.toString();
-            System.out.println(fromFile);
+            cache.put(SysConstants.BLOH_HTML_KEY, fromFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public String getCacheDate(String key) {
+        return cache.get(key);
     }
 
     public List<String> getIgnoreUrls() {

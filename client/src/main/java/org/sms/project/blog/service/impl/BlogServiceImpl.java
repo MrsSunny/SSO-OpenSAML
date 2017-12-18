@@ -9,6 +9,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.sms.SysConstants;
 import org.sms.core.id.UUIDFactory;
 import org.sms.project.base.UploadFileBase;
 import org.sms.project.blog.dao.BlogDao;
@@ -16,7 +21,9 @@ import org.sms.project.blog.entity.Blog;
 import org.sms.project.blog.service.BlogService;
 import org.sms.project.filemanage.entity.FileManage;
 import org.sms.project.filemanage.service.FileManageService;
+import org.sms.project.init.SysConfig;
 import org.sms.project.page.Page;
+import org.sms.project.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,7 +40,21 @@ public class BlogServiceImpl implements BlogService {
     public long insert(Blog blog) {
         blog.setCreateDate(new Date());
         blog.setReadNum(0L);
-        blog.setContent("");
+        String htmlId = blog.getHtmlFileId();
+        String path = SysConstants.FILE_ABS_PATH + File.separator + "html" + File.separator + htmlId + ".html";
+        String htmlText = FileUtil.getText(path);
+        String templateText = SysConfig.INSTANCE.getCacheDate(SysConstants.BLOH_HTML_KEY);
+        Document docBlog = Jsoup.parse(templateText);
+        Document docSource = Jsoup.parse(htmlText);
+        Elements sourceRealBody = docSource.getElementsByTag("body");
+        String sourceRealBodyStr = sourceRealBody.html().toString();
+        Element singerListDiv = docBlog.getElementsByAttributeValue("class", "noteAd").first();
+        singerListDiv.after(sourceRealBodyStr);
+        blog.setContent(docBlog.toString());
+        if (blog.getUsableStatus() == 0) {
+            String blogPath = SysConstants.FILE_ABS_PATH + File.separator + "blog" + File.separator + htmlId + ".html";
+            FileUtil.writeText(blogPath, docBlog.toString());
+        }
         return blogDao.insert(blog);
     }
 
@@ -73,8 +94,7 @@ public class BlogServiceImpl implements BlogService {
         String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1).toLowerCase();
         String id = UUIDFactory.INSTANCE.getUUID();
         try {
-            String rootPath = System.getProperty("catalina.home");
-            File dir = new File(rootPath + File.separator + "tmpFiles" + File.separator + suffix);
+            File dir = new File(SysConstants.FILE_ABS_PATH + File.separator + suffix);
             if (!dir.exists())
                 dir.mkdirs();
             File serverFile = new File(dir.getAbsolutePath() + File.separator + id + "." + suffix);

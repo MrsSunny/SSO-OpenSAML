@@ -42,8 +42,10 @@ public interface SysConstants {
   int DEFAULT_EXPIRE = 7;
   String TICKET_SPILT = ",";
   String IGNORE_KEY = "ignoreUrl";
+  String BLOH_HTML_KEY = "blogHtml";
   String SYS_CONFIG = "config/sys/sysConfig.xml";
   String BLOG_TEMPLATE = "config/template/blog.html";
   String DOMAIN = "soaer.com";
   String ROLE_ADMAIN_NAME = "ADMIN";
+  String FILE_ABS_PATH = "/Users/sunny/work/soaer/";
 }
