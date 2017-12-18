@@ -46,7 +46,7 @@ SSO-OpenSAML项目既可以作为应用服务器，也可以作为SSO服务器�
 
 
 >
-![](WebContent/image/sso_process.png)
+>![](WebContent/image/sso_process.png)
 
 
 
@@ -55,29 +55,25 @@ SSO-OpenSAML项目既可以作为应用服务器，也可以作为SSO服务器�
 全部接口定义：
 
 ```
-	SSO-OpenSAML/src/main/java/org/sms/SysConstants.java
-
+SSO-OpenSAML/src/main/java/org/sms/SysConstants.java
 ```
 
 验证及生成接口：
 
 ```
-	SSO-OpenSAML/src/main/java/org/sms/opensaml/service/impl/SamlServiceImpl.java
-
+SSO-OpenSAML/src/main/java/org/sms/opensaml/service/impl/SamlServiceImpl.java
 ```
 
 公钥证书配置位置：
 
 ```
-	SSO-OpenSAML/src/main/resources/opensaml/SPSSODescriptor.xml
-
+SSO-OpenSAML/src/main/resources/opensaml/SPSSODescriptor.xml
 ```
 
 私钥证书配置位置
 
 ```
-	SSO-OpenSAML/src/main/resources/opensaml/IDPSSODescriptor.xml
-	
+SSO-OpenSAML/src/main/resources/opensaml/IDPSSODescriptor.xml
 ```
 
 ⚠️如果要使用的话一定要生成自己的证书，我的证书是通过openssl生成的。切记

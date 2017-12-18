@@ -1,0 +1,167 @@
+<!doctype html>
+<html>
+<head>
+<meta charset='UTF-8'><meta name='viewport' content='width=device-width initial-scale=1'>
+<title>docker-elasticsearch部署.md</title></head>
+<body><h1>docker-elasticsearch部署</h1>
+<p>docker部署Elasticsearch Cluster</p>
+<h2>安装 docker</h2>
+<p>安装docker 查看官方文档：针对每个系统版本进行安装。</p>
+<pre><code>https://docs.docker.com/installation/#installation
+</code></pre>
+<h2>启动 docker</h2>
+<pre><code>$ sudo service docker start
+</code></pre>
+<h2>编写Dockerfile</h2>
+<pre><code>FROM     debian:jessie
+MAINTAINER Sunny &quot;liuzhenx@hotmail.com&quot;
+RUN apt-get update
+RUN apt-get install -y vim wget curl
+ENV Elasticsearch_version elasticsearch-1.7.0
+RUN echo &quot;root:root&quot; |chpasswd
+RUN \
+  echo &quot;deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main&quot; | tee -a /etc/apt/sources.list &amp;&amp; \
+  echo &quot;deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main&quot; | tee -a /etc/apt/sources.list &amp;&amp; \
+  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886 &amp;&amp; \
+  apt-get update
+
+RUN \
+  echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections &amp;&amp; \
+  apt-get install -y oracle-java8-installer &amp;&amp;\
+  apt-get clean
+RUN echo &quot;JAVA_HOME=/usr/lib/jvm/java-8-oracle&quot; &gt;&gt; /etc/environment
+RUN mkdir /usr/es
+WORKDIR /usr/es
+RUN wget https://download.elastic.co/elasticsearch/elasticsearch/$Elasticsearch_version.tar.gz
+RUN tar -zxf $Elasticsearch_version.tar.gz
+WORKDIR $Elasticsearch_version/config
+RUN mv elasticsearch.yml elasticsearch.yml.bak
+WORKDIR /usr/es
+EXPOSE 9200 9300
+</code></pre>
+<h2>根据Dockerfile制作 images</h2>
+<p>Dockerfile文件路径：docker/</p>
+<pre><code>sudo docker build -t debian/elasticsearch .
+
+编译完成后查看镜像
+$ sudo docker images
+
+REPOSITORY                   TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+debian/elasticsearch         latest              5f0668a6b9k0        About an hour ago   899.1 MB
+
+</code></pre>
+<h2>安装weave</h2>
+<pre><code>sudo wget -O /usr/local/bin/weave https://raw.githubusercontent.com/zettio/weave/master/weave
+sudo chmod a+x /usr/local/bin/weave
+weave launch &amp;&amp; weave launch-dns &amp;&amp; weave launch-proxy
+sudo weave launch
+sudo weave ps 查看weave的路由状态
+sudo weave status 查看weave状态
+sudo weave expose &lt;addr&gt; 添加IP，能够使主机访问container
+</code></pre>
+<h2>weave 启动container</h2>
+<p>在物理机A（192.168.1.135）上启动Container</p>
+<pre><code>sudo weave run 10.0.0.1/24 --name &quot;dataNode1&quot; -m 4g -v /opt/conf/data_node_1:/usr/tomcat/conf -v /opt/data/data_node_1:/usr/tomcat/data debian/tomcat
+</code></pre>
+<p>在物理机B（192.168.1.136）上启动Container</p>
+<pre><code>
+sudo weave run 10.0.0.2/24 --name &quot;dataNode2&quot; -m 4g -v /opt/conf/data_node_2:/usr/tomcat/conf -v /opt/data/data_node_2:/usr/tomcat/data debian/tomcat
+
+</code></pre>
+<p>在物理机A（192.168.1.135）上执行</p>
+<pre><code>
+sudo weave launch
+
+</code></pre>
+<p>在物理机B（192.168.1.136）上执行</p>
+<pre><code>
+sudo weave launch 192.168.1.136
+
+sudo weave connect 192.168.1.135
+
+</code></pre>
+<p></p>
+<h2>weave实现container跨主机互联需要注意的地方</h2>
+<p>注意：</p>
+<p>1.weave 的应用隔离功能</p>
+<p>不同子网的container之间是默认隔离的，即使他们在同一台机器上面也不能ping通，不同物理机之间的容器也是默认隔离的。
+所以在weave启动container的时候 集群应用的IP必须在同一个字网下面。10.0.0.1，10.0.0.2，而不能是10.0.0.1，10.0.1.1.</p>
+<p>2.当container关闭需要重新启动的时候</p>
+<pre><code>建议用weave启动container。
+这时候必须制定addr，否则ip会改变。
+</code></pre>
+<pre><code>	sudo weave start 10.0.0.1/24 node1
+	sudo weave start 10.0.0.2/24 node2
+	sudo weave start 10.0.0.3/24 node3
+	sudo weave start 10.0.0.4/24 node4
+	
+</code></pre>
+<p>3.宿主机器与container通信的时候，需要执行下面的语句：</p>
+<pre><code>sudo weave expose &lt;addr&gt; 添加IP，能够使主机访问container
+此处的addr必须是没有被使用的addr。
+
+比如：
+
+sudo weave expose 10.0.0.254/24
+
+这个10.0.0.254/24地址必须是没有被使用的。
+
+</code></pre>
+<p>4.使用sudo weave expose 10.0.0.254/24 这种方式能够使宿主机和container通信，但是当宿主机重新启动的时候这个值就不存在了，建议开机启动的时候就设置这个值。</p>
+<h2>weave 数据传输图</h2>
+<p>(此图是转载的)
+<img src='http://img.blog.csdn.net/20160318101656030' alt='' /></p>
+<p>从图中可以看到容器之间是怎么跨主机通信的，性能问题可能就住要集中在weave Router上面了</p>
+<h2>配置Elasticsearch</h2>
+<p>elasticsearch.yml 内容如下</p>
+<pre><code>
+cluster.name: aaaaaaa-name
+node.name: nade_01
+index.number_of_shards: 8
+index.number_of_replicas: 2
+network.host: 10.0.0.1
+transport.tcp.port: 9300
+transport.tcp.compress: true
+path.data: /usr/es/data
+path.logs: /usr/es/logs
+http.port: 9200
+http.enabled: true
+node.master: true
+node.data: true
+index.store.type: mmapfs
+discovery.zen.minimum_master_nodes: 2
+discovery.zen.ping.timeout: 90s
+indices.fielddata.cache.size: 40%
+bootstrap.mlockall: true
+gateway.expected_nodes: 4
+indices.recovery.max_size_per_sec: 100mb
+index.cache.field.type: soft
+node.rack_id: 101150
+cluster.routing.allocation.awareness.attributes: rack_id
+
+</code></pre>
+<p>配置事项：</p>
+<p>1.indices.fielddata.cache.size 这个值如果不用doc_values的话最好设置一下，默认是无上限的。
+不过最好启用doc_values ，Elasticsearch官方也说明在以后的版本中doc_values会成为默认值。</p>
+<p>2.因为只有两台物理机，并且配置也不一样所以设置了一下分片规则。</p>
+<h2>关闭swap</h2>
+<p>由于swap会影响Elasticsearch的性能，所以应该关闭swap</p>
+<p>请看Es官方提供的方法：
+<a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-configuration.html' target='_blank' >https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-configuration.html</a></p>
+<p>注意：官网上说的方法不能在容器里面执行，因为swap是系统功能，应该在宿主机上禁用swap。
+docker 容器里面的root的用户如果不是特权容器是没有办法修改这些参数的。还有就是容器最好不要用特权启动，那样容器里面的root和外面的root权限就一样了，很危险。</p>
+<h2>修改fd 参数</h2>
+<p>和swap修改的方式一样，需要在宿主机上修改，
+sysctl -w vm.max_map_count=262144
+这个事官网修改的值（没有测试），要想彻底修改这个值需要修改/etc/sysctl.conf这个文件，在里面加上vm.max_map_count=262144</p>
+<h2>启动容器</h2>
+<p>因为要用weave实现cluster，所以容器用weave启动</p>
+<pre><code>
+sudo weave run 10.0.0.1/24 --name &quot;dataNode1&quot; -m 9g -v /opt/conf/data_node_1:/usr/es/elasticsearch-1.7.0/config -v /opt/data/data_node_1:/usr/es/data -v /opt/logs/data_node_1:/usr/es/logs debian/elasticsearch /usr/es/elasticsearch-1.7.0/bin/elasticsearch -D
+
+</code></pre>
+<p>注意：要把es三个目录挂在外面，配置文件目录、数据目录、日志目录。</p>
+<p>这样用docker结合weave 就能实现跨主机的cluster。</p>
+<p></p>
+</body>
+</html>

@@ -15,6 +15,7 @@ drop table if exists TAG;
 drop table if exists ROLE;
 drop table if exists BLOG;
 drop table if exists USER;
+drop table if exists FILE_MANAGE;
 
 /*==============================================================*/
 /* Table: APP                                                   */
@@ -38,8 +39,8 @@ create table BLOG
 (
    ID                   bigint(32) not null auto_increment,
    TITLE                varchar(200) not null,
-   HTML_FILE_PATH       varchar(200) default "",
-   MD_FILE_PATH         varchar(200) not null,
+   HTML_FILE_ID         varchar(36) default "",
+   MD_FILE_ID           varchar(36),
    CONTENT              text not null,
    READ_NUM             bigint(32) not null,
    USABLE_STATUS        int not null default 0,
@@ -81,6 +82,19 @@ charset = UTF8;
 alter table COMMENTS comment '评论';
 
 /*==============================================================*/
+/* Table: FILE_MANAGE                                           */
+/*==============================================================*/
+create table FILE_MANAGE
+(
+   ID                   varchar(36) not null,
+   FILE_PATH            varchar(100),
+   FILE_TYPE            varchar(10),
+   CREATE_DATE          datetime,
+   NAME                 varchar(100),
+   primary key (ID)
+);
+
+/*==============================================================*/
 /* Table: LOGIN_LOG                                             */
 /*==============================================================*/
 create table LOGIN_LOG
@@ -89,7 +103,7 @@ create table LOGIN_LOG
    IP                   varchar(45) not null,
    LOGIN_TIME           datetime default NULL,
    LOGIN_DT             varchar(45) default "",
-   USER_ID				bigint not null,
+   USER_ID              bigint not null,
    primary key (ID)
 )
 charset = UTF8;

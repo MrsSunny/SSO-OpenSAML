@@ -2,6 +2,8 @@ package org.sms.project.user.service.impl;
 
 import java.util.Date;
 import java.util.List;
+
+import org.sms.project.encrypt.md5.MD5;
 import org.sms.project.page.Page;
 import org.sms.project.user.dao.UserDao;
 import org.sms.project.user.entity.User;
@@ -33,6 +35,8 @@ public class UserServiceImpl implements UserService {
         if (count >= 1) {
             return 0;
         }
+        String salt = MD5.encrypt(user.getPassword().trim());
+        user.setPassword(salt);
         long successInsert = sysUserDao.insert(user);
         return successInsert;
     }
@@ -83,7 +87,7 @@ public class UserServiceImpl implements UserService {
         if (name == null || email == null || password == null || name.trim() == "" || email.trim() == "" || password.trim() == "") {
             return false;
         }
-        if (name.length() >= 15 || password.length() < 6 || password.length() > 18) {
+        if (name.length() >= 15 || password.length() < 3 || password.length() > 18) {
             return false;
         }
         

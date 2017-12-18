@@ -1,8 +1,11 @@
 package org.sms.project.blog.service;
 
 import java.util.List;
+
+import org.sms.project.base.UploadFileBase;
 import org.sms.project.blog.entity.Blog;
 import org.sms.project.page.Page;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface BlogService {
 
@@ -19,4 +22,6 @@ public interface BlogService {
     List<Blog> queryByCondition(Page page);
 
     List<Blog> queryByCondition(String query, String order, Page page);
+    
+    UploadFileBase addUpload(MultipartFile file);
 }

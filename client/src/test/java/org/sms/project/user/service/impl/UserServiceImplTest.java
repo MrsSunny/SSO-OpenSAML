@@ -27,10 +27,9 @@ public class UserServiceImplTest extends BaseTest {
     @Test
     public void testInsert() {
         User user = new User();
-        double random = Math.random();
-        user.setEmail("lzxlxw1@163.com" + random);
+        user.setEmail("lzxlxw@163.com");
         user.setPassword("111111");
-        user.setName("Sunny1" + random);
+        user.setName("Sunny");
         user.setLoginSum(0);
         user.setAddress("北京市海淀区上庄水库");
         user.setLastLoginDate(new Date());
@@ -38,8 +37,7 @@ public class UserServiceImplTest extends BaseTest {
         user.setLastLoginIp("192.168.1.1");
         user.setUsableStatus(0);
         user.setLoginType(0);
-        String salt = MD5.encrypt(user.getPassword().trim());
-        user.setPassword(salt);
+        userService.insert(user);
         System.out.println(user.getId());
         System.out.println(user.getId());
     }

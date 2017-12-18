@@ -209,19 +209,6 @@ function create_blog_table() {
 									sortable : false
 								},
 								{
-									field : 'htmlFilePath',
-									title : 'html文件路径',
-									align : 'center',
-									valign : 'middle'
-								},
-								{
-									field : 'mdFilePath',
-									title : 'MarkDown文件路径',
-									align : 'center',
-									valign : 'middle',
-									sortable : false
-								},
-								{
 									field : 'readNum',
 									title : '阅读次数',
 									align : 'center',

@@ -43,6 +43,7 @@ public interface SysConstants {
   String TICKET_SPILT = ",";
   String IGNORE_KEY = "ignoreUrl";
   String SYS_CONFIG = "config/sys/sysConfig.xml";
+  String BLOG_TEMPLATE = "config/template/blog.html";
   String DOMAIN = "soaer.com";
   String ROLE_ADMAIN_NAME = "ADMIN";
 }

@@ -538,11 +538,15 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl? 'data-gallery': ''%}>{%=file.name%}</a> {% } else { %}
                                     <span>{%=file.name%}</span> {% } %} </p> {% if (file.error) { %}
                                 <div>
-                                    <span class="label label-danger">上传结果</span> {%=file.error%}</div> {% } %} </td>
+                                    <span class="label label-danger">上传结果</span> {%=file.error%}, <span class="label label-danger">文件地址</span>{%=file.url%}</div> {% } %} </td>
 
-							{% if (file.code == 1) { %}
-                                        <input type="hidden" name="htmlFilePath" readonly value="{%=file.url%}">
-                                    {% } %} 
+							{% if (file.code == 1 && file.type == "md" && file.id) { %}
+                                        <input type="hidden" name="mdFileId" id="mdFileId" readonly value="{%=file.id%}" />
+                             {% } %} 
+
+							{% if (file.code == 1 && file.type == "html" && file.id) { %}
+                                        <input type="hidden" name="htmlFileId" id="htmlFileId" readonly value="{%=file.id%}" />
+                             {% } %} 
                             <td>
                                 <span class="size">{%=o.formatFileSize(file.size)%}</span>
                             </td>
@@ -580,13 +584,13 @@ License: You must have a valid license purchased only from themeforest(the above
 															</label>
 															<div class="col-md-9">
 																<input type="text" class="form-control" placeholder=""
-																	name="number">
+																	name="tag">
 																<div class="form-control-focus"></div>
 															</div>
 														</div>
 														<div class="form-group form-md-line-input">
 															<label class="col-md-3 control-label"
-																for="form_control_1">是否可用 <span class="required">&nbsp;</span>
+																for="form_control_1">是否可用<span class="required">&nbsp;</span>
 															</label>
 															<div class="col-md-4">
 																<div class="mt-radio-list"

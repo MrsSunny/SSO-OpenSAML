@@ -1,20 +1,13 @@
 package org.sms.project.blog.controller;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-
 import org.sms.SysConstants;
 import org.sms.project.base.Result;
-import org.sms.project.blog.ResultUploadFile;
+import org.sms.project.base.UploadFileBase;
 import org.sms.project.blog.entity.Blog;
 import org.sms.project.blog.service.BlogService;
 import org.sms.project.common.ResultAdd;
@@ -57,55 +50,12 @@ public class BlogController {
         resAdd.setError("添加成功");
         return resAdd;
     }
+    
     @ResponseBody
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public List<ResultUploadFile> upload(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
-        InputStream in = null;
-        OutputStream out = null;
-        try {
-            String rootPath = System.getProperty("catalina.home");
-            File dir = new File(rootPath + File.separator + "tmpFiles");
-            if (!dir.exists())
-                dir.mkdirs();
-            File serverFile = new File(dir.getAbsolutePath() + File.separator + file.getOriginalFilename());
-            System.out.println(serverFile.getPath());
-            in = file.getInputStream();
-            out = new FileOutputStream(serverFile);
-            byte[] b = new byte[1024];
-            int len = 0;
-            while ((len = in.read(b)) > 0) {
-                out.write(b, 0, len);
-            }
-            out.close();
-            in.close();
-
-        } catch (Exception e) {
-            return null;
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                out = null;
-            }
-
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                in = null;
-            }
-        }
-        ResultUploadFile resAdd = new ResultUploadFile();
-        resAdd.setCode(1);
-        resAdd.setUrl("http://soaer.com/s.md");
-        resAdd.setName("yt_protocol.md");
-        resAdd.setError("添加成功");
-        List<ResultUploadFile> res = new ArrayList<ResultUploadFile>();
+    public List<UploadFileBase> upload(@RequestParam("file") MultipartFile file) {
+        UploadFileBase resAdd = blogService.addUpload(file);
+        List<UploadFileBase> res = new ArrayList<UploadFileBase>();
         res.add(resAdd);
         return res;
     }
@@ -149,10 +99,5 @@ public class BlogController {
         res.setPage(page);
         res.setList(blogs);
         return res;
-    }
-
-    @RequestMapping(value = "/isExit/{email}", method = RequestMethod.GET)
-    public String isExit(@PathVariable("email") String email, HttpServletRequest request) {
-        return "login/login_success";
     }
 }

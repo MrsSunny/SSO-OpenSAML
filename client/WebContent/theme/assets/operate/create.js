@@ -77,6 +77,26 @@ function createPostUser() {
 	});
 }
 
+function createPostBlog() {
+	var obj = $('#createBlogForm').serialize();
+	var htmlFileId = $("#htmlFileId").val()
+	var mdFileId = $("#mdFileId").val()
+	$.ajax({
+		type : "POST",
+		url : "/blog/add",
+		data : obj + "&htmlFileId=" + htmlFileId + "&mdFileId=" + mdFileId,
+		success : function(msg) {
+			var code = msg.code
+			if (code == 1) {
+				$(':input', '#createUserForm').not(':button, :submit, :reset, :hidden').val('').removeAttr('checked').removeAttr('selected');
+				create_user_table();
+			} else {
+				// alert("添加失败")
+			}
+		}
+	});
+}
+
 function createPostTag() {
 	var obj = $('#createTagForm').serialize();
 	$.ajax({

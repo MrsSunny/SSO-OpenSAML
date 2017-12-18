@@ -4,9 +4,9 @@
 	<resultMap id="BaseResultMap" type="org.sms.project.blog.entity.Blog">
 		<id column="ID" property="id" jdbcType="BIGINT" />
 		<result column="TITLE" property="title" jdbcType="VARCHAR" />
-		<result column="HTML_FILE_PATH" property="htmlFilePath"
+		<result column="HTML_FILE_ID" property="htmlFileId"
 			jdbcType="VARCHAR" />
-		<result column="MD_FILE_PATH" property="mdFilePath" jdbcType="VARCHAR" />
+		<result column="MD_FILE_ID" property="mdFileId" jdbcType="VARCHAR" />
 		<result column="READ_NUM" property="readNum" jdbcType="BIGINT" />
 		<result column="USABLE_STATUS" property="usableStatus"
 			jdbcType="INTEGER" />
@@ -19,7 +19,7 @@
 		<result column="CONTENT" property="content" jdbcType="LONGVARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		ID, TITLE, HTML_FILE_PATH, MD_FILE_PATH, READ_NUM,
+		ID, TITLE, HTML_FILE_ID, MD_FILE_ID, READ_NUM,
 		USABLE_STATUS,
 		CREATE_USER_ID,
 		CREATE_DATE
@@ -36,7 +36,7 @@
 		from BLOG
 		where ID = #{id,jdbcType=BIGINT}
 	</select>
-	
+
 	<select id="selectByPage" resultMap="BaseResultMap"
 		parameterType="org.sms.project.page.Page">
 		select
@@ -49,21 +49,22 @@
 		select count(1)
 		from BLOG
 	</select>
-	
+
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-		update BLOG set USABLE_STATUS = 1 where ID = #{id,jdbcType=BIGINT}
+		update BLOG set
+		USABLE_STATUS = 1 where ID = #{id,jdbcType=BIGINT}
 	</delete>
 	<insert id="insert" parameterType="org.sms.project.blog.entity.Blog">
 		insert into BLOG (ID, TITLE,
-		HTML_FILE_PATH,
-		MD_FILE_PATH, READ_NUM, USABLE_STATUS,
+		HTML_FILE_ID,
+		MD_FILE_ID, READ_NUM, USABLE_STATUS,
 		CREATE_USER_ID,
 		CREATE_DATE, CONTENT
 		)
 		values (#{id,jdbcType=BIGINT},
 		#{title,jdbcType=VARCHAR},
-		#{htmlFilePath,jdbcType=VARCHAR},
-		#{mdFilePath,jdbcType=VARCHAR}, #{readNum,jdbcType=BIGINT},
+		#{htmlFileId,jdbcType=VARCHAR},
+		#{mdFileId,jdbcType=VARCHAR}, #{readNum,jdbcType=BIGINT},
 		#{usableStatus,jdbcType=INTEGER},
 		#{createUserId,jdbcType=BIGINT},
 		#{createDate,jdbcType=TIMESTAMP},
@@ -79,11 +80,11 @@
 			<if test="title != null">
 				TITLE,
 			</if>
-			<if test="htmlFilePath != null">
-				HTML_FILE_PATH,
+			<if test="htmlFileId != null">
+				HTML_FILE_ID,
 			</if>
-			<if test="mdFilePath != null">
-				MD_FILE_PATH,
+			<if test="mdFileId != null">
+				MD_FILE_ID,
 			</if>
 			<if test="readNum != null">
 				READ_NUM,
@@ -108,11 +109,11 @@
 			<if test="title != null">
 				#{title,jdbcType=VARCHAR},
 			</if>
-			<if test="htmlFilePath != null">
-				#{htmlFilePath,jdbcType=VARCHAR},
+			<if test="htmlFileId != null">
+				#{htmlFileId,jdbcType=VARCHAR},
 			</if>
-			<if test="mdFilePath != null">
-				#{mdFilePath,jdbcType=VARCHAR},
+			<if test="mdFileId != null">
+				#{mdFileId,jdbcType=VARCHAR},
 			</if>
 			<if test="readNum != null">
 				#{readNum,jdbcType=BIGINT},
@@ -137,11 +138,11 @@
 			<if test="title != null">
 				TITLE = #{title,jdbcType=VARCHAR},
 			</if>
-			<if test="htmlFilePath != null">
-				HTML_FILE_PATH = #{htmlFilePath,jdbcType=VARCHAR},
+			<if test="htmlFileId != null">
+				HTML_FILE_ID = #{htmlFileId,jdbcType=VARCHAR},
 			</if>
-			<if test="mdFilePath != null">
-				MD_FILE_PATH = #{mdFilePath,jdbcType=VARCHAR},
+			<if test="mdFileId != null">
+				MD_FILE_ID = #{mdFileId,jdbcType=VARCHAR},
 			</if>
 			<if test="readNum != null">
 				READ_NUM = #{readNum,jdbcType=BIGINT},
@@ -165,10 +166,10 @@
 		update
 		BLOG
 		set TITLE = #{title,jdbcType=VARCHAR},
-		HTML_FILE_PATH =
-		#{htmlFilePath,jdbcType=VARCHAR},
-		MD_FILE_PATH =
-		#{mdFilePath,jdbcType=VARCHAR},
+		HTML_FILE_ID =
+		#{htmlFileId,jdbcType=VARCHAR},
+		MD_FILE_ID =
+		#{mdFileId,jdbcType=VARCHAR},
 		READ_NUM = #{readNum,jdbcType=BIGINT},
 		USABLE_STATUS = #{usableStatus,jdbcType=INTEGER},
 		CREATE_USER_ID =
@@ -183,10 +184,10 @@
 		update BLOG
 		set
 		TITLE = #{title,jdbcType=VARCHAR},
-		HTML_FILE_PATH =
-		#{htmlFilePath,jdbcType=VARCHAR},
-		MD_FILE_PATH =
-		#{mdFilePath,jdbcType=VARCHAR},
+		HTML_FILE_ID =
+		#{htmlFileId,jdbcType=VARCHAR},
+		MD_FILE_ID =
+		#{mdFileId,jdbcType=VARCHAR},
 		READ_NUM = #{readNum,jdbcType=BIGINT},
 		USABLE_STATUS = #{usableStatus,jdbcType=INTEGER},
 		CREATE_USER_ID =

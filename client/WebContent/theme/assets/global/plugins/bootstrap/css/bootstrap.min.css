@@ -1750,7 +1750,7 @@ address {
 	line-height: 1.42857
 }
 
-code, kbd, pre, samp {
+kbd, pre, samp {
 	font-family: Menlo, Monaco, Consolas, "Courier New", monospace
 }
 

@@ -17,5 +17,6 @@ public class SysContextLoaderListener extends ContextLoaderListener {
   public void contextInitialized(ServletContextEvent sce) {
     logger.debug("初始换数据开始");
     SysConfig.INSTANCE.loadSysConfig();
+    SysConfig.INSTANCE.loadHtmlTemplate();
   }
 }
